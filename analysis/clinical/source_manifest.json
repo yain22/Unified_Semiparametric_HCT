@@ -121,13 +121,6 @@
       "packaged": "run_clinical.R",
       "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
       "transformation": "Selection/status and historical character-group sampling order retained; explicit input paths, optional bootstrap. Public runner defaults to replication/results/cgm and records input hashes by logical role."
-    },
-    {
-      "source": "historical/v3/code/focused_clinical_revision.py",
-      "source_sha256": "dca9131345087d0b5f7bd2c580c3f27ac1a083334c8f76e89cf62d43a90cdd7c",
-      "packaged": "render_clinical.py",
-      "packaged_sha256": "ed3de5520eddc7975cd8fb69850a2ec3d0d7d769ff7d8f466e9bb507a55bcf20",
-      "transformation": "Current five-method plot layout adapted to local aggregate inputs; no manuscript editing functions."
     }
   ],
   "generated_files": [
@@ -136,8 +129,8 @@
       "sha256": "4aa7da86fee6d2b3ad38c6868021b383991c7764e00f38794f87d4cd9d28ff09"
     },
     {
-      "path": "check_results.py",
-      "sha256": "3891e67c38b7e2b0cab7c1d73c6d496815322b9148e6e104e8e2398732f2fa89"
+      "path": "check_results.R",
+      "sha256": "86bcfad34705401c9059aa8f4e6c1e703e290eb06706549721bb9a619ef87022"
     },
     {
       "path": "cohort/cohort_6m.R",
@@ -154,6 +147,26 @@
     {
       "path": "inputs/baseline_summary.csv",
       "sha256": "e77c1496acf1d1eebb0783784b4b117d3015360c71e7b901723ac4880977c5a9"
+    },
+    {
+      "path": "inputs/descriptive/cohort_flow.csv",
+      "sha256": "c97d54d3c5b273bd60b14e8d1dbc403e8592b1c22ec4eb0a5aa79d1d9ed009e6"
+    },
+    {
+      "path": "inputs/descriptive/covariate_balance.csv",
+      "sha256": "300b7a5ad8e83e0822de85a64e90447db6ad99c0a61cff0b248842f7b852097f"
+    },
+    {
+      "path": "inputs/descriptive/outcome_changes.csv",
+      "sha256": "4b7683f0d048e98cc9a8fc6bfdd77cf272663635d42b7d55c29fbffb50dbf8e8"
+    },
+    {
+      "path": "inputs/descriptive/outcome_means.csv",
+      "sha256": "908f7b75e9e3b13a801044b34a9cbb762cb1bd6e86dac82ac8daf02f5a234abf"
+    },
+    {
+      "path": "inputs/descriptive/source_scores.csv",
+      "sha256": "6d1ca6f52eabefcea464f7a28817ef2c5b1a242b213d5b4fcf47ea23cfed3019"
     },
     {
       "path": "inputs/near-index/eligibility_and_timing.csv",
@@ -273,11 +286,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "7e1416f19e943a7babfcd4b4d734ebea1b7553322a2b1f758f156c20f3faf30b"
+      "sha256": "bae2c5dfa0147854062ceca37d3e977e8534126639ab2668fdb73bf00d6b52b1"
     },
     {
-      "path": "render_clinical.py",
-      "sha256": "ed3de5520eddc7975cd8fb69850a2ec3d0d7d769ff7d8f466e9bb507a55bcf20"
+      "path": "render_clinical.R",
+      "sha256": "5d40a0e8b52388175511bf874122c5156c31541bc20d522294685bfd11250503"
+    },
+    {
+      "path": "render_descriptive.R",
+      "sha256": "6847e7535e3cb36dc1ce6d7ff79a3399837470cdc7de143d4dc9f59f245b31f2"
     },
     {
       "path": "run_clinical.R",
@@ -304,12 +321,28 @@
       "sha256": "61b79677722dacfc727afd351dc0457ce62954a732d7c70cf79966e10d2e0039"
     },
     {
+      "path": "summarize_descriptive.R",
+      "sha256": "3a0e1818ab0f0992252d18a9568c81772aec41982dc2f8b0aac676d6c8d80983"
+    },
+    {
       "path": "support_gap.R",
       "sha256": "f56b2d3090648b6a195b003abf58625ae5e0e2338f5b2af5de7be945f89d37c5"
     },
     {
       "path": "validate_synthetic.R",
       "sha256": "c301bf854092c253c8cdefe7ce05bf0b83e7e1df63f7ea0e4206841eb0b0d8ee"
+    }
+  ],
+  "historical_file_hashes": [
+    {
+      "source": "historical/v3/code/focused_clinical_revision.py",
+      "source_sha256": "dca9131345087d0b5f7bd2c580c3f27ac1a083334c8f76e89cf62d43a90cdd7c",
+      "previous_name": "render_clinical.py",
+      "previous_sha256": "ed3de5520eddc7975cd8fb69850a2ec3d0d7d769ff7d8f466e9bb507a55bcf20"
+    },
+    {
+      "previous_name": "check_results.py",
+      "previous_sha256": "3891e67c38b7e2b0cab7c1d73c6d496815322b9148e6e104e8e2398732f2fa89"
     }
   ]
 }

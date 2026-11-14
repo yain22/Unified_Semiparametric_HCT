@@ -20,6 +20,7 @@ reproduce <- function(what = c("tables", "figures", "validate", "smoke", "refit"
     run("model_relationships.R", "--output-dir", out)
     run("simulation_figures/plot_simulations.R", "--output-dir", file.path(out,"simulations"))
     run("clinical/render_clinical.R", "--out", file.path(out,"clinical"))
+    run("clinical/render_descriptive.R", "--out", file.path(out, "clinical"))
     map <- read.csv(file.path("analysis", "paper-map.csv"), stringsAsFactors = FALSE)
     index <- map[startsWith(map$exhibit, "Figure "), c("exhibit", "figure_output", "script_or_source")]
     input <- file.path(out, index$figure_output)

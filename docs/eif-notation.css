@@ -1,0 +1,38 @@
+/* An open definition is placed next to its MathML token by eif-notation.js. */
+math mrow[data-notation] {
+  cursor: help;
+}
+math mrow[data-notation-active],
+math mrow[data-notation]:focus-visible {
+  background-color: #e3efec;
+  outline: 1px solid #37766c;
+  outline-offset: 2px;
+}
+#eif-notation-popover {
+  position: fixed;
+  z-index: 100;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: min(22rem, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: .65rem .85rem .7rem;
+  border: 1px solid #759890;
+  border-radius: .25rem;
+  background: #fff;
+  color: #1b2d2a;
+  box-shadow: 0 .15rem .55rem rgb(21 43 37 / 14%);
+  font: .9rem/1.4 system-ui, sans-serif;
+  text-align: left;
+}
+#eif-notation-popover[hidden] { display: none; }
+#eif-notation-popover strong { display: block; }
+#eif-notation-popover p { margin: .25rem 0 0; }
+#eif-notation-popover .notation-role { color: #3b534d; }
+@media (forced-colors: active) {
+  math mrow[data-notation-active], math mrow[data-notation]:focus-visible {
+    outline-color: Highlight;
+  }
+  #eif-notation-popover { border-color: CanvasText; }
+}

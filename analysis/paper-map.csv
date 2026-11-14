@@ -23,6 +23,9 @@ Figure S6,fig:scenariovariance,analysis/simulation_figures/plot_simulations.R,Ex
 Figure S7,fig:scenariofewerexternal,analysis/simulation_figures/plot_simulations.R,Extended scenario fewer external controls,simulations/figures/supp_scenario_fewer_external.pdf
 Figure S8,fig:scenariosourceshift,analysis/simulation_figures/plot_simulations.R,Extended scenario shifted external covariates,simulations/figures/supp_scenario_source_shift.pdf
 Figure S9,fig:scenarioquadratic,analysis/simulation_figures/plot_simulations.R,Extended scenario quadratic discrepancy,simulations/figures/supp_scenario_quadratic_discrepancy.pdf
+Figure S10,fig:cgmflow,analysis/clinical/render_descriptive.R,Aggregate CGM cohort counts,clinical/cgm_cohort_flow.pdf
+Figure S11,fig:cgmprofiles,analysis/clinical/render_descriptive.R,Aggregate HbA1c outcome summaries by cohort,clinical/cgm_outcome_profiles.pdf
+Figure S12,fig:cgmbalance,analysis/clinical/render_descriptive.R,Aggregate baseline covariate summaries by cohort,clinical/cgm_covariate_balance.pdf
 Table S1,tab:notation,,Definitions of mathematical notation,
 Table S2,tab:datastructure,,Definition of data structure,
 Table S3,tab:nuisanceroles,,Definition of nuisance quantities,

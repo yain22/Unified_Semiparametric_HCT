@@ -48,11 +48,77 @@
   let lastModel;
   // Store the current free setting while the common-mean restriction fixes it at zero.
   let savedDelta;
+  let traceModel = null;
+  let frameIndex = 0;
+  let playTimer = null;
+
+  function stopPlayback() {
+    clearTimeout(playTimer);
+    playTimer = null;
+    const atEnd = traceModel && frameIndex === EifReductionSteps[traceModel].length - 1;
+    by("reduction-play").textContent = atEnd ? "Replay" : "Play";
+  }
+
+  function showFrame(announce = true) {
+    window.EifNotationHelp.close();
+    const frames = EifReductionSteps[traceModel];
+    const frame = frames[frameIndex];
+    const position = `Step ${frameIndex + 1} of ${frames.length}`;
+    by("reduction-count").textContent = position;
+    by("reduction-title").textContent = frame.title;
+    by("reduction-explanation").textContent = frame.explanation;
+    by("reduction-equation").innerHTML = frame.html;
+    by("reduction-key").querySelector(".term-zero-key").hidden = !by("reduction-equation").querySelector(".reduction-removed");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reducedMotion) {
+      by("reduction-equation").animate(
+        [{ opacity: .25, transform: "translateY(4px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 280, easing: "ease-out" }
+      );
+    }
+    by("reduction-prev").disabled = frameIndex === 0;
+    by("reduction-next").disabled = frameIndex === frames.length - 1;
+    if (announce) by("reduction-announcement").textContent = position + ". " + frame.title;
+    if (playTimer === null || by("reduction-next").disabled) stopPlayback();
+    markWideEquations();
+  }
+
+  function openTrace(model) {
+    stopPlayback();
+    traceModel = model;
+    frameIndex = 0;
+    by("reduction-player").hidden = false;
+    by("formula").hidden = true;
+    by("trace-toggle").setAttribute("aria-expanded", "true");
+    by("trace-toggle").textContent = "Return to model equation";
+    showFrame();
+  }
+
+  function closeTrace() {
+    stopPlayback();
+    traceModel = null;
+    by("reduction-player").hidden = true;
+    by("formula").hidden = false;
+    by("trace-toggle").setAttribute("aria-expanded", "false");
+    by("trace-toggle").textContent = "Trace this reduction";
+    by("reduction-announcement").textContent = "";
+  }
+
+  function scheduleNextFrame() {
+    by("reduction-play").textContent = "Pause";
+    playTimer = setTimeout(() => {
+      frameIndex += 1;
+      showFrame();
+      if (playTimer !== null) scheduleNextFrame();
+    }, 6500);
+  }
+
   function refresh() {
     const model = document.querySelector('input[name="model"]:checked').value;
     const design = designs[model];
     const isTrial = model === "rct", common = model === "transportable", isEct = model === "ect";
     if (lastModel !== model) {
+      window.EifNotationHelp.close();
       const old = by("group").value;
       by("group").replaceChildren(...groups[model].map(g => new Option(labels[g], g)));
       by("group").value = groups[model].includes(old) ? old : groups[model][0];
@@ -64,6 +130,15 @@
       }
       by("model-name").textContent = design.title;
       by("formula").innerHTML = EifFormulaPanels[design.formula];
+      EifRecordTable.render(model);
+      const choosingFromFull = model === "unrestricted";
+      by("reduction-path").hidden = !choosingFromFull;
+      document.querySelector('label[for="reduction-path"]').hidden = !choosingFromFull;
+      if (!choosingFromFull) by("reduction-path").value = model;
+      if (traceModel !== null) {
+        if (choosingFromFull) closeTrace();
+        else openTrace(model);
+      }
       lastModel = model;
     }
     by("delta").disabled = isTrial || common;
@@ -110,18 +185,57 @@
     by("zero-note").textContent = zeroNote;
   }
   function markWideEquations() {
-    for (const block of document.querySelectorAll("#formula .formula-block")) {
+    for (const block of document.querySelectorAll("#formula .formula-block, #reduction-equation .formula-block")) {
       const wide = block.scrollWidth > block.clientWidth + 1;
       block.classList.toggle("wide-equation", wide);
       block.tabIndex = wide ? 0 : -1;
     }
   }
-  document.querySelectorAll("select, input").forEach(el => el.addEventListener("change", () => {
+  document.querySelectorAll(".experiment select, #models input").forEach(el => el.addEventListener("change", () => {
     refresh();
     markWideEquations();
   }));
   window.addEventListener("resize", markWideEquations);
   by("formula").addEventListener("toggle", markWideEquations, true);
+  by("trace-toggle").addEventListener("click", () => {
+    if (traceModel !== null) {
+      window.EifNotationHelp.close();
+      closeTrace();
+      markWideEquations();
+    } else {
+      const model = by("reduction-path").value;
+      document.querySelector(`#models input[value="${model}"]`).checked = true;
+      refresh();
+      openTrace(model);
+    }
+  });
+  function moveFrame(offset) {
+    stopPlayback();
+    frameIndex += offset;
+    showFrame();
+  }
+  by("reduction-prev").addEventListener("click", () => moveFrame(-1));
+  by("reduction-next").addEventListener("click", () => moveFrame(1));
+  by("reduction-play").addEventListener("click", () => {
+    if (playTimer !== null) {
+      stopPlayback();
+      return;
+    }
+    if (frameIndex === EifReductionSteps[traceModel].length - 1) {
+      frameIndex = 0;
+      showFrame();
+    }
+    scheduleNextFrame();
+  });
+  for (const eventName of ["focusin", "pointerover"]) {
+    by("reduction-equation").addEventListener(eventName, event => {
+      if (playTimer !== null && event.target.closest("[data-notation]")) stopPlayback();
+    });
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopPlayback();
+  });
+  by("trace-toolbar").hidden = false;
   refresh();
   markWideEquations();
 })();

@@ -83,7 +83,7 @@ Main Table 1 gives the terms of the hybrid trial’s efficient influence functio
 
 # Reproduce the figures
 
-With Cairo graphics available in R (`capabilities("cairo")`), install the two packages with `install.packages(c("jsonlite", "digest"))` and run `reproduce("figures")` in the same session. This writes `Figure-01.pdf` through `Figure-11.pdf`, `Figure-S01.pdf` through `Figure-S09.pdf`, and `figure-index.csv` under `results/figures/`. Sampling plots use supplied synthetic draws, simulation plots use saved summaries, and the clinical forest plot uses aggregate estimates. The [exhibit index](https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/analysis/paper-map.csv) lists the source for each display. Neither this command nor the table command refits a simulation or needs participant records.
+With Cairo graphics available in R (`capabilities("cairo")`), install the two packages with `install.packages(c("jsonlite", "digest"))` and run `reproduce("figures")` in the same session. This writes `Figure-01.pdf` through `Figure-11.pdf`, `Figure-S01.pdf` through `Figure-S12.pdf`, and `figure-index.csv` under `results/figures/`. Sampling plots use supplied synthetic draws, simulation plots use saved summaries, and the CGM figures use aggregate data. Figures S10–S12 show cohort selection, HbA1c outcomes, and baseline covariate balance. The [exhibit index](https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/analysis/paper-map.csv) lists the source for each display. Neither this command nor the table command refits a simulation or needs participant records.
 
 # A design decision before enrollment
 

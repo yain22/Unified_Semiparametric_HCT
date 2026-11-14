@@ -2,3 +2,53 @@
 .formula-block mtd:first-child{text-align:right}.formula-block mtd:nth-child(2){text-align:left}.formula-block.wide-equation{border-bottom:1px dashed var(--rule);padding-bottom:.7rem}.wide-equation:focus-visible{outline:2px solid var(--sea);outline-offset:-2px}
 #formula:has(.wide-equation)::before{content:"Scroll wide equations horizontally to see every term.";display:block;color:var(--muted);font:14px/1.45 system-ui,sans-serif;margin:.3rem 0 .65rem}
 .law-details{margin:1rem 0}.law-details p{max-width:78ch}.controls label[hidden]{display:none}
+.notation-help, .example-links, #reduction-count, .trace-toolbar, .trace-controls {
+  font: 14px/1.5 system-ui, sans-serif;
+}
+.notation-help, #reduction-count { color: var(--muted); }
+.trace-toolbar, .trace-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem; }
+.trace-toolbar { margin: .65rem 0 1rem; }
+.trace-toolbar label { font-weight: 600; }
+.trace-toolbar select { width: auto; margin: 0; }
+.trace-toolbar button, .trace-controls button {
+  appearance: none;
+  border: 1px solid #8da39b;
+  border-radius: 3px;
+  padding: .45rem .85rem;
+  background: #fff;
+  color: #153f35;
+  cursor: pointer;
+  font: 600 14px/1.4 system-ui, sans-serif;
+}
+.trace-toolbar button:hover, .trace-controls button:enabled:hover { background: #e8f3ed; }
+.trace-toolbar button:focus-visible, .trace-controls button:focus-visible,
+.trace-toolbar select:focus-visible { outline: 2px solid var(--sea); outline-offset: 2px; }
+.trace-controls button:disabled { color: #67716c; border-color: #ccc; background: #f3f4f2; cursor: default; }
+.trace-controls #reduction-play { min-width: 5.2em; }
+#reduction-player { border-block: 1px solid var(--rule); padding: 1.1rem 0; margin: 1rem 0; }
+#reduction-count { margin: 0 0 .12rem; font-variant-numeric: tabular-nums; }
+#reduction-title { margin: 0 0 .5rem; }
+#reduction-explanation { margin: .25rem 0 .8rem; }
+#reduction-equation .reduction-emphasized { color: #075a4c; }
+#reduction-equation .reduction-removed { color: #8c3b25; }
+.reduction-key { color: var(--muted); font: 13px/1.45 system-ui, sans-serif; }
+.reduction-key span { display: inline-flex; align-items: center; gap: .35rem; margin-right: 1rem; }
+.reduction-key span[hidden] { display: none; }
+.reduction-key span::before { content: ""; width: .9em; border-top: 3px solid #075a4c; }
+.reduction-key .term-zero-key::before { border-color: #8c3b25; }
+#reduction-equation:has(.wide-equation)::after {
+  content: "Scroll wide equations horizontally to see every term.";
+  display: block; color: var(--muted); font: 14px/1.45 system-ui,sans-serif; margin-block: .4rem;
+}
+.trace-controls { margin-top: .8rem; }
+.example-records { margin-block: 2rem 1rem; border-top: 1px solid var(--rule); padding-top: .6rem; }
+.example-links span { padding-inline: .4em; }
+.trace-toolbar[hidden], [hidden]#reduction-player, [hidden]#formula, .trace-toolbar [hidden] { display: none; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  #reduction-equation .reduction-emphasized { animation: term-emphasis .65s ease-out; }
+  @keyframes term-emphasis { from { color: #12221b; } to { color: #075a4c; } }
+}

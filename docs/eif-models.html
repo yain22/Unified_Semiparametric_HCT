@@ -1,15 +1,44 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Four trial models and their influence functions | causalgap</title><meta name="description" content="Compare the unrestricted hybrid-trial efficient influence function with common-mean hybrid, randomized, and externally controlled trials.">
-<link rel="icon" href="assets/mark.svg"><link rel="stylesheet" href="assets/guide.css"><link rel="stylesheet" href="eif-models.css">
-<script src="eif-model-calculator.js" defer></script><script src="eif-model-formulas.js" defer></script><script src="eif-models.js" defer></script></head>
+<link rel="icon" href="assets/mark.svg"><link rel="stylesheet" href="assets/guide.css"><link rel="stylesheet" href="eif-models.css"><link rel="stylesheet" href="eif-record-table.css"><link rel="stylesheet" href="eif-notation.css">
+<script src="eif-model-calculator.js" defer></script>
+<script src="eif-model-formulas.js" defer></script>
+<script src="eif-reduction-steps.js" defer></script>
+<script src="eif-notation.js" defer></script>
+<script src="eif-record-table.js" defer></script>
+<script src="eif-models.js" defer></script></head>
 <body><a class="skip" href="#main">Skip to models</a><header><nav aria-label="Project"><a class="home" href="index.html">causalgap</a><a href="r-package.html">R package</a><a aria-current="page" href="eif-models.html">Model comparison</a><a href="eif-lab.html">EIF lab</a><a href="design-lab.html">Design lab</a><a href="index.html">Replication guide</a></nav></header>
 <main id="main"><div class="intro"><p class="kicker">Statistical theory · Theorem 1 and Corollaries 1–3</p><h1>One hybrid trial, three reductions</h1><p class="lead">What changes in the efficient influence function (EIF) when the two control means agree? What changes when an entire control group is absent? Choose a model to see its equation, then follow one observation through the calculation.</p></div>
 <figure class="map"><img src="assets/trial-models.png" alt="The common-mean hybrid model is nested in the unrestricted hybrid model. Removing external controls gives an RCT; removing internal controls gives an ECT under its own observation law."><figcaption>Equality of the control means restricts an existing model. Removing a source changes which observations are possible.</figcaption></figure>
 <fieldset id="models"><legend>Choose an observation model</legend><div class="choices">
 <label><input type="radio" name="model" value="unrestricted" checked><span>Unrestricted HCT</span></label><label><input type="radio" name="model" value="transportable"><span>Common-mean HCT</span></label><label><input type="radio" name="model" value="rct"><span>Randomized trial</span></label><label><input type="radio" name="model" value="ect"><span>Externally controlled trial</span></label></div></fieldset>
 <h2 id="model-name">Unrestricted hybrid trial</h2>
+<p class="notation-help">Hover over, tap, or focus a symbol in an equation to read its definition.</p>
+<div class="trace-toolbar" hidden id="trace-toolbar">
+  <label for="reduction-path">Follow the derivation for</label>
+  <select id="reduction-path"><option value="transportable">Common-mean hybrid trial</option><option value="rct">Randomized trial</option><option value="ect">Externally controlled trial</option></select>
+  <button id="trace-toggle" type="button" aria-expanded="false" aria-controls="reduction-player">Trace this reduction</button>
+</div>
+<section id="reduction-player" aria-label="EIF derivation" hidden>
+  <div class="frame-header"><p id="reduction-count"></p><h3 id="reduction-title"></h3></div>
+  <p id="reduction-explanation"></p>
+  <div id="reduction-equation"></div>
+  <p id="reduction-key" class="reduction-key"><span class="term-emphasis-key">Terms used in this step</span> <span class="term-zero-key" hidden>Terms that vanish</span></p>
+  <div class="trace-controls" role="group" aria-label="Derivation playback">
+    <button type="button" id="reduction-prev">Previous</button>
+    <button type="button" id="reduction-play">Play</button>
+    <button type="button" id="reduction-next">Next</button>
+  </div>
+  <span id="reduction-announcement" role="status" class="visually-hidden"></span>
+</section>
 <section id="formula" aria-label="Selected model equation"><noscript><p>Enable scripting to compare the four formulas, or download the <a href="examples/model-reductions.R">R example</a> and consult the <a href="https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/assets/tables/eif-components.tex">seven-term equation source</a>.</p></noscript></section>
+<section class="example-records" aria-labelledby="record-heading">
+  <h2 id="record-heading">Which records does this design observe?</h2>
+  <p>Figure S1 in the supplement illustrates a hybrid trial with six hypothetical records. Change the observation model above to see which rows enter each comparison.</p>
+  <div id="record-table"></div>
+  <p class="example-links"><a href="examples/observed-records.csv" download>Download the six records (CSV)</a> <span aria-hidden="true">·</span> <a href="examples/observed-records.R" download>Reproduce the design subsets in R</a></p>
+</section>
 <section class="experiment"><p class="kicker">Worked example · finite outcome distribution</p><h2>Evaluate one record</h2>
 <p>At baseline stratum X = x, the treated mean is 1 + 0.4x. In a randomized trial or hybrid trial the internal control mean is 0.4x. Where external controls are present their mean starts at 0.4x and can be shifted downward or upward. Under the common-mean restriction their mean is 0.4x. The trial arms have variance one.</p>
 <details class="law-details"><summary>Outcome distribution and baseline mix</summary><p>Within each observed group and stratum, Y = m + √v Z, where m and v are its conditional mean and variance. Z takes the values −√3, 0, and √3 with probabilities 1/6, 2/3, and 1/6. These give mean zero, variance one, third moment zero, and fourth moment three, matching a standard Gaussian through its fourth moment. The example enumerates these three outcomes exactly. The variance-correction terms involve squared residuals, so their covariances and variances can change under other third and fourth moments.</p><p>With the same baseline mix, half of each source has X = 1. With a different mix, two thirds of the trial and one third of the external cohort have X = 1. In the RCT the trial mix alone is used.</p></details>

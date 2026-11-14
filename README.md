@@ -23,7 +23,7 @@ This recreates 15 CSVs using base R and bundled inputs. Table 3 is calculated fr
 | To reproduce | In the same R session | Where to look |
 |:--|:--|:--|
 | Tables 2–4 and S4–S12 | `reproduce("tables")` | `results/tables/` |
-| Figures 1–11 and S1–S9 | `reproduce("figures")` | `results/figures/` |
+| Figures 1–11 and S1–S12 | `reproduce("figures")` | `results/figures/` |
 | A short estimator check on synthetic data | `reproduce("validate")` | `results/validate/` |
 
 Figures require R with Cairo graphics and two packages: `install.packages(c("jsonlite", "digest"))`. The estimator check and simulation refits also need `data.table`.
@@ -48,6 +48,7 @@ Here one quarter of the hybrid control mean comes from internal controls. If the
 [<img src="docs/assets/trial-models.png" width="640" alt="Model diagram: the common-mean hybrid model is nested within the unrestricted hybrid model; separate branches redefine the observation law for randomized or externally controlled trials.">](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html)
 
 - [**Compare the four influence functions.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html) Select a model, read its formula, and evaluate it for a treated patient or a control. In an externally controlled single-arm trial, the borrowing target is identified under overlap, but its gap from the trial effect is not identified without an additional assumption.
+- [**Inspect six hypothetical records from Figure S1.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html#record-table) Compare the groups observed under each design, or download the [CSV](docs/examples/observed-records.csv) and the [base R example](docs/examples/observed-records.R).
 - [**Check a pathwise derivative.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-lab.html) Perturb a conditional outcome law and compare the resulting target change with its EIF prediction.
 - [**Plan a trial.**](https://yain22.github.io/Unified_Semiparametric_HCT/design-lab.html) Change the number of internal controls or the discrepancy between sources to compare power and false positives.
 
@@ -55,4 +56,4 @@ Here one quarter of the hybrid control mean comes from internal controls. If the
 
 Simulation fitting uses three R packages: `install.packages(c("data.table", "digest", "jsonlite"))`. Run `reproduce("smoke")` for four repetitions to check your installation. A successful smoke run exits without error and writes four `run-completed.txt` files under `results/smoke/`. For the manuscript's 5,000 repetitions at each specified sample size and scenario, run `reproduce("refit", workers = 4)`. The latter fits the baseline, paired oracle, extended scenarios and quadratic comparator, builds calibration and one-sided summaries, and writes tables and figures from the new runs. It can take substantial time. [Simulation settings and seeds](analysis/simulations/README.md) · [Numerical checks](REPRODUCIBILITY.md).
 
-The published CGM summaries are sufficient for the clinical table and forest plot. To refit the estimators or repeat the participant bootstrap, obtain the trial and registry archives separately under the distributor's terms. [Clinical data and R instructions](analysis/clinical/README.md).
+The clinical table, forest plot, and Figures S10–S12 use aggregate data. The three supplementary figures show cohort selection, HbA1c outcomes, and baseline covariate balance. To refit the estimators or repeat the participant bootstrap, obtain the trial and registry archives separately under the distributor's terms. [Clinical data and R instructions](analysis/clinical/README.md).
