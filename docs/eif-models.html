@@ -43,20 +43,25 @@
 <section id="formula" aria-label="Selected model equation"><noscript><p>Enable scripting to compare the four formulas, or download the <a href="examples/model-reductions.R">R example</a> and consult the <a href="https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/assets/tables/eif-components.tex">seven-term equation source</a>.</p></noscript></section>
 <section id="fitted-estimator" aria-labelledby="estimator-heading" hidden>
   <h3 id="estimator-heading"></h3>
-  <label class="estimator-choice" id="adjustment-control" hidden>Trial regression
-    <select id="estimator-adjustment"><option value="anova">ANOVA (unadjusted)</option><option value="ancova">ANCOVA (adjusted for X₁)</option></select>
-  </label>
   <div id="estimator-formula"></div>
   <section class="estimator-example" aria-labelledby="estimator-example-heading">
     <h3 id="estimator-example-heading">Calculate the estimate from the records</h3>
     <p>These six hypothetical records come from Figure S1. The table shows the records used by the selected design. Choose a participant to inspect the terms in that row.</p>
+    <fieldset id="adjustment-control" hidden>
+      <legend>Calculate participant contributions for</legend>
+      <div class="choices trial-choices">
+        <label><input type="radio" name="trial-adjustment" value="anova" checked>ANOVA (unadjusted)</label>
+        <label><input type="radio" name="trial-adjustment" value="ancova">ANCOVA (adjusted for X₁)</label>
+      </div>
+    </fieldset>
     <label class="estimator-choice" id="external-outcomes-control">External control outcomes
       <select id="external-outcomes"><option value="0">As recorded in the example</option><option value="1">Add 1 outcome unit to each external control</option></select>
     </label>
     <p id="estimator-fit-note"></p>
-    <div class="estimator-total"><span>Estimated treatment contrast</span><output id="estimator-result" aria-live="polite"></output><span id="estimator-arithmetic"></span></div>
-    <div class="estimator-rows"><table><caption>Participant contributions to the sum</caption>
-      <thead><tr><th scope="col">Participant</th><th scope="col">Group</th><th scope="col">X₁</th><th scope="col">Outcome</th><th scope="col">Contribution</th></tr></thead>
+    <div id="trial-weight-formula"></div>
+    <div class="estimator-total"><span id="estimator-result-label">Estimated treatment contrast</span><output id="estimator-result" aria-labelledby="estimator-result-label" aria-live="polite"></output><span id="estimator-arithmetic"></span></div>
+    <div class="estimator-rows"><table><caption id="estimator-rows-caption">Participant contributions to the sum</caption>
+      <thead><tr><th scope="col">Participant</th><th scope="col">Group</th><th scope="col">X₁</th><th scope="col">Outcome</th><th scope="col" id="trial-weight-heading" hidden>OLS weight</th><th scope="col">Contribution</th></tr></thead>
       <tbody id="estimator-rows"></tbody></table></div>
     <details open class="estimator-parts"><summary id="estimator-parts-caption"></summary><dl id="estimator-parts"></dl></details>
     <p class="example-links"><a href="examples/fitted-estimators.R" download>Reproduce the four estimators in R</a></p>

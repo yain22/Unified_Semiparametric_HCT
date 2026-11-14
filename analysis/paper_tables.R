@@ -71,7 +71,7 @@ planning_tables <- function() {
   a <- get("table1_panel_a.csv")
   b <- get("table1_panel_b.csv")
   design <- c("ANOVA (RCT)", "ANCOVA (RCT)", "AIPW-U (HCT)", "AIPW (ECT)")
-  shown <- c(design[1:2], "HCT Gaussian reference", "ECT Gaussian reference")
+  shown <- c(design[1:2], "HCT", "ECT")
   a <- a[order(match(a$scenario, c("I", "II", "III")), match(a$method, design)), ]
   a$method <- shown[match(a$method, design)]
   save_table(a[, c("scenario", "sigma", "method", "n_treated", "n_internal",

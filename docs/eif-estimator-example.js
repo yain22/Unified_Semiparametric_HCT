@@ -75,8 +75,8 @@
     unrestricted: "Evaluate all seven terms at X = X₁. For this illustration, hold the nuisance predictions fixed as you vary the two external outcomes: pH(x) = 0.55 + 0.15x, e = 1/2, m₁(x) = 8 + 2x, m₁,₀(x) = 7 + 1.5x, m₀(x) = 6.5 + 1.5x, v₁,₀ = 1, and v₀ = 1.5. The two variance terms use the observed squared control residuals.",
     transportable: "Fit one pooled control regression of Y on an intercept and X₁ using the four control records. This regression is refitted when the external outcomes change. Hold the supplied predictions pH(x) = 0.55 + 0.15x and m₁(x) = 8 + 2x fixed, with e = 1/2 and working variance ratio ρ = 1/1.5.",
     ect: "Keep the two treated and two external records. Holding the supplied external mean m₀,E(x) = 6.5 + 1.5x fixed, evaluate their residuals at X = X₁. For this record restriction the ECT source odds are e pH(x)/{1 − pH(x)}, with e = 1/2 and pH(x) = 0.55 + 0.15x.",
-    anova: "Fit Y on an intercept and treatment using the four trial records. The treatment coefficient equals the treated mean minus the internal-control mean. Each row already includes its OLS weight, so the row values sum directly to the estimate.",
-    ancova: "Fit Y on an intercept, treatment, and X₁ in the four trial records. Residualize treatment on the intercept and X₁; each OLS weight equals that residual divided by the sum of the four squared treatment residuals. The weighted outcomes sum directly to the adjusted treatment coefficient."
+    anova: "There are two participants in each randomized arm. The treated outcomes receive weight +½ each and the control outcomes receive weight −½ each.",
+    ancova: "Here the adjustment is for X₁. Fit a least-squares regression of treatment on an intercept and X₁ across the four trial records. The Frisch–Waugh–Lovell formula uses its treatment residuals to give the weights below."
   };
   const labels = {
     unrestricted: ["Standardization", "Treated residual", "Internal residual", "External residual", "Source probability", "Internal variance", "External variance"],

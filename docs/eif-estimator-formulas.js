@@ -16,7 +16,7 @@
   const bracesSq = a => sq(braces(a));
   const P = text => '<p>' + text + '</p>';
   const details = (label, body) => '<details><summary>' + label + '</summary>' + body + '</details>';
-  const sum = upper => '<munderover><mo>∑</mo><mrow>' + i + eq + one +
+  const sum = (upper, index = i) => '<munderover><mo>∑</mo><mrow>' + index + eq + one +
     '</mrow><mrow>' + upper + '</mrow></munderover>';
   const sumIn = condition => '<munder><mo>∑</mo><mrow>' + i + op(':') + condition + '</mrow></munder>';
 
@@ -220,39 +220,58 @@
   const D = symbol('trialDesignMatrix', id('D'), 'Trial regression design matrix D',
     'Each randomized participant supplies a row containing the intercept and treatment assignment. ANCOVA also includes prespecified baseline terms.',
     'The design matrix determines the least-squares weights and each record’s leverage.');
-  function trial(adjustment) {
-    const adjusted = adjustment === 'ancova';
-    const designRow = wrap(one + comma + A + (adjusted ? comma + transpose(b) : ''));
-    const compact = adjusted
-      ? wrap(differenceY) + minus + transpose(wrap(baselineDifference)) + betaB
-      : differenceY;
-    const expanded = [[thetaTrial, eq + sum(nR) + LA + Y]];
-    if (adjusted) {
-      expanded.push([L, eq + sup(wrap(transpose(D) + D), minus + one) + transpose(D)]);
-    } else {
-      expanded.push(['', eq + frac(one, n1) + sumIn(A + eq + one) + Y + minus +
-        frac(one, n10) + sumIn(A + eq + zero) + Y]);
+  const fittedAssignment = symbol('fittedTrialAssignment', sub(hat(id('A')), i), 'Fitted treatment indicator Âᵢ',
+    'The fitted value from regressing treatment on an intercept and the baseline adjustment terms across the randomized participants.',
+    'Subtracting this value from observed treatment gives the residual used to calculate the ANCOVA outcome weight.');
+  const tildeA = '<mover accent="true">' + id('A') + '<mo>~</mo></mover>';
+  const residualAssignment = symbol('residualTrialAssignment', sub(tildeA, i), 'Residualized treatment',
+    'The observed treatment indicator minus its fitted value from the trial regression of treatment on the baseline terms and an intercept.',
+    'Its value for participant i supplies the numerator of that participant’s weight. The denominator sums its square over all trial participants.');
+  const trialSum = sub(op('∑'), i);
+  const sumOverArm = assignment => sumIn(S + eq + one + comma + A + eq + assignment);
+  function trialCase(label, terms) {
+    // A phone can wrap at a mathematical operator without separating a sum from its outcome.
+    return '<div class="trial-case"><h4>' + label + '</h4><div class="trial-case-equation">' +
+      terms.map(term => math('<mstyle displaystyle="true">' + term + '</mstyle>')).join('') +
+      '</div></div>';
+  }
+  const trial = P('Both analyses use the randomized participants. Each estimates the treatment coefficient in its own regression. Adding baseline covariates to the design matrix changes the weight assigned to each outcome.') +
+    display('Shared trial regression form', [
+      [thetaTrial, eq + betaA + eq + sum(nR) + LA + Y],
+      [L, eq + sup(wrap(transpose(D) + D), minus + one) + transpose(D)]
+    ]) +
+    P('The ANOVA design row is ' + math(wrap(one + comma + A)) + '. Common-slope ANCOVA uses ' +
+      math(wrap(one + comma + A + comma + transpose(b))) + '. Here ' + math(residualAssignment) +
+      ' is the residual from regressing treatment on the baseline terms and an intercept in the trial.') +
+    '<div class="trial-case-display" role="group" aria-label="Two forms of the randomized trial estimator">' +
+    '<div class="trial-cases-lhs">' + math(thetaTrial + eq) + '</div><div class="trial-cases">' +
+    '<svg class="trial-brace" aria-hidden="true" viewBox="0 0 12 100" preserveAspectRatio="none"><path d="M11 0 Q6 0 6 6 V43 Q6 49 1 50 Q6 51 6 57 V94 Q6 100 11 100" vector-effect="non-scaling-stroke"/></svg>' +
+    trialCase('ANOVA (unadjusted)', [
+      frac(one, n1) + sumOverArm(one) + Y, minus + frac(one, n10) + sumOverArm(zero) + Y, eq + differenceY
+    ]) +
+    trialCase('ANCOVA (baseline-adjusted)', [
+      frac(trialSum + residualAssignment + Y, trialSum + sq(residualAssignment)),
+      eq + wrap(differenceY), minus + transpose(wrap(baselineDifference)) + betaB
+    ]) +
+    '</div></div>' + details('HC2 variance for either regression', display('HC2 variance of the treatment coefficient', [
+      [sRCT, eq + sum(nR) + sq(LA) + frac(sq(rTrial), complement(leverage))]
+    ]) + P('Use the weights, fitted outcome residuals and leverages from the selected regression. The design matrix must have full column rank, with leverage below one for each contributing record. The paper assumes constant treatment allocation for these coefficient comparisons. With covariate-dependent allocation, recovering the trial effect generally requires trial standardization or appropriate weighting.'));
+
+  const j = id('j');
+  function trialWeights(adjustment) {
+    if (adjustment === 'anova') {
+      return display('ANOVA outcome weight', [[LA, eq + frac(A, n1) + minus + frac(complement(A), n10)]]);
     }
-    return P('Use only the randomized arms. ' + (adjusted
-      ? 'ANCOVA subtracts the fitted common slope times the arm difference in prespecified baseline terms. '
-      : 'ANOVA gives the treated mean minus the internal control mean. ') +
-      'The regression design row for participant i is ' + math(designRow) + '.') +
-      display(adjusted ? 'ANCOVA treatment estimate' : 'ANOVA treatment estimate', [
-        [thetaTrial, eq + betaA], ['', eq + compact]
-      ]) + details('Expand the participant sum', display('RCT outcome weights and participant sum', expanded) +
-      P(adjusted ? 'The treatment row of the least-squares matrix supplies one weight for each randomized outcome.'
-        : 'All treated participants receive weight 1/n₁. Each control receives weight −1/n₁,₀.')) +
-      details('HC2 uncertainty', display('HC2 variance of the treatment coefficient', [
-        [sRCT, eq + sum(nR) + sq(LA) + frac(sq(rTrial), complement(leverage))]
-      ]) + P('Here L = (DᵀD)⁻¹Dᵀ, r̂ᵢ is the fitted regression residual, and hᵢ is the ith diagonal of DL. The matrix must have full column rank, and HC2 requires positive 1 − hᵢ for the contributing records. The coefficient comparisons in the paper use constant treatment allocation. With covariate-dependent allocation, recovering the trial effect generally requires standardization or appropriate weighting.'));
+    return display('ANCOVA outcome weights by treatment residualization', [
+      [residualAssignment, eq + diff(A, fittedAssignment)],
+      [LA, eq + frac(residualAssignment, sum(nR, j) + sq(mark('residualTrialAssignment', sub(tildeA, j), notation)))]
+    ]);
   }
 
-  const views = {unrestricted, transportable, ect};
+  const views = {unrestricted, transportable, ect, rct: trial};
   window.EifNotation = Object.freeze(notation);
   window.EifEstimatorFormulas = Object.freeze({
-    render(model, adjustment = 'anova') {
-      if (model === 'rct') return trial(adjustment);
-      return views[model];
-    }
+    render: model => views[model],
+    trialWeights
   });
 }());

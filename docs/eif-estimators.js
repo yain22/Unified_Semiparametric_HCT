@@ -3,11 +3,12 @@
   'use strict';
 
   const by = id => document.getElementById(id);
+  const trialAdjustment = () => document.querySelector('input[name="trial-adjustment"]:checked').value;
   const titles = {
     unrestricted: 'AIPW-U with separate control means',
     transportable: 'AIPW-R with a pooled control mean',
     ect: 'AIPW with external controls',
-    rct: 'Randomized trial regression'
+    rct: 'Randomized trial estimators'
   };
   const format = value => (Math.abs(value) < .00005 ? 0 : value).toFixed(4).replace('-', '−');
   let participant = 'P01';
@@ -38,6 +39,11 @@
     });
     if (!result.rows.some(row => row.id === participant)) participant = result.rows[0].id;
     by('estimator-fit-note').textContent = result.note;
+    const isTrial = model === 'rct';
+    by('trial-weight-formula').innerHTML = isTrial ? EifEstimatorFormulas.trialWeights(adjustment) : '';
+    by('trial-weight-heading').hidden = !isTrial;
+    by('estimator-result-label').textContent = isTrial ? adjustment.toUpperCase() + ' estimate' : 'Estimated treatment contrast';
+    by('estimator-rows-caption').textContent = isTrial ? adjustment.toUpperCase() + ' participant weights and contributions' : 'Participant contributions to the sum';
     by('estimator-result').textContent = format(result.estimate);
     by('estimator-arithmetic').textContent = model === 'rct'
       ? 'Sum of the weighted trial outcomes'
@@ -54,7 +60,10 @@
       button.setAttribute('aria-controls', 'estimator-parts');
       label.append(button);
       tr.append(label);
-      for (const value of [record.group, record.x.toFixed(2), record.y.toFixed(1), format(record.value)]) {
+      const cells = [record.group, record.x.toFixed(2), record.y.toFixed(1)];
+      if (isTrial) cells.push(format(record.weight));
+      cells.push(format(record.value));
+      for (const value of cells) {
         tr.insertCell().textContent = value;
       }
       return tr;
@@ -64,12 +73,11 @@
   }
 
   function render(model) {
-    const adjustment = by('estimator-adjustment').value;
     by('estimator-heading').textContent = titles[model];
     by('adjustment-control').hidden = model !== 'rct';
     by('external-outcomes-control').hidden = model === 'rct';
-    by('estimator-formula').innerHTML = EifEstimatorFormulas.render(model, adjustment);
-    updateNumbers(model, adjustment);
+    by('estimator-formula').innerHTML = EifEstimatorFormulas.render(model);
+    updateNumbers(model, trialAdjustment());
   }
 
   by('estimator-rows').addEventListener('click', event => {
@@ -81,7 +89,7 @@
   });
   by('external-outcomes').addEventListener('change', () => {
     const model = document.querySelector('input[name="model"]:checked').value;
-    updateNumbers(model, by('estimator-adjustment').value);
+    updateNumbers(model, trialAdjustment());
   });
-  window.EifEstimatorView = { render };
+  window.EifEstimatorView = { render, updateTrial: () => updateNumbers('rct', trialAdjustment()) };
 })();

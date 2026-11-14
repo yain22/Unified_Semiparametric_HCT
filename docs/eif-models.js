@@ -214,9 +214,9 @@
     markWideEquations();
   }
   by("estimators").addEventListener("change", switchView);
-  by("estimator-adjustment").addEventListener("change", () => {
+  by("adjustment-control").addEventListener("change", () => {
     window.EifNotationHelp.close();
-    EifEstimatorView.render("rct");
+    EifEstimatorView.updateTrial();
     markWideEquations();
   });
   by("trace-toggle").addEventListener("click", () => {
@@ -259,12 +259,17 @@
   });
   by("trace-toolbar").hidden = false;
   function openLinkedView() {
-    if (location.hash === "#estimators") {
+    if (location.hash === "#rct-estimators") {
+      document.querySelector('input[name="model"][value="rct"]').checked = true;
+      document.querySelector('input[name="equation-view"][value="estimator"]').checked = true;
+      refresh();
+    } else if (location.hash === "#estimators") {
       document.querySelector('input[name="equation-view"][value="estimator"]').checked = true;
     } else if (["#record-table", "#models"].includes(location.hash)) {
       document.querySelector('input[name="equation-view"][value="eif"]').checked = true;
     } else return;
     switchView();
+    if (location.hash === "#rct-estimators") by("estimator-heading").scrollIntoView();
   }
   refresh();
   openLinkedView();

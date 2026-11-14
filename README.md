@@ -14,7 +14,7 @@ If a trial replaces some of its concurrent controls with external patients, how 
 source("analysis/reproduce.R")
 reproduce("tables")
 planning <- read.csv("results/tables/table-3a.csv")
-subset(planning, scenario == "I" & method == "HCT Gaussian reference")$power
+subset(planning, scenario == "I" & method == "HCT")$power
 # Approximately 0.832
 ```
 
@@ -48,7 +48,7 @@ Here one quarter of the hybrid control mean comes from internal controls. If the
 [<img src="docs/assets/trial-models.png" width="640" alt="Model diagram: the common-mean hybrid model is nested within the unrestricted hybrid model; separate branches redefine the observation law for randomized or externally controlled trials.">](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html)
 
 - [**Compare the four influence functions.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html) Select a model, read its formula, and evaluate it for a treated patient or a control. In an externally controlled single-arm trial, the borrowing target is identified under overlap, but its gap from the trial effect is not identified without an additional assumption.
-- [**Explore the four fitted estimators.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html#estimators) Expand the estimating equation, select a participant to inspect the terms they contribute, and reproduce the calculation in [base R](docs/examples/fitted-estimators.R). For the randomized trial, switch between ANOVA and ANCOVA.
+- [**Explore the four fitted estimators.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html#estimators) Expand the estimating equation, select a participant to inspect the terms they contribute, and reproduce the calculation in [base R](docs/examples/fitted-estimators.R). For the [randomized trial](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html#rct-estimators), compare the ANOVA and ANCOVA formulas, then switch the regression to see how the participant weights change.
 - [**Inspect six hypothetical records from Figure S1.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html#record-table) Compare the groups observed under each design, or download the [CSV](docs/examples/observed-records.csv) and the [base R example](docs/examples/observed-records.R).
 - [**Check a pathwise derivative.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-lab.html) Perturb a conditional outcome law and compare the resulting target change with its EIF prediction.
 - [**Plan a trial.**](https://yain22.github.io/Unified_Semiparametric_HCT/design-lab.html) Change the number of internal controls or the discrepancy between sources to compare power and false positives.
