@@ -49,6 +49,7 @@ jobs:
           oracle <- marker("oracle", "protocol.json")$validation
           oracle500 <- marker("oracle", "enrollment-500", "protocol.json")
           extended <- marker("extended", "validation.json")
+          extended500 <- marker("extended", "enrollment-500", "validation.json")
           quadratic <- marker("quadratic", "quadratic_rct_protocol.json")
           stopifnot(isTRUE(baseline$success), identical(as.integer(baseline$repetitions_per_size), 4L),
                     identical(as.integer(baseline$failures), 0L),
@@ -59,6 +60,8 @@ jobs:
                     identical(as.integer(oracle500$validation$failures), 0L),
                     isTRUE(extended$success), identical(as.integer(extended$paired_datasets), 16L),
                     identical(as.integer(extended$failures), 0L),
+                    isTRUE(extended500$success), identical(as.integer(extended500$paired_datasets), 16L),
+                    identical(as.integer(extended500$failures), 0L),
                     identical(as.integer(quadratic$repetitions_per_size), 4L),
                     identical(as.integer(quadratic$samples_hashed), 8L),
                     identical(as.integer(quadratic$portable_hash_matches), 8L),
@@ -69,9 +72,9 @@ jobs:
           source("analysis/reproduce.R")
           reproduce("tables")
           reproduce("figures")
-          stopifnot(length(list.files("results/tables", pattern = "[.]csv$")) == 15L)
+          stopifnot(length(list.files("results/tables", pattern = "[.]csv$")) == 14L)
           figures <- read.csv("results/figures/figure-index.csv")
-          expected <- sprintf("Figure-%s%02d.pdf", rep(c("", "S"), c(11, 12)), c(1:11, 1:12))
+          expected <- sprintf("Figure-%s%02d.pdf", rep(c("", "S"), c(11, 11)), c(1:11, 1:11))
           stopifnot(!anyDuplicated(figures$pdf), setequal(basename(figures$pdf), expected),
                     all(file.exists(file.path("results/figures", expected))))
           source("docs/examples/model-reductions.R")

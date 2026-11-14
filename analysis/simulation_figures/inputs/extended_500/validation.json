@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "phase": "full",
+  "repetitions_per_scenario": 5000,
+  "scenarios": 4,
+  "paired_datasets": 20000,
+  "summary_rows": 800,
+  "failures": 0,
+  "warnings": 0,
+  "source_files_unchanged": true,
+  "source_hashes": {
+    "run_extended.R": "83a6c4cff040fa65cdaea288176e277edd450ca6f22b63eeb4c71d7d424f02c3",
+    "lib/cli_guard.R": "65e785ac6a51aa4aeeff82c9a02fe60b6933f369b45741b5cece72d7e41e362f",
+    "lib/ect_sim_source.R": "540c9f9ca24fb8cf64c0180c4c8597b7ed3ae636c9bf99681200c9956dd62789",
+    "lib/fitted_helpers.R": "e510c671347ecb90e7605879885ec34bb7fe67af8d57c2eac3dc1600f896559d",
+    "lib/hct_unrestricted_comparators.R": "54221db51c0bb72c12f3564653411d3dc02eb1887ee5eb56134f81972fadeccd",
+    "lib/scalar_gap_ect_helpers.R": "027d81f23ca80415dfad6551d6f80244da0be2166ded83116dc980398f72b6c4",
+    "lib/scalar_gap_estimated_share_helpers.R": "9355538258a051fba739471783337268648ff0e604f387080ac2b23cf2363093",
+    "lib/trial_baselines.R": "0f92ca927cff1179f37e3ab6cf02fb1902d7f6140c3c72ef12b7d8c00bd49ed6"
+  },
+  "checkpoint_key": "a57a93500478284fa3083d210b3b027ac9fa5824534a014786ef3ad6780b6438",
+  "calibration_max_error": 9.5645713571457236e-13,
+  "direct_estimate_max_error": 8.3266726846886741e-17,
+  "direct_SE_max_error": 1.3877787807814457e-17,
+  "direct_IF_max_error": 2.3092638912203256e-14,
+  "oracle_system_max_error": 4.4408920985006262e-15,
+  "oracle_path_estimate_max_error": 8.3266726846886741e-17,
+  "oracle_path_variance_max_error": 1.7347234759768071e-18,
+  "max_oracle_bias_z": 1.7546152743677594,
+  "ECT_total_probability_guards": 1,
+  "trial_reference_identical_between_modes": true,
+  "elapsed_seconds": 528.33776617050171
+}

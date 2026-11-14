@@ -11,7 +11,9 @@ opt <- function(n, d) {
 phase <- opt('phase', 'full')
 reps <- as.integer(opt('reps', '5000'))
 workers <- as.integer(opt('workers', '8'))
-stopifnot(phase %in% c('pilot', 'full'), reps >= 2L, workers >= 1L, workers <= 8L)
+enrollment <- as.integer(opt('enrollment', '250'))
+stopifnot(phase %in% c('pilot', 'full'), reps >= 2L, workers >= 1L, workers <= 8L,
+          enrollment %in% c(250L, 500L))
 out <- normalizePath(opt('output', file.path(paper, '../../results/extended')), winslash = '/', mustWork = FALSE)
 out <- simulation_guard_output(out, paper)
 dir.create(out, recursive = TRUE, showWarnings = FALSE)
@@ -32,13 +34,15 @@ adjustment <- as.formula(paste('~', paste(paste0('X', 1:10), collapse = '+')))
 designs <- data.table(
   id = 1:4,
   scenario = c('fewer_external', 'source_shift', 'stronger_heteroskedasticity', 'quadratic_discrepancy'),
-  nT = 167L, nC = 83L, nE = c(250L, 500L, 500L, 500L),
+  nT = if (enrollment == 250L) 167L else 333L,
+  nE = enrollment * c(1L, 2L, 2L, 2L),
   source_shift = c(0, .5, 0, 0), variance_slope = c(.4, .4, .7, .4), quadratic_discrepancy = c(0, 0, 0, .5)
 )
-designs[, nR := nT + nC]
+designs[, `:=`(nC = enrollment - nT, nR = enrollment)]
 grid <- (-12:12) / 40
 seed_base <- as.integer(opt('seed-base', if (phase == 'full') '74461005' else '73461005'))
-stopifnot(is.finite(seed_base), seed_base > 0, seed_base + 400000 + reps < .Machine$integer.max)
+seed_offset <- if (enrollment == 500L) 500000L else 0L
+stopifnot(is.finite(seed_base), seed_base > 0, as.double(seed_base) + seed_offset + 400000 + reps < .Machine$integer.max)
 gh <- function(n) {
   J <- matrix(0, n, n)
   J[cbind(1:(n - 1), 2:n)] <- sqrt(1:(n - 1))
@@ -74,8 +78,10 @@ calibration <- rbindlist(lapply(seq_len(nrow(designs)), function(i) {
 fwrite(calibration, file.path(out, 'calibration.csv'))
 protocol <- list(
   stage = phase, repetitions_per_scenario = reps, scenarios = as.data.frame(designs), grid = grid,
-  seed_base = seed_base, seed = 'seed_base + 100000 * scenario_id + replicate',
-  original_baseline = list(nT = 167, nC = 83, nE = 500, source_shift = 0, variance_slope = .4, quadratic_discrepancy = 0),
+  seed_base = seed_base, enrollment_seed_offset = seed_offset,
+  seed = 'seed_base + enrollment_seed_offset + 100000 * scenario_id + replicate',
+  original_baseline = list(nT = designs$nT[1], nC = designs$nC[1], nE = 2L * enrollment,
+                           source_shift = 0, variance_slope = .4, quadratic_discrepancy = 0),
   factors = 'Exactly one factor differs from the original baseline in each scenario; settings fixed before fits.',
   covariates = 'Trial X~N10(0,I); external X~N10(mu*e1,I). Independent fixed-count groups.',
   means = 'mT=mC=f=.5+.6/sqrt(5)*sum(X1:5)+.25/sqrt(5)*sum(X1:5^2); mE=f-a-h(X1); h=x+q*(x^2-1). theta=0.',
@@ -98,7 +104,7 @@ protocol <- list(
 jsonlite::write_json(protocol, file.path(out, 'protocol.json'), auto_unbox = TRUE, pretty = TRUE, digits = 16)
 
 generate <- function(d, b) {
-  seed <- seed_base + 100000L * d$id + b
+  seed <- seed_base + seed_offset + 100000L * d$id + b
   set.seed(seed)
   xe <- matrix(rnorm(d$nE * 10L), ncol = 10L)
   xe[, 1] <- xe[, 1] + d$source_shift
@@ -252,7 +258,7 @@ one_job <- function(job) {
   ans <- tryCatch(one_dataset(job), error = function(e) list(success = FALSE, error = conditionMessage(e)))
   ans$id <- job$id
   ans$replicate <- job$replicate
-  ans$seed <- seed_base + 100000L * job$id + job$replicate
+  ans$seed <- seed_base + seed_offset + 100000L * job$id + job$replicate
   saveRDS(ans, paste0(job$file, '.partial'), compress = FALSE)
   stopifnot(file.rename(paste0(job$file, '.partial'), job$file))
   job$file
@@ -270,7 +276,7 @@ start <- Sys.time()
 cl <- parallel::makePSOCKcluster(workers, outfile = file.path(out, 'workers.log'))
 parallel::clusterExport(cl, c(
   'paper', 'helper', 'ect_helper', 'trial_helper', 'sim_source', 'thread_vars', 'designs', 'calibration',
-  'adjustment', 'seed_base', 'discrepancy_shape', 'true_odds', 'true_share', 'generate', 'shift', 'gcov', 'oracle_U_raw', 'oracle_paths',
+  'adjustment', 'seed_base', 'seed_offset', 'discrepancy_shape', 'true_odds', 'true_share', 'generate', 'shift', 'gcov', 'oracle_U_raw', 'oracle_paths',
   'coefficient_row', 'one_dataset', 'one_job'
 ), envir = environment())
 invisible(parallel::clusterEvalQ(cl, {

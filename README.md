@@ -24,17 +24,17 @@ subset(planning, scenario == "I" & method == "HCT")$power
 # Approximately 0.832
 ```
 
-This recreates 15 CSVs using base R and bundled inputs. Table 3 is calculated from enrollment counts, variances and the planned treatment effect. Tables based on simulations or clinical analyses use the saved summaries. No clinical records or simulation refits are needed for this command.
+This recreates 14 CSVs using base R and bundled inputs. Table 3 is calculated from enrollment counts, variances and the planned treatment effect. Tables based on simulations or clinical analyses use the saved summaries. No clinical records or simulation refits are needed for this command.
 
 | To reproduce | In the same R session | Where to look |
 |:--|:--|:--|
-| Tables 2–3 and S4–S13 | `reproduce("tables")` | `results/tables/` |
-| Figures 1–11 and S1–S12 | `reproduce("figures")` | `results/figures/` |
+| Tables 2–3 and S4–S12 | `reproduce("tables")` | `results/tables/` |
+| Figures 1–11 and S1–S11 | `reproduce("figures")` | `results/figures/` |
 | A short estimator check on synthetic data | `reproduce("validate")` | `results/validate/` |
 
 Figures require R with Cairo graphics and two packages: `install.packages(c("jsonlite", "digest"))`. The estimator check and simulation refits also need `data.table`.
 
-[Find an individual figure or table](analysis/paper-map.csv). Table 1 displays the EIF; Tables S1–S3 define notation and data structures. Tables S10–S13 describe the CGM analysis. Table S13 reports the five treatment contrasts, the matched trial score, and the estimated gap in Section 7.2.
+[Find an individual figure or table](analysis/paper-map.csv). Table 1 displays the EIF; Tables S1–S3 define notation and data structures. Tables S9–S12 describe the CGM analysis. Table S12 reports the five treatment contrasts, the matched trial score, and the estimated gap in Section 7.2.
 
 ## Use the estimator
 
@@ -66,4 +66,4 @@ Here one quarter of the hybrid control mean comes from internal controls. If the
 
 Simulation fitting uses three R packages: `install.packages(c("data.table", "digest", "jsonlite"))`. Run `reproduce("smoke")` for four repetitions to check your installation. A successful smoke run exits without error and writes four `run-completed.txt` files under `results/smoke/`. For the manuscript's 5,000 repetitions at each specified sample size and scenario, run `reproduce("refit", workers = 4)`. The latter fits the baseline, paired oracle, extended scenarios and quadratic comparator, builds calibration and one-sided summaries, and writes tables and figures from the new runs. It can take substantial time. [Simulation settings and seeds](analysis/simulations/README.md) · [Numerical checks](REPRODUCIBILITY.md).
 
-The clinical table, forest plot, and Figures S10–S12 use aggregate data. The three supplementary figures show cohort selection, HbA1c outcomes, and baseline covariate balance. To refit the estimators or repeat the participant bootstrap, obtain the trial and registry archives separately under the distributor's terms. [Clinical data and R instructions](analysis/clinical/README.md).
+The clinical table, forest plot, and Figures S9–S11 use aggregate data. The three supplementary figures show cohort selection, HbA1c outcomes, and baseline covariate balance. To refit the estimators or repeat the participant bootstrap, obtain the trial and registry archives separately under the distributor's terms. [Clinical data and R instructions](analysis/clinical/README.md).

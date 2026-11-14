@@ -30,15 +30,15 @@ Rscript analysis/clinical/render_clinical.R --out results/clinical-figure
 
 The first command checks the aggregate point estimates, interval arithmetic, group counts, and hybrid-minus-trial identity. The second draws the clinical forest plot in PDF and PNG and writes its point estimates and interval limits to `figure_values.json`. Both commands use R and jsonlite. The `inputs/` directory contains group-level results and published comparison-trial estimates. Participant-level records, individual identifiers, and clinical bootstrap draws are excluded.
 
-To draw Figures S10–S12 from the five supplied CSVs in `inputs/descriptive/`, run:
+To draw Figures S9–S11 from the five supplied CSVs in `inputs/descriptive/`, run:
 
 ```sh
 Rscript analysis/clinical/render_descriptive.R --out results/clinical-figures
 ```
 
-Figure S10 counts people by source and enrollment or eligibility stage. Figure S11 uses available HbA1c measurements from each visit within the baseline and six-month complete-record cohort. The visit intervals are pointwise t intervals for the group mean. Change quantiles summarize each participant's six-month measurement minus baseline. The registry has no corresponding three-month visit.
+Figure S9 counts people by source and enrollment or eligibility stage. Figure S10 uses available HbA1c measurements from each visit within the baseline and six-month complete-record cohort. The visit intervals are pointwise t intervals for the group mean. Change quantiles summarize each participant's six-month measurement minus baseline. The registry has no corresponding three-month visit.
 
-Figure S12 compares the 440 registry-eligible trial participants with the 273 registry controls. A main-effects logistic model for trial membership uses baseline HbA1c, age, diabetes duration, sex, and insulin pump use. The weighted external mean uses fitted source odds normalized to sum to one. Each absolute standardized difference uses the same unweighted pooled scale before and after weighting, the square root of the mean of the two sample variances. The score summaries are empirical quantiles within each of the three groups.
+Figure S11 compares the 440 registry-eligible trial participants with the 273 registry controls. A main-effects logistic model for trial membership uses baseline HbA1c, age, diabetes duration, sex, and insulin pump use. The weighted external mean uses fitted source odds normalized to sum to one. Each absolute standardized difference uses the same unweighted pooled scale before and after weighting, the square root of the mean of the two sample variances. The score summaries are empirical quantiles within each of the three groups.
 
 To regenerate these five aggregate CSVs using authorized local data, supply either the six-month cohort cache or the distributor's two archives. Choose an output directory for the summaries.
 

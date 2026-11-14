@@ -34,6 +34,11 @@ reproduce <- function(what = c("tables", "figures", "validate", "smoke", "refit"
       stop("Could not write numbered figure PDFs.")
     write.csv(index[c("exhibit", "pdf", "figure_output", "script_or_source")],
               file.path(out, "figure-index.csv"), row.names = FALSE)
+    # Discard the two superseded generated PDFs when refreshing an earlier run.
+    retired <- file.path(out, c("Figure-S12.pdf",
+                                "simulations/figures/oracle_estimated_nuisance_comparison.pdf"))
+    if (!all(file.remove(retired[file.exists(retired)])))
+      stop("Could not remove the superseded figure outputs.")
     message("Wrote ", nrow(index), " numbered PDFs and figure-index.csv in ", out, ".")
     return(invisible(out))
   }

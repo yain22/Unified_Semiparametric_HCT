@@ -148,10 +148,12 @@ paper_main <- function() {
     reps <- integer_option("reps", 5000L, 2L)
     workers <- integer_option("workers", 1L, 1L, 8L)
     seed <- integer_option("seed-base", if (task == "baseline") 52461004L else 74461005L)
-    run(
-      paste0("simulations/run_", task, ".R"),
-      c(paste0("--reps=", reps), paste0("--workers=", workers), paste0("--seed-base=", seed), paste0("--output-dir=", output))
-    )
+    shared <- c(paste0("--reps=", reps), paste0("--workers=", workers), paste0("--seed-base=", seed))
+    script <- paste0("simulations/run_", task, ".R")
+    run(script, c(shared, paste0("--output-dir=", output)))
+    if (task == "extended") {
+      run(script, c(shared, "--enrollment=500", paste0("--output-dir=", file.path(output, "enrollment-500"))))
+    }
   } else if (task == "oracle") {
     baseline <- get("baseline-dir")
     shared <- c(

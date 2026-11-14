@@ -80,14 +80,14 @@ reproduce("tables")
 |:--|:--|:--|
 | Main Table 2 | Oracle and fitted coverage, bias, mean squared error, and interval width at both trial sizes | `table-2.csv` |
 | Main Table 3 | Gaussian planning calculations for three schizophrenia trial scenarios | `table-3a.csv`, `table-3b.csv` |
-| Supplementary Tables S4–S12 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | Files beginning `table-s4` through `table-s12` |
-| Supplementary Table S13 | Six-month HbA1c estimates and bootstrap intervals from the saved clinical summaries | `table-s13.csv` |
+| Supplementary Tables S4–S11 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | Files beginning `table-s4` through `table-s11` |
+| Supplementary Table S12 | Six-month HbA1c estimates and bootstrap intervals from the saved clinical summaries | `table-s12.csv` |
 
 Main Table 1 gives the terms of the hybrid trial’s efficient influence function. Tables S1–S3 define notation, observed groups, and nuisance quantities. The exhibit map (`analysis/paper-map.csv`) identifies the source for each figure and table. The simulation and clinical sections below explain how to refit the analyses that produced the saved summaries.
 
 # Reproduce the figures
 
-With Cairo graphics available in R (`capabilities("cairo")`), install the two packages with `install.packages(c("jsonlite", "digest"))` and run `reproduce("figures")` in the same session. This writes `Figure-01.pdf` through `Figure-11.pdf`, `Figure-S01.pdf` through `Figure-S12.pdf`, and `figure-index.csv` under `results/figures/`. Figures 1, 5, S1, and S4 use the supplied vector artwork. Sampling plots use supplied synthetic draws, simulation plots use saved summaries, and the CGM figures use aggregate data. Figures S10–S12 show cohort selection, HbA1c outcomes, and baseline covariate balance. The [exhibit index](https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/analysis/paper-map.csv) lists the source for each display. Neither this command nor the table command refits a simulation or needs participant records.
+With Cairo graphics available in R (`capabilities("cairo")`), install the two packages with `install.packages(c("jsonlite", "digest"))` and run `reproduce("figures")` in the same session. This writes `Figure-01.pdf` through `Figure-11.pdf`, `Figure-S01.pdf` through `Figure-S11.pdf`, and `figure-index.csv` under `results/figures/`. Figures 1, 5, S1, and S4 use the supplied vector artwork. Sampling plots use supplied synthetic draws, simulation plots use saved summaries, and the CGM figures use aggregate data. Figures S9–S11 show cohort selection, HbA1c outcomes, and baseline covariate balance. The [exhibit index](https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/analysis/paper-map.csv) lists the source for each display. Neither this command nor the table command refits a simulation or needs participant records.
 
 # A design decision before enrollment
 

@@ -47,7 +47,7 @@ stopifnot(length(reps) == 1L, all(is.finite(reps)), reps > 0)
 
 # The paper displays pointwise agreement separately from a zero average gap.
 baseline <- expand.grid(gap = c(-.3, 0, .3), n = c(250, 500))
-extra <- c("fewer_external", "source_shift", "stronger_heteroskedasticity", "quadratic_discrepancy")
+extra <- c("stronger_heteroskedasticity", "fewer_external", "source_shift", "quadratic_discrepancy")
 selected <- rbind(
   data.frame(setting = "transportability", method = rep(c("U", "AIPW (ECT)"), each = 2),
              n = rep(c(250, 500), 2), gap = 0),
@@ -62,8 +62,8 @@ caption <- paste0("\\caption{Calibration for the statistical target, based on ",
                   " repetitions per row. Bias is measured against the statistical target of each procedure, ",
                   "SD is the empirical standard deviation, and SE is the mean reported standard error. ",
                   "The pointwise transportability check ($\\delta\\equiv0$) is separate from heterogeneous ",
-                  "discrepancies with zero aggregate causal-gap. Additional scenarios are shown at zero ",
-                  "aggregate gap.}\\label{tab:own-tce-calibration}")
+                  "discrepancies with zero aggregate causal-gap. The four additional scenarios are shown at zero ",
+                  "aggregate gap for $n_{\\mathrm{RCT}}=250$.}\\label{tab:own-tce-calibration}")
 lines <- c("\\begin{table}[!htbp]", "\\centering", caption, "\\small",
            "\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}>{\\raggedright\\arraybackslash}p{3.5cm}lrrrrr@{}}",
            "\\toprule", "Setting & Procedure & $n_{\\mathrm{RCT}}$ & $\\xi_{\\lambda,\\delta}$ & Bias & SD / SE & Coverage\\\\",
