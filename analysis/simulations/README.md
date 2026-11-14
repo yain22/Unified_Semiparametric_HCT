@@ -5,11 +5,11 @@ Run these commands from this directory. R packages: `data.table`, `digest`, and 
 ```sh
 Rscript validate.R
 Rscript run_baseline.R --reps=5000 --workers=4
-Rscript run_oracle.R --reps=5000
+Rscript ../paper_analysis.R oracle --reps 5000 --baseline-dir ../../results/baseline --output-dir ../../results/oracle
 Rscript run_extended.R --reps=5000 --workers=4
 ```
 
-Results go to `../../results/validation`, `baseline`, `oracle`, and `extended`. Use `--output-dir=PATH` to choose another location. For a short check, use `--reps=4` for all three simulation runs. Run the baseline before the oracle, using the same repetitions and seed; `--baseline=PATH` selects another completed baseline directory.
+Results go under `../../results/`. Run the baseline before the oracle with the same repetition count and seed. The oracle command checks each regenerated sample against the saved baseline hashes at both enrollment levels. The 250-participant results appear in `oracle/` and the 500-participant results in `oracle/enrollment-500/`. To repeat the score calculation for one size, use `run_oracle.R` with `--enrollment=250` or `--enrollment=500`, `--baseline=PATH`, and a separate `--output-dir=PATH`.
 
 The baseline uses trial counts `(167,83)` and `(333,167)`, with 500 and 1,000 external controls. Outcomes have quadratic covariate means and heterogeneous control variances. HCT and ECT discrepancies are calibrated separately to the same causal gap. A separate baseline output evaluates identical conditional control means. Four extended scenarios vary external enrollment, covariate distribution, variance heterogeneity, or discrepancy shape.
 

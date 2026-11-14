@@ -47,12 +47,16 @@ jobs:
           marker <- function(...) jsonlite::read_json(file.path("results", "smoke", ...), simplifyVector = TRUE)
           baseline <- marker("baseline", "validation.json")
           oracle <- marker("oracle", "protocol.json")$validation
+          oracle500 <- marker("oracle", "enrollment-500", "protocol.json")
           extended <- marker("extended", "validation.json")
           quadratic <- marker("quadratic", "quadratic_rct_protocol.json")
           stopifnot(isTRUE(baseline$success), identical(as.integer(baseline$repetitions_per_size), 4L),
                     identical(as.integer(baseline$failures), 0L),
                     identical(as.integer(oracle$paired_datasets), 4L),
                     identical(as.integer(oracle$failures), 0L),
+                    identical(as.integer(oracle500$counts), c(333L, 167L, 1000L)),
+                    identical(as.integer(oracle500$validation$paired_datasets), 4L),
+                    identical(as.integer(oracle500$validation$failures), 0L),
                     isTRUE(extended$success), identical(as.integer(extended$paired_datasets), 16L),
                     identical(as.integer(extended$failures), 0L),
                     identical(as.integer(quadratic$repetitions_per_size), 4L),

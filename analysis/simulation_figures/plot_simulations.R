@@ -33,7 +33,8 @@ gap_grid <- (-12:12) / 40
 # plotted across the common comparison axis although their own gap is zero.
 validate_curves <- function(d, row_field, row_values) {
   columns <- c("method", "xi", "achieved_gap", "n_reps", "n_failed", row_field, metrics)
-  stopifnot(all(columns %in% names(d)), nrow(d) == 200L, all(d$n_reps == 5000L),
+  stopifnot(all(columns %in% names(d)), nrow(d) == length(row_values) * length(methods) * length(gap_grid),
+            all(d$n_reps == 5000L),
             all(d$n_failed == 0L), all(is.finite(as.matrix(d[metrics]))))
   for (row in row_values) {
     for (method in methods) {
@@ -59,11 +60,15 @@ validate_curves <- function(d, row_field, row_values) {
 
 draw_simulation <- function(d, row_field, row_values, file) {
   width <- 7.25
+  rows <- length(row_values)
+  cols <- length(metrics)
+  enrollment_grid <- row_field == "enrollment_mode"
   # All six grids use the same physical panel size.
   left <- c(.30, .36, .29, .27)
   right <- .07
-  bottom <- c(.08, .23)
-  top <- .24
+  bottom <- c(rep(.08, rows - 1L), .23)
+  top <- rep(.24, rows)
+  if (enrollment_grid) top[1L] <- .48
   row_key_height <- if (row_field == "mode") .24 else 0
   key_height <- .51 + row_key_height
   side <- (width - sum(left + right)) / length(metrics)
@@ -78,12 +83,13 @@ draw_simulation <- function(d, row_field, row_values, file) {
   curve_width <- 1.25
   grid_color <- "#E3E7EA"
   axis_color <- "#647078"
-  layout(rbind(1:4, 5:8, rep(9, 4)), widths = left + side + right,
+  cells <- matrix(seq_len(rows * cols), nrow = rows, byrow = TRUE)
+  layout(rbind(cells, rep(rows * cols + 1L, cols)), widths = left + side + right,
          heights = c(row_heights, key_height))
   par(omi = c(0, 0, 0, 0), mgp = c(1.65, .36, 0), tcl = -.18,
       xaxs = "i", yaxs = "i", ps = 10, cex = 1)
 
-  # Each column shares its vertical scale over the two rows.
+  # Each metric has one vertical scale across all rows of its figure.
   for (i in seq_along(row_values)) {
     row <- d[d[[row_field]] == row_values[i], ]
     for (j in seq_along(metrics)) {
@@ -99,7 +105,7 @@ draw_simulation <- function(d, row_field, row_values, file) {
                       bias_theta = c(-.3, -.15, 0, .15, .3), pretty(limit, n = 4))
       ticks <- ticks[ticks >= limit[1] & ticks <= limit[2]]
       xticks <- seq(-.3, .3, .15)
-      par(mai = c(bottom[i], left[j], top, right), pty = "s")
+      par(mai = c(bottom[i], left[j], top[i], right), pty = "s")
       plot.new()
       plot.window(c(-.31, .31), limit)
       abline(v = xticks, h = ticks, col = grid_color, lwd = .6)
@@ -119,14 +125,24 @@ draw_simulation <- function(d, row_field, row_values, file) {
         points(series$xi[marked], series[[metric]][marked], pch = shapes[k],
                cex = .60, lwd = .75, col = palette[k])
       }
-      panel <- paste0("(", letters[(i - 1L) * 4L + j], ")")
-      axis(1, at = xticks, labels = if (i == 2L) c("-0.3", "", "0", "", "0.3") else FALSE,
+      axis(1, at = xticks, labels = if (i == rows) c("-0.3", "", "0", "", "0.3") else FALSE,
            cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
       axis(2, at = ticks, labels = format(ticks, trim = TRUE, drop0trailing = TRUE),
            las = 1, cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
       box(lwd = .7, col = axis_color)
       title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
-      mtext(paste(panel, title), side = 3, line = .33, adj = 0, cex = .94, font = 2)
+      if (enrollment_grid) {
+        if (i == 1L) mtext(title, side = 3, line = 1.55, adj = 0, cex = .94, font = 2)
+        if (j == 1L) {
+          panel_range <- sprintf("(%s-%s)", letters[(i - 1L) * cols + 1L], letters[i * cols])
+          row_title <- bquote(bold(.(panel_range)) ~~ italic(n)[plain(RCT)] == .(unique(row$N_trial)) * "," ~
+                              .(paste(unique(row$mode), "functions")))
+          mtext(row_title, side = 3, line = .3, adj = 0, cex = .90, xpd = NA)
+        }
+      } else {
+        panel <- paste0("(", letters[(i - 1L) * cols + j], ")")
+        mtext(paste(panel, title), side = 3, line = .33, adj = 0, cex = .94, font = 2)
+      }
     }
   }
   par(mar = c(0, 0, 0, 0), pty = "m")
@@ -154,12 +170,31 @@ render_simulations <- function(inputs, figures, audit, check_archive = FALSE) {
   baseline <- read_summary("baseline")
   baseline <- baseline[baseline$method %in% methods, ]
   oracle <- read_summary("oracle")
+  oracle_large <- read_summary("oracle_500")
   extended <- read_summary("extended")
   read_json <- function(name, file) jsonlite::fromJSON(file.path(inputs[[name]], file))
-  oracle_run <- read_json("oracle", "protocol.json")$validation
+  verify_paired <- function(pair, name, counts) {
+    protocol <- read_json(name, "protocol.json")
+    stopifnot(all(protocol$counts == counts), protocol$repetitions == 5000L,
+              protocol$validation$paired_datasets == 5000L,
+              protocol$validation$failures == 0L, protocol$validation$max_direct_error < 1e-10,
+              all(pair$nT == counts[1]), all(pair$nC == counts[2]), all(pair$nE == counts[3]),
+              all(pair$N_trial == sum(counts[1:2])))
+    validate_curves(pair, "mode", modes)
+    # Both versions of the trial-only estimators must use the same records,
+    # and the fitted row must be the baseline run at this enrollment.
+    rows <- baseline[baseline$N_trial == sum(counts[1:2]), ]
+    fitted <- pair[pair$mode == modes[2L], ]
+    cols <- c("method", "xi", "achieved_gap", metrics)
+    ordered <- function(x) x[order(x$method, x$xi), cols]
+    a <- ordered(fitted)
+    b <- ordered(rows)
+    stopifnot(identical(a$method, b$method), all(as.matrix(a[-1L]) == as.matrix(b[-1L])))
+  }
+  verify_paired(oracle, "oracle", c(167L, 83L, 500L))
+  verify_paired(oracle_large, "oracle_500", c(333L, 167L, 1000L))
   extended_run <- read_json("extended", "validation.json")
-  stopifnot(oracle_run$paired_datasets == 5000L, oracle_run$max_direct_error < 1e-10,
-            all(oracle$N_trial == 250L), extended_run$success, extended_run$failures == 0L,
+  stopifnot(extended_run$success, extended_run$failures == 0L,
             extended_run$paired_datasets == 20000L, setequal(extended$scenario, scenarios))
   stopifnot(all(is.finite(as.matrix(extended[c("coverage_TCE", "bias_TCE", "estimated_variance")]))))
   calibration <- read.csv(file.path(inputs$extended, "calibration.csv"))
@@ -192,20 +227,25 @@ render_simulations <- function(inputs, figures, audit, check_archive = FALSE) {
       }
     }
   }
-  render(baseline, "N_trial", c(250, 500), "heterogeneous_gap_design_comparison_lines")
+  columns <- c("N_trial", "mode", "method", "xi", "achieved_gap", "n_reps", "n_failed", metrics)
+  paired <- rbind(oracle[columns], oracle_large[columns])
+  paired$enrollment_mode <- paste(paired$N_trial, paired$mode, sep = " / ")
+  render(paired, "enrollment_mode", paste(rep(c(250, 500), each = 2), modes, sep = " / "),
+         "heterogeneous_gap_design_comparison_lines")
   render(oracle, "mode", modes, "oracle_estimated_nuisance_comparison")
   for (scenario in scenarios) {
     render(extended[extended$scenario == scenario, ], "mode", modes, paste0("supp_scenario_", scenario))
   }
   curves <- do.call(rbind, records)
-  stopifnot(length(records) == 192L, nrow(curves) == 4800L)
+  stopifnot(length(records) == 224L, nrow(curves) == 5600L)
   write.csv(curves, file.path(audit, "curve_coordinates.csv"), row.names = FALSE)
-  report <- list(success = TRUE, figure_count = 6L, panel_count = 48L, curve_count = length(records),
+  report <- list(success = TRUE, figure_count = 6L, panel_count = 56L, curve_count = length(records),
                  points_per_curve = length(gap_grid), max_calibration_error = max(calibration_error))
   if (check_archive) {
     # File-byte checks avoid differences between CSV parsers at the last bit.
     expected <- c(baseline = "eb8d8026aa210c5b060e4e5d6d285520a73b4c739c2353e79a1a8849b614b11f",
                   oracle = "2c57fced133a4ccb8918e5cf0a36615bd5297354b43d5ec90587c1d2f535fb7b",
+                  oracle_500 = "b40905c06633978223f3f1215b3f72955af34a8a47d5be0df33abe9bbf39010d",
                   extended = "7f6e5c3fe679c94218556fac2ff15074fd70f8c6588da5c506719102765b9d67")
     observed <- vapply(inputs[names(expected)], function(p)
       digest::digest(file.path(p, "summary.csv"), algo = "sha256", file = TRUE), character(1))
@@ -213,12 +253,13 @@ render_simulations <- function(inputs, figures, audit, check_archive = FALSE) {
     report$input_sha256 <- as.list(observed)
   }
   jsonlite::write_json(report, file.path(audit, "plot_manifest.json"), auto_unbox = TRUE, pretty = TRUE)
-  message("Wrote six simulation figures (192 curves, 4,800 coordinates).")
+  message("Wrote six simulation figures (224 curves, 5,600 coordinates).")
   invisible(report)
 }
 
 archived_inputs <- function(here) {
   list(baseline = file.path(here, "inputs", "heterogeneous"), oracle = file.path(here, "inputs", "oracle"),
+       oracle_500 = file.path(here, "inputs", "oracle_500"),
        extended = file.path(here, "inputs", "extended"))
 }
 

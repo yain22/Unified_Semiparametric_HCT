@@ -42,20 +42,35 @@ labels <- c("AIPW-U (HCT)", "AIPW (ECT)", "ANOVA (RCT)", "Linear ANCOVA (RCT)",
             "Quadratic ANCOVA (RCT)")
 scenarios <- c("fewer_external", "source_shift", "stronger_heteroskedasticity", "quadratic_discrepancy")
 
-# Table 2. Trial-only estimates have zero causal gap throughout the sensitivity grid.
+# Table 2. Borrowing analyses vary by nuisance mode; the randomized-arm
+# regressions use the same trial observations throughout the gap grid.
 baseline <- sim_table("baseline", "summary.csv", "comparators", "inputs", "baseline-summary.csv")
-t1 <- subset(baseline, setting == "additive_discrepancy" &
-               ((method %in% procedure[1:2] & xi_index %in% c(-6, 0, 6)) |
-                (method %in% procedure[3:4] & xi_index == 0)),
-             select = c(N_trial, method, achieved_gap, coverage_theta, bias_theta, mse_theta, width))
-names(t1) <- c("n_RCT", "analysis", "gap", "coverage", "bias", "mse", "width")
+oracle250 <- sim_table("oracle", "summary.csv", "simulation_figures", "inputs", "oracle", "summary.csv")
+oracle500 <- sim_table("oracle/enrollment-500", "summary.csv", "simulation_figures", "inputs",
+                       "oracle_500", "summary.csv")
+metrics <- c("N_trial", "method", "achieved_gap", "coverage_theta", "bias_theta", "mse_theta", "width")
+borrowing <- function(data, mode) {
+  selected <- data[data$method %in% procedure[1:2] & data$xi_index %in% c(-6, 0, 6), metrics]
+  transform(selected, nuisance = mode)
+}
+oracle <- rbind(subset(oracle250, mode == "Oracle nuisance" & N_trial == 250),
+                subset(oracle500, mode == "Oracle nuisance" & N_trial == 500))
+baseline <- subset(baseline, setting == "additive_discrepancy")
+t1 <- rbind(borrowing(oracle, "Oracle"), borrowing(baseline, "Estimated"))
+trial <- baseline[baseline$method %in% procedure[3:4] & baseline$xi_index == 0, metrics]
 quad <- sim_table("quadratic", "quadratic_rct_summary.csv", "comparators", "quadratic_rct_summary.csv")
-t1 <- rbind(t1, data.frame(n_RCT = quad$N_trial, analysis = quad$method, gap = 0,
-                           coverage = quad$coverage, bias = quad$bias, mse = quad$mse,
-                           width = quad$width))
-t1 <- t1[order(t1$n_RCT, match(t1$analysis, procedure), t1$gap), ]
+trial <- rbind(trial, data.frame(N_trial = quad$N_trial, method = quad$method, achieved_gap = 0,
+                                 coverage_theta = quad$coverage, bias_theta = quad$bias,
+                                 mse_theta = quad$mse, width = quad$width))
+t1 <- rbind(t1, transform(trial, nuisance = "Trial-only"))
+names(t1) <- c("n_RCT", "analysis", "gap", "coverage", "bias", "mse", "width", "nuisance")
+stopifnot(!anyDuplicated(t1[c("n_RCT", "analysis", "gap", "nuisance")]),
+          all(is.finite(as.matrix(t1[c("gap", "coverage", "bias", "mse", "width")]))))
+t1 <- t1[order(t1$n_RCT, match(t1$analysis, procedure), t1$gap,
+               match(t1$nuisance, c("Oracle", "Estimated", "Trial-only"))),
+         c("n_RCT", "analysis", "gap", "nuisance", "coverage", "bias", "mse", "width")]
 t1$analysis <- labels[match(t1$analysis, procedure)]
-save_table(t1, "table-2", 18)
+save_table(t1, "table-2", 30)
 
 # Tables 3 and S9. Reuse the Gaussian planning calculation at its prescribed
 # group sizes, prognostic R-squared, treatment effect, and significance level.

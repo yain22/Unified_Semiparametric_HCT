@@ -10,7 +10,7 @@ paper_help <- function() {
     "  validate      Short independent estimator and synthetic-data checks",
     "  planning      Exact Gaussian planning calculations (base R)",
     "  baseline      Fitted baseline simulation at both sample sizes",
-    "  oracle        Oracle comparison using a completed baseline run",
+    "  oracle        Paired oracle comparison at both baseline enrollment levels",
     "  extended      Four additional simulation scenarios",
     "  quadratic     Paired quadratic RCT ANCOVA comparator",
     "  cgm           CGM analysis with explicitly supplied local data",
@@ -154,11 +154,14 @@ paper_main <- function() {
     )
   } else if (task == "oracle") {
     baseline <- get("baseline-dir")
-    run("simulations/run_oracle.R", c(
+    shared <- c(
       paste0("--baseline=", normalizePath(baseline, winslash = "/")),
       paste0("--reps=", integer_option("reps", 5000L, 2L)),
-      paste0("--seed-base=", integer_option("seed-base", 52461004L)), paste0("--output-dir=", output)
-    ))
+      paste0("--seed-base=", integer_option("seed-base", 52461004L))
+    )
+    run("simulations/run_oracle.R", c(shared, "--enrollment=250", paste0("--output-dir=", output)))
+    run("simulations/run_oracle.R", c(shared, "--enrollment=500",
+                                      paste0("--output-dir=", file.path(output, "enrollment-500"))))
   } else if (task == "quadratic") {
     baseline <- get("baseline-dir")
     run("comparators/quadratic_rct_comparator.R", c("--repetitions", as.character(integer_option("reps", 5000L, 1L, 5000L)),

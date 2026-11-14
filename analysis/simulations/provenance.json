@@ -1,5 +1,5 @@
 {
-  "scope": "Historical paths are relative to the archived simulation sources. Historical, audited-copy, and public-copy hashes identify different files; public hashes refer to the distributed files. Statistical function bodies are preserved. Only unused generator loader fields, comments, and package references were changed.",
+  "scope": "Historical paths and hashes identify the archived simulation sources and their audited and public copies at the time of migration. The current oracle driver supports 250 and 500 randomized participants and checks the draws against the baseline for each enrollment. Current file hashes are in analysis/code-manifest.json.",
   "removed_unused_file": "lib/scalar_gap_primary_helpers.R",
   "files": [
     {

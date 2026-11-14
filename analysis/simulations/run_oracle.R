@@ -18,11 +18,13 @@ dir.create(out, recursive = TRUE, showWarnings = FALSE)
 library(data.table)
 setDTthreads(1L)
 B <- as.integer(opt('reps', '5000'))
-stopifnot(B >= 2L, is.finite(seed_base), seed_base > 0, seed_base + B < .Machine$integer.max)
-nT <- 167L
-nC <- 83L
-nE <- 500L
-nR <- nT + nC
+nR <- as.integer(opt('enrollment', '250'))
+stopifnot(B >= 2L, nR %in% c(250L, 500L), is.finite(seed_base), seed_base > 0,
+          as.double(seed_base) + 100000 + B < .Machine$integer.max)
+seed_offset <- if (nR == 500L) 100000L else 0L
+nT <- if (nR == 250L) 167L else 333L
+nC <- nR - nT
+nE <- 2L * nR
 e <- nT / nR
 aa <- 1 - e
 w <- nR / nE
@@ -52,7 +54,7 @@ cal_saved <- fread(file.path(source_dir, 'calibration.csv'))[N_trial == nR]
 stopifnot(abs(K['K0'] - cal_saved$K0) < 1e-12, abs(K['K1'] - cal_saved$K1) < 1e-12)
 
 generate <- function(b) {
-  seed <- seed_base + b
+  seed <- seed_base + seed_offset + b
   set.seed(seed)
   xe <- matrix(rnorm(nE * 10L), ncol = 10L)
   epsE <- rnorm(nE)
@@ -220,7 +222,8 @@ fwrite(analytical, file.path(out, 'analytic_checks.csv'))
 fwrite(ch, file.path(out, 'direct_score_checks.csv'))
 fwrite(mo, file.path(out, 'generator_pairing_checks.csv'))
 protocol <- list(
-  counts = c(treated = nT, internal = nC, external = nE), repetitions = B, seed = paste0(seed_base, ' + replicate'),
+  counts = c(treated = nT, internal = nC, external = nE), repetitions = B,
+  seed = paste0(seed_base + seed_offset, ' + replicate'),
   covariates = 'Independent N10(0,I10) in each group; exact saved fitted draw order and datasets verified by SHA256.',
   means = 'mT=mC=f=.5+.6/sqrt(5)*sum(X1:5)+.25/sqrt(5)*sum(X1:5^2); mE=f-a-X1.',
   variances = 'vT=1;vC=exp(.4X1);vE=exp(-.4X1)', K0 = unname(K['K0']), K1 = unname(K['K1']),

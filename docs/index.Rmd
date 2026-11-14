@@ -78,7 +78,7 @@ reproduce("tables")
 
 | Paper display | Calculation or source | Output in `results/tables/` |
 |:--|:--|:--|
-| Main Table 2 | Simulation estimates of coverage, bias, mean squared error, and interval width | `table-2.csv` |
+| Main Table 2 | Oracle and fitted coverage, bias, mean squared error, and interval width at both trial sizes | `table-2.csv` |
 | Main Table 3 | Gaussian planning calculations for three schizophrenia trial scenarios | `table-3a.csv`, `table-3b.csv` |
 | Supplementary Tables S4–S12 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | Files beginning `table-s4` through `table-s12` |
 | Supplementary Table S13 | Six-month HbA1c estimates and bootstrap intervals from the saved clinical summaries | `table-s13.csv` |

@@ -5,13 +5,13 @@ Figure 3,main:anchorfigure,analysis/illustrations/illustrate_hct_eif.R,Analytica
 Figure 4,fig:eifhistograms,analysis/planning/illustrate_hct_targets_and_sampling.R,analysis/planning/data/exact_sampling/replicates.csv,planning/figures/hct_targets_and_sampling.pdf
 Figure 5,main:modelrelationships,assets/main/observed_model_relationships.pdf,Observed-data model diagram,observed_model_relationships.pdf
 Figure 6,main:designfigure,analysis/planning/plot_planning.R,Gaussian coverage and rejection curves,planning/figures/scalar_gap_design_sensitivity.pdf
-Figure 7,fig:estimatednuisancesizes,analysis/simulation_figures/plot_simulations.R,analysis/simulation_figures/inputs/heterogeneous/summary.csv,simulations/figures/heterogeneous_gap_design_comparison_lines.pdf
+Figure 7,fig:estimatednuisancesizes,analysis/simulation_figures/plot_simulations.R,Paired baseline oracle and fitted summaries at both trial sizes,simulations/figures/heterogeneous_gap_design_comparison_lines.pdf
 Figure 8,main:baselinepower,analysis/planning/plot_planning.R,Fixed-weight Gaussian planning,planning/figures/zero_gap_power.pdf
 Figure 9,fig:studysensitivity,analysis/planning/plot_planning.R,Matched causal-gap calculations,planning/figures/study_design_sensitivity.pdf
 Figure 10,fig:commonsourcediscrepancy,analysis/planning/plot_planning.R,Common-discrepancy calculations,planning/figures/common_source_discrepancy.pdf
 Figure 11,main:cgmfigure,analysis/clinical/render_clinical.R,Primary CGM aggregate and published randomized trial results,clinical/focused_clinical_comparison.pdf
 Table 1,tab:eif-components,assets/tables/eif-components.tex,Seven-term influence function in manuscript notation,
-Table 2,tab:focusedsimulation,analysis/paper_tables.R,Baseline fitted simulation and paired quadratic trial ANCOVA,
+Table 2,tab:focusedsimulation,analysis/paper_tables.R,Baseline oracle and fitted simulations at both trial sizes with paired quadratic trial ANCOVA,
 Table 3,main:studytable,analysis/paper_tables.R,Gaussian reference calculated by analysis/planning/run_planning.R,
 Figure S1,main:hctdata,assets/main/hct_observed_data.pdf,Illustrative records invented to explain the observed data,hct_observed_data.pdf
 Figure S2,fig:tceweighting,analysis/illustrations/illustrate_hct_eif.R,Population precision-share calculation,illustrations/tce_weighting.pdf
