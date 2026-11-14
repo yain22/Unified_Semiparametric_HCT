@@ -40,7 +40,7 @@ figure_values <- function() {
 }
 
 draw_forest <- function(values) {
-  par(fig = c(.25, .98, .23, .95), mar = c(0, 0, 0, 0), xaxs = "i", yaxs = "i",
+  par(fig = c(.25, .98, .275, .95), mar = c(0, 0, 0, 0), xaxs = "i", yaxs = "i",
       family = "sans", las = 1, lend = "butt", xpd = FALSE)
   xlim <- c(-.86, .22)
   ylim <- c(-.5, 8.1)
@@ -70,7 +70,14 @@ draw_forest <- function(values) {
        adj = 1, xpd = NA, cex = .95)
   text(xlim[1] - .31 * diff(xlim), 2.55, "Published randomized trials",
        adj = 0, xpd = NA, font = 2, cex = .94)
-  mtext("HbA1c difference (percentage points; negative favors CGM)", 1, line = 1.8, cex = .94)
+  # Keep the directional key on the same effect scale as the plotted values.
+  arrow_height <- grconvertY(.191, from = "ndc", to = "user")
+  arrows(c(-.012, .012), arrow_height, c(-.8, .2), arrow_height,
+         length = .065, angle = 25, lwd = .9, col = "#404040", xpd = NA)
+  text(c(-.406, .106), grconvertY(.152, from = "ndc", to = "user"),
+       c("Favors CGM", "Favors control"), cex = .91, xpd = NA)
+  text(mean(xlim), grconvertY(.094, from = "ndc", to = "user"),
+       "HbA1c difference (percentage points)", cex = .94, xpd = NA)
   par(fig = c(0, 1, 0, 1), mar = rep(0, 4), new = TRUE)
   plot.new()
   plot.window(c(0,1), c(0,1))

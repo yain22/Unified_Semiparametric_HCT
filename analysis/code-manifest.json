@@ -39,7 +39,7 @@
     "clinical/inputs/subsequent/source_probabilities.csv": "bd25696891dd2cb66176695f777efb436d780c53b244c95a81b5b9a8a481bb5d",
     "clinical/inputs/subsequent_cgm_status.csv": "c28a0ea8c684edeb57a2a2e69bafb80da2fed41d6237740a71b413b83a8e0033",
     "clinical/inputs/trial_flow.csv": "e8b05f59fdde9b2224b54bf43f8f0e942e1dd669ccbb79c1515c5c22f06763e6",
-    "clinical/render_clinical.R": "3b6c0258eec099094136dcda7b860e858e243a391ea284abdb14e8cbdb9774be",
+    "clinical/render_clinical.R": "5d40a0e8b52388175511bf874122c5156c31541bc20d522294685bfd11250503",
     "clinical/run_clinical.R": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
     "clinical/source_manifest.json": "b7684f4cd52e9468e8dc5ad98da2a5a494063e822c82197e926c6cfd4094ce76",
     "clinical/src/estimated_share.R": "d95a03a1a88410cc3b301630a52a07e1f6d79a8d8e148074a3c08ba0cff11fa4",
