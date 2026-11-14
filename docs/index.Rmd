@@ -80,10 +80,10 @@ reproduce("tables")
 |:--|:--|:--|
 | Main Table 2 | Oracle and fitted coverage, bias, mean squared error, and interval width at both trial sizes | `table-2.csv` |
 | Main Table 3 | Gaussian planning calculations for three schizophrenia trial scenarios | `table-3a.csv`, `table-3b.csv` |
-| Supplementary Tables S4–S11 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | Files beginning `table-s4` through `table-s11` |
-| Supplementary Table S12 | Six-month HbA1c estimates and bootstrap intervals from the saved clinical summaries | `table-s12.csv` |
+| Supplementary Tables S4 and S7–S13 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | `table-s4.csv` and files beginning `table-s7` through `table-s13` |
+| Supplementary Table S14 | Six-month HbA1c estimates and bootstrap intervals from the saved clinical summaries | `table-s14.csv` |
 
-Main Table 1 gives the terms of the hybrid trial’s efficient influence function. Tables S1–S3 define notation, observed groups, and nuisance quantities. The exhibit map (`analysis/paper-map.csv`) identifies the source for each figure and table. The simulation and clinical sections below explain how to refit the analyses that produced the saved summaries.
+Main Table 1 gives the terms of the hybrid trial’s efficient influence function. Tables S1–S3 define notation, observed groups, and nuisance quantities. Tables S5 and S6 identify the analysis settings, simulation scenarios, and corresponding results. The exhibit map (`analysis/paper-map.csv`) identifies the source for each figure and table. The simulation and clinical sections below explain how to refit the analyses that produced the saved summaries.
 
 # Reproduce the figures
 

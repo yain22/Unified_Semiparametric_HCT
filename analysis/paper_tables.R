@@ -72,7 +72,7 @@ t1 <- t1[order(t1$n_RCT, match(t1$analysis, procedure), t1$gap,
 t1$analysis <- labels[match(t1$analysis, procedure)]
 save_table(t1, "table-2", 30)
 
-# Tables 3 and S8. Reuse the Gaussian planning calculation at its prescribed
+# Tables 3 and S10. Reuse the Gaussian planning calculation at its prescribed
 # group sizes, prognostic R-squared, treatment effect, and significance level.
 planning_tables <- function() {
   dest <- tempfile("gaussian-planning-")
@@ -98,11 +98,11 @@ planning_tables <- function() {
   endpoints <- get("common_discrepancy_endpoints.csv")
   d <- subset(endpoints, source_discrepancy == .5)
   save_table(d[, c("scenario", "design", "causal_gap", "coverage", "null_rejection",
-                   "sampling_variance", "causal_mse", "interval_width")], "table-s8", 9)
+                   "sampling_variance", "causal_mse", "interval_width")], "table-s10", 9)
 }
 planning_tables()
 
-# Tables S12 and S11b. Published intervals use the bootstrap SD and a normal
+# Tables S14 and S13b. Published intervals use the bootstrap SD and a normal
 # critical value. The archived SD of the matched gap includes its covariance.
 clinical <- function(cohort) {
   fits <- clinical_table(cohort, "full_results.csv")
@@ -122,7 +122,7 @@ main_clinical <- main_clinical[match(keys, main_clinical$method), ]
 main_clinical$method <- c("AIPW-U", "AIPW-R", "Matched gap score", "AIPW",
                           "ANOVA", "ANCOVA", "Matched augmented score")
 main_clinical$design <- c("HCT", "HCT", "HCT", "ECT", "RCT", "RCT", "Trial")
-save_table(main_clinical[, c("design", "method", "estimate", "lower", "upper")], "table-s12", 7)
+save_table(main_clinical[, c("design", "method", "estimate", "lower", "upper")], "table-s14", 7)
 
 # Table S4. Fixed illustrative means, treated 23, internal control 18,
 # external control 16.5. These numbers describe an example, not study records.
@@ -131,7 +131,7 @@ control <- share * 18 + (1 - share) * 16.5
 save_table(data.frame(internal_share = share, control_mean = control, tce = 23 - control,
                       gap = 18 - control), "table-s4", 3)
 
-# Table S5. Target-specific coverage under transportability, calibrated
+# Table S7. Target-specific coverage under transportability, calibrated
 # heterogeneous baseline drift, and the four additional fitted scenarios.
 calib <- sim_table("calibration", "own_tce_calibration.csv", "comparators", "own_tce_calibration.csv")
 calib <- subset(calib, mode == "Estimated nuisance")
@@ -144,9 +144,9 @@ t5 <- calib[keep, c("setting", "method", "N_trial", "gap", "bias_TCE", "empirica
 t5 <- t5[order(match(t5$setting, c("transportability", "baseline", scenarios)),
                match(t5$method, procedure), t5$N_trial, t5$gap), ]
 t5$method <- labels[match(t5$method, procedure)]
-save_table(t5, "table-s5", 16)
+save_table(t5, "table-s7", 16)
 
-# Table S6. Count one-sided declarations in the archived simulation tally.
+# Table S8. Count one-sided declarations in the archived simulation tally.
 sided <- sim_table("one-sided", "fitted-operating-characteristics.csv", "simulations", "reference", "one-sided.csv")
 t6 <- subset(sided, case == "matched_gap" & xi_index %in% c(-4, 0, 4))
 t6 <- t6[order(t6$N_trial, match(t6$method, procedure), t6$xi), ]
@@ -157,9 +157,9 @@ mcse <- function(p, n) sqrt(p * (1 - p) / n)
 t6$null_mcse <- mcse(t6$null_rejection, t6$repetitions)
 t6$efficacy_mcse <- mcse(t6$efficacy_declaration, t6$repetitions)
 save_table(t6[, c("N_trial", "method", "xi", "actual_gap", "null_rejection", "null_mcse",
-                  "efficacy_declaration", "efficacy_mcse")], "table-s6", 30)
+                  "efficacy_declaration", "efficacy_mcse")], "table-s8", 30)
 
-# Table S7. Integrate over the standard normal trial covariate distribution.
+# Table S9. Integrate over the standard normal trial covariate distribution.
 t7 <- rbind(
   sim_table("extended", "calibration.csv", "simulation_figures", "inputs", "extended", "calibration.csv"),
   sim_table("extended/enrollment-500", "calibration.csv", "simulation_figures", "inputs",
@@ -183,16 +183,16 @@ for (i in seq_len(nrow(t7))) {
   t7$K1[i] <- k1
 }
 save_table(t7[, c("scenario", "nR", "nE", "source_shift", "variance_slope",
-                  "quadratic_discrepancy", "K0", "K1")], "table-s7", 8)
+                  "quadratic_discrepancy", "K0", "K1")], "table-s9", 8)
 
-# Tables S9-S11. Use group-level clinical summaries. The numbers describing
+# Tables S11-S13. Use group-level clinical summaries. The numbers describing
 # registry selection and the participants' baseline characteristics retain their
 # original denominators; the overlap analysis uses registry-eligible profiles.
 sel <- clinical_table("subsequent", "registry_selection_baseline.csv", shared = TRUE)
 diffs <- clinical_table("subsequent", "registry_selection_differences.csv", shared = TRUE)
 sel$standardized_difference <- diffs$standardized_difference[match(sel$variable, diffs$variable)]
 save_table(sel[, c("variable", "group", "n_total", "n_observed", "mean", "sd", "count",
-                   "percentage", "standardized_difference")], "table-s11a", 10)
+                   "percentage", "standardized_difference")], "table-s13a", 10)
 
 variants <- lapply(c("primary", "subsequent", "near-index"), function(branch) {
   fit <- clinical(branch)
@@ -204,20 +204,20 @@ variants <- lapply(c("primary", "subsequent", "near-index"), function(branch) {
 })
 t10b <- do.call(rbind, variants)
 save_table(t10b[, c("cohort", "n_external", "method", "estimate", "lower", "upper")],
-           "table-s11b", 9)
+           "table-s13b", 9)
 
 chars <- clinical_table("primary", "baseline_summary.csv", shared = TRUE)
 save_table(chars[, c("variable", "label", "n_total", "n_observed", "mean", "sd",
-                     "count", "percentage")], "table-s9", 15)
+                     "count", "percentage")], "table-s11", 15)
 overlap <- clinical_table("primary", "source_probabilities.csv")
-save_table(overlap, "table-s10a", 5)
+save_table(overlap, "table-s12a", 5)
 weights <- clinical_table("primary", "external_weights.csv")
 weights$largest_pct <- 100 * weights$max_share
 weights$top_tenth_pct <- 100 * weights$top_tenth_share
 save_table(weights[, c("quantity", "median", "p95", "max", "effective", "largest_pct",
-                       "top_tenth_pct")], "table-s10b", 3)
-# A destination reused from an earlier edition can contain the former table numbers.
-obsolete <- file.path(out, c("table-s10.csv", "table-s12a.csv", "table-s12b.csv", "table-s13.csv"))
+                       "top_tenth_pct")], "table-s12b", 3)
+# Remove filenames retired in earlier editions when the destination is reused.
+obsolete <- file.path(out, c("table-s5.csv", "table-s6.csv", "table-s10a.csv", "table-s10b.csv",
+                            "table-s11a.csv", "table-s11b.csv", "table-s12.csv", "table-s13.csv"))
 if (any(file.exists(obsolete))) stopifnot(all(file.remove(obsolete[file.exists(obsolete)])))
-message("Wrote numerical Tables 2-3 and S4-S12.")
-
+message("Wrote numerical Tables 2-3, S4, and S7-S14.")
