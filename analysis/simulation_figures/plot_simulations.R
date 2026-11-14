@@ -58,18 +58,17 @@ validate_curves <- function(d, row_field, row_values) {
   }
 }
 
-draw_simulation <- function(d, row_field, row_values, file) {
+draw_simulation <- function(d, row_field, row_values, file, row_headings = TRUE) {
   width <- 7.25
   rows <- length(row_values)
   cols <- length(metrics)
-  enrollment_grid <- row_field == "enrollment_mode"
   # All six grids use the same physical panel size.
   left <- c(.30, .36, .29, .27)
   right <- .07
   bottom <- c(rep(.08, rows - 1L), .23)
   top <- rep(.24, rows)
-  if (enrollment_grid) top[1L] <- .48
-  row_key_height <- if (row_field == "mode") .24 else 0
+  if (row_headings) top[1L] <- .48
+  row_key_height <- if (row_headings) 0 else .24
   key_height <- .51 + row_key_height
   side <- (width - sum(left + right)) / length(metrics)
   row_heights <- bottom + side + top
@@ -131,7 +130,7 @@ draw_simulation <- function(d, row_field, row_values, file) {
            las = 1, cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
       box(lwd = .7, col = axis_color)
       title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
-      if (enrollment_grid) {
+      if (row_headings) {
         if (i == 1L) mtext(title, side = 3, line = 1.55, adj = 0, cex = .94, font = 2)
         if (j == 1L) {
           panel_range <- sprintf("(%s-%s)", letters[(i - 1L) * cols + 1L], letters[i * cols])
@@ -153,7 +152,7 @@ draw_simulation <- function(d, row_field, row_values, file) {
   legend(.5, key_y(.22), xjust = .5, yjust = .5, legend = method_labels, text.width = NA,
          col = palette, lty = patterns, lwd = curve_width, pch = shapes, pt.cex = .68,
          pt.lwd = .75, horiz = TRUE, bty = "n", cex = .90, x.intersp = .65, seg.len = 2.6)
-  if (row_field == "mode") {
+  if (!row_headings) {
     text(.5, row_key_height * .45 / key_height,
          "Top panels: Oracle nuisance functions     Bottom panels: Estimated nuisance functions",
          cex = .90)
@@ -212,9 +211,9 @@ render_simulations <- function(inputs, figures, audit, check_archive = FALSE) {
   stopifnot(max(calibration_error) < 1e-10)
   # Save the exact numeric series supplied to lines() in a portable table.
   records <- list()
-  render <- function(d, row_field, row_values, stem) {
+  render <- function(d, row_field, row_values, stem, row_headings = TRUE) {
     validate_curves(d, row_field, row_values)
-    draw_simulation(d, row_field, row_values, file.path(figures, paste0(stem, ".pdf")))
+    draw_simulation(d, row_field, row_values, file.path(figures, paste0(stem, ".pdf")), row_headings)
     for (row in row_values) {
       for (metric in metrics) {
         for (method in methods) {
@@ -232,7 +231,7 @@ render_simulations <- function(inputs, figures, audit, check_archive = FALSE) {
   paired$enrollment_mode <- paste(paired$N_trial, paired$mode, sep = " / ")
   render(paired, "enrollment_mode", paste(rep(c(250, 500), each = 2), modes, sep = " / "),
          "heterogeneous_gap_design_comparison_lines")
-  render(oracle, "mode", modes, "oracle_estimated_nuisance_comparison")
+  render(oracle, "mode", modes, "oracle_estimated_nuisance_comparison", row_headings = FALSE)
   for (scenario in scenarios) {
     render(extended[extended$scenario == scenario, ], "mode", modes, paste0("supp_scenario_", scenario))
   }

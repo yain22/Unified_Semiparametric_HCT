@@ -110,7 +110,7 @@
     "simulation_figures/inputs/oracle_500/protocol.json": "1de87684cd02bfbc0f0f0904844b27a815583792becb63dcb3e97e47eb3f487f",
     "simulation_figures/inputs/oracle_500/summary.csv": "b40905c06633978223f3f1215b3f72955af34a8a47d5be0df33abe9bbf39010d",
     "simulation_figures/inputs/reference_curve_checks.json": "36e50a629b0ac452407a3fc52a7a34f366259cae497f451a9eb1a944ea8e31b4",
-    "simulation_figures/plot_simulations.R": "2388c934b2240523d08de766d7f2938aa5aafd0a3237136d36596a5432288d84",
+    "simulation_figures/plot_simulations.R": "6b144a6b963673cd97ac23570dd1ba5481fc3a8b53eb84f805441d598748bb1c",
     "simulations/README.md": "56fa031ade9ca1fc93daa5abe3b8564e1d78b07e737c1f310b89901ecebbb711",
     "simulations/check_gap_inference.R": "7da6569ed3e3cc93b07d04f0844b2238c6738cfc9759e3a1da2af87ebe1a2641",
     "simulations/fitted_operating_characteristics.R": "c463b694c52c9da6ba6e078482ad053c4a41c5b865b00ee784ccaacf4a4c95c5",
