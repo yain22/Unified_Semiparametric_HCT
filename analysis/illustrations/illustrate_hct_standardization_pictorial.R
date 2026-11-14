@@ -1,5 +1,4 @@
-# In two strata, the external mean is linear in the proportion from stratum 1.
-# Open markers use the external proportions. Filled markers use the trial proportions.
+# Figure 2. Source-specific control means, their hybrid mean, and the internal share.
 args <- commandArgs(trailingOnly = TRUE)
 if (identical(args, "--help")) {
   cat("Rscript SCRIPT.R [--output-dir PATH]\n")
@@ -13,56 +12,100 @@ output_dir <- if (length(args)) args[2] else file.path(dirname(script_file), "..
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 stem <- file.path(output_dir, "hct_standardization_pictorial")
 
-trial_means <- c(10, 20)
-trial_share <- 0.50
-external_means <- list(c(10, 20), c(8, 18))
-external_share <- c(0.20, 0.70)
-mixture_mean <- function(means, share) sum(means * c(1 - share, share))
-trial_mean <- mixture_mean(trial_means, trial_share)
-raw <- mapply(mixture_mean, external_means, external_share)
-standardized <- vapply(external_means, mixture_mean, numeric(1), share = trial_share)
-stopifnot(all.equal(raw, c(12, 15)), all.equal(standardized, c(15, 13)),
-          all.equal(0.6 * (trial_mean - standardized), c(0, 1.2)))
+x <- seq(0, 1, length.out = 301)
+p <- 0.2 + 0.6 * x
+e <- 0.5
+internal_mean <- 12 + 4 * x
+external_mean <- 10 + 2 * x
+
+# Normalize the internal and external probabilities per unit of outcome variance.
+internal_share <- function(p, e, v_internal, v_external) {
+  internal_precision <- p * (1 - e) / v_internal
+  external_precision <- (1 - p) / v_external
+  internal_precision / (internal_precision + external_precision)
+}
+share <- internal_share(p, e, v_internal = 1, v_external = 1)
+alternative <- internal_share(p, e, v_internal = 1, v_external = 2)
+hybrid_mean <- share * internal_mean + (1 - share) * external_mean
+
+# Equal variances give p/(2-p). Doubling the external variance gives p.
+mid <- which(x == 0.5)
+stopifnot(length(mid) == 1L, all.equal(share, p / (2 - p)),
+          all.equal(alternative, p), all(alternative > share),
+          all(external_mean < hybrid_mean & hybrid_mean < internal_mean),
+          all.equal(c(internal_mean[mid], hybrid_mean[mid], external_mean[mid]),
+                    c(14, 12, 11)),
+          all.equal(c(share[mid], alternative[mid]), c(1/3, 1/2)))
 
 draw <- function() {
-  ink <- "#202020"
-  accent <- "#164D57"
-  par(mfrow = c(1, 2), mar = c(1.7, 2.0, 1.55, 0.7),
-      oma = c(3.25, 1.0, 0.12, 0.28), las = 1, mgp = c(1.5, 0.38, 0),
-      tcl = -0.20, cex = 1, fg = ink, col.axis = ink, xaxs = "i", yaxs = "i")
-  titles <- c("(a) Sources agree within strata", "(b) External means lower by 2")
-  for (j in seq_along(external_means)) {
+  ink <- "#222222"
+  teal <- "#145963"
+  grey <- "#545454"
+  guide <- "#a8a8a8"
+  par(mfrow = c(1, 2), mar = c(2.9, 3.0, 1.8, 2.85), las = 1,
+      mgp = c(1.85, 0.4, 0), tcl = -0.2, xaxs = "i", yaxs = "i",
+      cex = 1, fg = ink, col.axis = ink, col.lab = ink)
+  panel <- function(ylim, yticks, ylabels, ytitle, heading) {
     plot.new()
-    plot.window(xlim = c(-0.03, 1.03), ylim = c(7, 21))
-    axis(1, at = c(0, 0.25, 0.5, 0.75, 1), labels = c(0, 25, 50, 75, 100),
-         cex.axis = 0.92, lwd = 0, lwd.ticks = 0.55)
-    axis(2, at = seq(8, 20, 4), cex.axis = 0.92, lwd = 0, lwd.ticks = 0.55)
+    plot.window(xlim = c(0, 1), ylim = ylim)
+    axis(1, at = c(0, 0.25, 0.5, 0.75, 1),
+         labels = c("0", "0.25", "0.5", "0.75", "1"),
+         cex.axis = 0.87, lwd = 0, lwd.ticks = 0.55)
+    axis(2, at = yticks, labels = ylabels, cex.axis = 0.87,
+         lwd = 0, lwd.ticks = 0.55)
     box(bty = "l", lwd = 0.6)
-    abline(h = trial_mean, lty = 2, col = "#666666", lwd = 0.85)
-    segments(0, external_means[[j]][1], 1, external_means[[j]][2], lwd = 1.1, col = accent)
-    segments(external_share[j], raw[j], trial_share, standardized[j], lwd = 2.1, col = accent)
-    points(external_share[j], raw[j], pch = 21, bg = "white", col = accent, lwd = 1.3, cex = 1.12)
-    points(trial_share, standardized[j], pch = 19, col = accent, cex = 1.13)
-    text(external_share[j], raw[j], raw[j], pos = 1, offset = 0.65, cex = 0.98)
-    text(trial_share, standardized[j], standardized[j], pos = 3, offset = 0.6, cex = 0.98)
-    mtext(titles[j], side = 3, line = 0.42, adj = 0, font = 2, cex = 1)
+    abline(v = x[mid], lty = "dotted", lwd = 0.9, col = guide)
+    mtext(heading, side = 3, adj = 0, line = 0.5, font = 2, cex = 0.98)
+    mtext(ytitle, side = 2, line = 1.9, las = 0, cex = 0.95)
+    mtext(expression("Baseline covariate " * italic(x)), side = 1, line = 1.68,
+          cex = 0.95)
   }
-  mtext("Mean control outcome", side = 2, outer = TRUE, las = 0, line = 0.03, cex = 1.02)
-  mtext("Proportion in stratum 1 (%)", side = 1, outer = TRUE, line = 0.02, cex = 1.02)
-  par(fig = c(0, 1, 0, 1), mar = rep(0, 4), oma = rep(0, 4), new = TRUE)
-  plot.new()
-  plot.window(xlim = c(0, 1), ylim = c(0, 1), xaxs = "i", yaxs = "i")
-  legend(0.5, 0.035, xjust = 0.5, yjust = 0.5, horiz = TRUE, bty = "n",
-         legend = c("External mix", "Trial mix", "Internal control mean"),
-         pch = c(21, 19, NA), pt.bg = "white", lty = c(NA, NA, 2),
-         col = c(accent, accent, "#666666"), lwd = 1, pt.cex = 1.05,
-         x.intersp = 0.5, cex = 0.96)
-}
-font <- Sys.getenv("HCT_FIGURE_FONT", "Times New Roman")
-cairo_pdf(paste0(stem, ".pdf"), width = 6.55, height = 2.93, pointsize = 10.5, family = font)
-draw()
-invisible(dev.off())
-png(paste0(stem, ".png"), width = 1638, height = 733, res = 250, pointsize = 10.5, family = font, type = "cairo")
-draw()
-invisible(dev.off())
+  end_label <- function(y, label, color) {
+    text(1, tail(y, 1), label, pos = 4, offset = 0.32, col = color,
+         cex = 0.86, xpd = NA)
+  }
+  mark <- function(y, label, color, symbol) {
+    points(x[mid], y[mid], pch = symbol, bg = "white", col = color,
+           lwd = 1.0, cex = 0.74)
+    dy <- 0.016 * diff(par("usr")[3:4])
+    text(x[mid] - 0.025, y[mid] + dy, label, pos = 2, offset = 0.1,
+         col = color, cex = 0.85)
+  }
 
+  panel(c(9.6, 16.35), c(10, 12, 14, 16), c("10", "12", "14", "16"),
+        "Mean control outcome", "(a) Conditional control means")
+  lines(x, internal_mean, lty = "dashed", lwd = 1.35, col = ink)
+  lines(x, external_mean, lty = "dotdash", lwd = 1.35, col = grey)
+  lines(x, hybrid_mean, lwd = 2.05, col = teal)
+  end_label(internal_mean, "Internal", ink)
+  end_label(external_mean, "External", grey)
+  end_label(hybrid_mean, "Hybrid", teal)
+  mark(internal_mean, "14", ink, 21)
+  mark(external_mean, "11", grey, 21)
+  mark(hybrid_mean, "12", teal, 19)
+
+  panel(c(0, 1), c(0, 0.25, 0.5, 0.75, 1), c("0", "0.25", "0.5", "0.75", "1"),
+        "Internal share", "(b) Internal precision share")
+  lines(x, alternative, lty = "dashed", lwd = 1.35, col = grey)
+  lines(x, share, lwd = 2.05, col = teal)
+  end_label(alternative, expression(italic(r) == 0.5), grey)
+  end_label(share, expression(italic(r) == 1), teal)
+  mark(alternative, "1/2", grey, 21)
+  mark(share, "1/3", teal, 19)
+}
+
+font <- Sys.getenv("HCT_FIGURE_FONT", "Times New Roman")
+width <- 6.55
+height <- 2.93
+cairo_pdf(paste0(stem, ".pdf"), width = width, height = height, pointsize = 10.5,
+          family = font)
+draw()
+invisible(dev.off())
+cairo_ps(paste0(stem, ".eps"), onefile = FALSE, width = width, height = height,
+         pointsize = 10.5, family = font)
+draw()
+invisible(dev.off())
+png(paste0(stem, ".png"), width = round(250 * width), height = round(250 * height),
+    res = 250, pointsize = 10.5, family = font, type = "cairo")
+draw()
+invisible(dev.off())

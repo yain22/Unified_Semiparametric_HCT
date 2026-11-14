@@ -18,6 +18,7 @@ node <- function(x, y, label, type="trial", w=.38, dotted=FALSE) {
 arrow <- function(x,y,x1,y1) arrows(x,y,x1,y1,length=.07,col=ink)
 grDevices::cairo_pdf(file.path(out,"trial-designs.pdf"), width=10,height=3.65)
 par(mfrow=c(1,3), mar=c(.15,.4,.4,.4))
+join_y <- .22
 for (design in c("RCT","HCT","ECT")) {
   panel()
   text(.02,.96,switch(design,RCT="(a) RCT",HCT="(b) HCT",ECT="(c) ECT"),adj=0,font=2)
@@ -35,11 +36,11 @@ for (design in c("RCT","HCT","ECT")) {
     node(.77,.31,"Hybrid control\nmean")
     arrow(.43,.31,.575,.31)
     arrow(.77,.447,.77,.37)
-    lines(c(.05,.025,.025,.5),c(.505,.505,.19,.19),col=ink)
-  } else lines(c(.24,.24,.5),c(.447,.19,.19),col=ink)
+    lines(c(.05,.025,.025,.5),c(.505,.505,join_y,join_y),col=ink)
+  } else lines(c(.24,.24,.5),c(.447,join_y,join_y),col=ink)
   if (design=="ECT") node(.77,.31,"External controls","external")
-  lines(c(.77,.77,.5),c(if (design=="RCT") .447 else .252,.19,.19),col=ink)
-  arrow(.5,.19,.5,.148)
+  lines(c(.77,.77,.5),c(if (design=="RCT") .447 else .252,join_y,join_y),col=ink)
+  arrow(.5,join_y,.5,.143)
   node(.5,.085,switch(design,RCT="Randomized comparison",HCT="Hybrid comparison",
                        ECT="External comparison"),w=.85)
 }

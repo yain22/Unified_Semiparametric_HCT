@@ -51,6 +51,13 @@
   let traceModel = null;
   let frameIndex = 0;
   let playTimer = null;
+  const mapRegions = by("map-regions").querySelectorAll("button[data-model]");
+
+  function describeMapRegion(model) {
+    for (const region of mapRegions) {
+      by(region.getAttribute("aria-describedby")).hidden = region.dataset.model !== model;
+    }
+  }
 
   function stopPlayback() {
     clearTimeout(playTimer);
@@ -129,6 +136,10 @@
         by("delta").value = savedDelta;
       }
       by("model-name").textContent = design.title;
+      for (const region of mapRegions) {
+        region.setAttribute("aria-pressed", String(region.dataset.model === model));
+      }
+      describeMapRegion(model);
       by("formula").innerHTML = EifFormulaPanels[design.formula];
       EifRecordTable.render(model);
       if (fittedSelected()) EifEstimatorView.render(model);
@@ -196,6 +207,20 @@
     refresh();
     markWideEquations();
   }));
+  for (const region of mapRegions) {
+    const model = region.dataset.model;
+    region.addEventListener("pointerenter", () => describeMapRegion(model));
+    region.addEventListener("focus", () => describeMapRegion(model));
+    region.addEventListener("pointerleave", () =>
+      describeMapRegion(by("map-regions").querySelector(":focus-visible")?.dataset.model || lastModel));
+    region.addEventListener("blur", () => describeMapRegion(lastModel));
+    region.addEventListener("click", () => {
+      document.querySelector(`#models input[value="${model}"]`).click();
+      describeMapRegion(model);
+    });
+  }
+  by("map-regions").hidden = false;
+  by("map-descriptions").hidden = false;
   window.addEventListener("resize", markWideEquations);
   by("formula").addEventListener("toggle", markWideEquations, true);
   by("estimator-formula").addEventListener("toggle", markWideEquations, true);

@@ -12,8 +12,27 @@
 <script src="eif-estimators.js" defer></script>
 <script src="eif-models.js" defer></script></head>
 <body><a class="skip" href="#main">Skip to models</a><header><nav aria-label="Project"><a class="home" href="index.html">causalgap</a><a href="r-package.html">R package</a><a aria-current="page" href="eif-models.html">Model comparison</a><a href="eif-lab.html">EIF lab</a><a href="design-lab.html">Design lab</a><a href="index.html">Replication guide</a></nav></header>
-<main id="main"><div class="intro"><p class="kicker">Statistical theory · Section 4</p><h1>One hybrid trial, three reductions</h1><p class="lead">What changes in the efficient influence function (EIF) when the two control means agree? What changes when an entire control group is absent? Choose a model to explore its EIF or calculate its fitted estimator from six hypothetical records.</p></div>
-<figure class="map"><img src="assets/trial-models.png" alt="The common-mean hybrid model is nested in the unrestricted hybrid model. Removing external controls gives an RCT; removing internal controls gives an ECT under its own observation law."><figcaption>Equality of the control means restricts an existing model. Removing a source changes which observations are possible.</figcaption></figure>
+<main id="main"><div class="intro"><p class="kicker">Statistical theory · Section 4</p><h1>One hybrid trial, three reductions</h1><p class="lead">What changes in the efficient influence function (EIF) when the two control means agree? What changes when an entire control group is absent? Select a model in the diagram or below it to explore its EIF or calculate its fitted estimator from six hypothetical records.</p></div>
+<figure class="map">
+  <div class="model-map">
+    <img src="assets/trial-models.png" width="1040" height="679" alt="The common-mean hybrid model is nested in the unrestricted hybrid model. Removing external controls gives an RCT. Removing internal controls gives an ECT under its own observation law.">
+    <div id="map-regions" role="group" aria-label="Select a trial model in the diagram" hidden>
+      <button type="button" data-model="unrestricted" aria-label="Unrestricted HCT" aria-describedby="map-unrestricted" aria-pressed="true"></button>
+      <button type="button" data-model="transportable" aria-label="Common-mean HCT" aria-describedby="map-transportable" aria-pressed="false"></button>
+      <button type="button" data-model="rct" aria-label="Randomized controlled trial" aria-describedby="map-rct" aria-pressed="false"></button>
+      <button type="button" data-model="ect" aria-label="Externally controlled trial" aria-describedby="map-ect" aria-pressed="false"></button>
+    </div>
+  </div>
+  <figcaption>
+    Equality of the control means restricts an existing model. Removing a source changes which observations are possible.
+    <div id="map-descriptions" hidden>
+      <p id="map-unrestricted"><strong>Unrestricted HCT.</strong> Randomized and external controls can have different mean outcomes at the same baseline covariates.</p>
+      <p id="map-transportable" hidden><strong>Common-mean HCT.</strong> Both control groups contribute to a shared conditional mean. Their conditional variances can differ.</p>
+      <p id="map-rct" hidden><strong>Randomized controlled trial.</strong> Only the randomized treated and control arms enter the treatment contrast.</p>
+      <p id="map-ect" hidden><strong>Externally controlled trial.</strong> The treated trial arm is compared with external controls after standardizing their outcomes to the trial covariate distribution.</p>
+    </div>
+  </figcaption>
+</figure>
 <fieldset id="models"><legend>Choose an observation model</legend><div class="choices">
 <label><input type="radio" name="model" value="unrestricted" checked><span>Unrestricted HCT</span></label><label><input type="radio" name="model" value="transportable"><span>Common-mean HCT</span></label><label><input type="radio" name="model" value="rct"><span>Randomized trial</span></label><label><input type="radio" name="model" value="ect"><span>Externally controlled trial</span></label></div></fieldset>
 <h2 id="model-name">Unrestricted hybrid trial</h2>

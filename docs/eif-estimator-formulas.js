@@ -121,7 +121,7 @@
     'The fitted numerator minus the estimated effect times Sᵢ, divided by the observed trial fraction.',
     'Its sample variance divided by N estimates the estimator variance under iid sampling and the stated convergence conditions.');
   const phiMean = symbol('fittedInfluenceMean', bar(hat(id('φ'))), 'Mean fitted influence value',
-    'The arithmetic mean of the N fitted participant influence values.', 'Subtract it to form the sample variance in equation (17).');
+    'The arithmetic mean of the N fitted participant influence values.', 'Subtract it to form the sample variance in equation (15).');
   const qhat = symbol('fittedFraction', hat(id('q')), 'Observed trial fraction q̂',
     'The number of randomized trial participants divided by the total hybrid sample size.', 'It normalizes the fitted influence values under mixture sampling.');
   const varianceLabel = (key, index, label, definition) => symbol(key, sq(sub(hat(id('s')), roman(index))),
@@ -139,7 +139,7 @@
   const internalTerm = frac(I10 + lambda, complement(e)) + residual[1];
   const externalTerm = I0 + omegaH + braces(complement(lambda)) + residual[2];
   const multiplier = delta + lambda + braces(complement(lambda));
-  const expandedU = display('Equation 16 expanded over all hybrid records', [
+  const expandedU = display('Equation 14 expanded over all hybrid records', [
     [thetaU, eq + hybridSum + op('[') + S + t + plus + treatedTerm],
     ['', minus + internalTerm + minus + externalTerm],
     ['', plus + multiplier + op('(') + minus + frac(diff(S, p), complement(p))],
@@ -153,25 +153,25 @@
     [lambda, eq + frac(p + braces(complement(e)),
       p + braces(complement(e)) + plus + braces(complement(p)) + frac(v10, v0))]
   ]);
-  const unrestricted = P('Fit separate means for trial treatment, internal control, and external control. Each hybrid record contributes to the sum in equation (16). The denominator counts the trial participants whose covariates define the target.') +
-    display('Unrestricted hybrid estimator, equation 16', [
+  const unrestricted = P('Fit separate means for trial treatment, internal control, and external control. Each hybrid record contributes to the sum in equation (14). The denominator counts the trial participants whose covariates define the target.') +
+    display('Unrestricted hybrid estimator, equation 14', [
       [thetaU, eq + hybridSum + H], [H, eq + HM + plus + HL]
     ]) +
     details('Expand the participant sum', expandedU + P('The first four terms use the fitted contrast and the three outcome residuals. The remaining three correct for fitting the source probability and each control variance. The variance corrections use raw squared residuals.') + fitDefinitions) +
-    details('Uncertainty and support', display('Plug-in variance under independent mixture sampling, equation 17', [
+    details('Uncertainty and support', display('Plug-in variance under independent mixture sampling, equation 15', [
       [phi, eq + frac(diff(H, S + thetaU), qhat)],
       [qhat, eq + frac(nR, N)],
       [sU, eq + frac(one, N + wrap(diff(N, one))) + sum(N) + bracesSq(diff(phi, phiMean))]
-    ]) + P('With cross-fitting, the fitted quantities for participant i come from folds that exclude that participant. Equation (17) uses independent mixture sampling and requires score convergence and negligible first-order bias from nuisance fitting. The interval measures uncertainty around the hybrid statistical target.') +
+    ]) + P('With cross-fitting, the fitted quantities for participant i come from folds that exclude that participant. Equation (15) uses independent mixture sampling and requires score convergence and negligible first-order bias from nuisance fitting. The interval measures uncertainty around the hybrid statistical target.') +
     P('At trial-only covariate profiles, set the internal share to one, use only trial terms, and set the share correction to zero. External-only profiles contribute zero. The paper uses a within-group sandwich for its fixed-count simulations and a refitted, stratified bootstrap for the clinical intervals.'));
 
   const pooledCorrection = frac(p + braces(I10 + plus + I0 + rho), dRho) + braces(diff(Y, mP));
   const HR = symbol('fittedHR', indexed('H', roman('R') + comma + i), 'Restricted numerator H_R,i',
-    'The terms inside the square brackets in equation (18), evaluated at participant i.',
+    'The terms inside the square brackets in equation (16), evaluated at participant i.',
     'It combines trial standardization with a treated residual and a pooled control residual.');
-  const transportable = P('Fit one control regression on shared support and specify a positive working variance ratio. Write H<sub>R,i</sub> for the fitted participant contribution in equation (18).') +
+  const transportable = P('Fit one control regression on shared support and specify a positive working variance ratio. Write H<sub>R,i</sub> for the fitted participant contribution in equation (16).') +
     display('Restricted hybrid estimator', [[thetaR, eq + hybridSum + HR]]) +
-    details('Expand the participant sum', display('Restricted hybrid estimator, equation 18', [
+    details('Expand the participant sum', display('Restricted hybrid estimator, equation 16', [
       [thetaR, eq + hybridSum + op('[') + S + braces(diff(m[0], mP)) + plus + treatedTerm],
       ['', minus + pooledCorrection + op(']')],
       [dRho, eq + p + braces(complement(e)) + plus + braces(complement(p)) + rho]
@@ -181,13 +181,13 @@
 
   const weightE = braces(diff(S, wrap(complement(S)) + oddsE));
   const ect = P('Fit the external outcome regression and source odds using treated trial participants and external controls. Divide by the number of treated participants on the selected target support.') +
-    display('Externally controlled trial estimator, equation 19', [
+    display('Externally controlled trial estimator, equation 17', [
       [thetaE, eq + frac(one, n1) + sum(nE) + weightE + resE]
     ]) + details('Expand the participant sum', display('ECT treated and external sums', [
       [thetaE, eq + frac(one, n1) + sumIn(S + eq + one) + braces(diff(Y, mE))],
       ['', minus + frac(one, n1) + sumIn(S + eq + zero) + oddsE + braces(diff(Y, mE))]
     ]) + P('The first group compares its observed outcomes with predicted external control outcomes at its covariates. The weighted external residuals correct the standardized predictions.')) +
-    details('Uncertainty and support', display('ECT plug-in variance, equation 19', [
+    details('Uncertainty and support', display('ECT plug-in variance, equation 17', [
       [sE, eq + frac(one, sq(n1)) + sum(nE) + op('[') + S + bracesSq(diff(resE, thetaE))],
       ['', plus + wrap(complement(S)) + sq(oddsE) + sq(resE) + op(']')]
     ]) + P('External controls must cover the trial target’s covariate profiles. Interpreting the statistical contrast as a trial effect also requires an assumption about the missing trial control mean.') +

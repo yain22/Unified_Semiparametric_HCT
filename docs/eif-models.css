@@ -2,6 +2,34 @@
 .formula-block mtd:first-child{text-align:right}.formula-block mtd:nth-child(2){text-align:left}.formula-block.wide-equation{border-bottom:1px dashed var(--rule);padding-bottom:.7rem}.wide-equation:focus-visible{outline:2px solid var(--sea);outline-offset:-2px}
 :is(#formula,#estimator-formula):has(.wide-equation)::before{content:"Scroll wide equations horizontally to see every term.";display:block;color:var(--muted);font:14px/1.45 system-ui,sans-serif;margin:.3rem 0 .65rem}
 .law-details{margin:1rem 0}.law-details p{max-width:78ch}.controls label[hidden]{display:none}
+.model-map { position:relative; width:min(100%,600px); margin:auto; }
+.model-map img { width:100%; height:auto; }
+#map-regions button {
+  position:absolute; margin:0; padding:0; border:0; background:transparent;
+  cursor:pointer; color:#233f50;
+}
+/* Boundaries follow the colored outlines in the 1040 × 679 artwork. */
+#map-regions [data-model="unrestricted"] {
+  left:3.46%; top:9.5%; width:93.08%; height:51%; border-radius:50%; clip-path:ellipse(50% 50%);
+}
+#map-regions [data-model="transportable"] {
+  left:13%; top:31.9%; width:74%; height:25%; border-radius:50%; clip-path:ellipse(50% 50%);
+}
+#map-regions [data-model="rct"], #map-regions [data-model="ect"] {
+  top:70%; width:44.04%; height:19.15%; border-radius:2.4% / 8.5%;
+}
+#map-regions [data-model="rct"] { left:3.08%; }
+#map-regions [data-model="ect"] { left:52.88%; }
+#map-regions button[aria-pressed="true"] { box-shadow:inset 0 0 0 3px currentColor; }
+#map-regions button:focus-visible, #map-regions button:hover {
+  outline:2px dashed currentColor; outline-offset:-5px;
+}
+@media (forced-colors:active) {
+  #map-regions button { forced-color-adjust:none; }
+  #map-regions button[aria-pressed="true"] { border:3px solid currentColor; }
+}
+#map-descriptions { max-width:70ch; margin:.7rem auto 0; text-align:left; }
+#map-descriptions p { margin:0; padding:.55rem .8rem; background:var(--wash); border-left:3px solid var(--sea); }
 .notation-help, .example-links, #reduction-count, .trace-toolbar, .trace-controls {
   font: 14px/1.5 system-ui, sans-serif;
 }

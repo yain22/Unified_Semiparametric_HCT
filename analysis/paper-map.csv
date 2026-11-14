@@ -1,6 +1,6 @@
 exhibit,label,script_or_source,inputs_or_calculation,figure_output
 Figure 1,fig:trialdesigns,analysis/illustrations/design_schematics.R,Observed groups in the three trial designs,trial-designs.pdf
-Figure 2,fig:standardizationpictorial,analysis/illustrations/illustrate_hct_standardization_pictorial.R,Two-stratum example with fixed source means and trial mix,illustrations/hct_standardization_pictorial.pdf
+Figure 2,fig:standardizationpictorial,analysis/illustrations/illustrate_hct_standardization_pictorial.R,Conditional control means and precision shares over a scalar covariate,illustrations/hct_standardization_pictorial.pdf
 Figure 3,main:anchorfigure,analysis/illustrations/illustrate_hct_eif.R,Analytical internal-control sample size comparison,illustrations/external-borrowing-anchor.pdf
 Figure 4,fig:eifhistograms,analysis/planning/illustrate_hct_targets_and_sampling.R,analysis/planning/data/exact_sampling/replicates.csv,planning/figures/hct_targets_and_sampling.pdf
 Figure 5,main:modelrelationships,analysis/model_relationships.R,Observed-data model diagram,observed_model_relationships.pdf

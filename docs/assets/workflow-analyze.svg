@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="172" height="140" viewBox="0 0 172 140" role="img" aria-labelledby="title description">
+  <title id="title">Analyze the trial</title>
+  <desc id="description">A forest plot represents analysis of the trial and its borrowing contrast. Estimate contrasts and assess the causal gap.</desc>
+  <rect width="172" height="140" fill="#f6f8f4"/>
+  <g fill="none" stroke="#7d9993" stroke-width="1.6">
+    <path d="M0 45h58"/>
+  </g>
+  <circle cx="86" cy="45" r="28" fill="#dde9ed" stroke="#315e73" stroke-width="1.5"/>
+  <g fill="none" stroke="#315e73" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M85 31v28" stroke-dasharray="2 3" stroke-width="1.4"/>
+    <path d="M70 37h22m-22-2v4m22-4v4m-18 6h26m-26-2v4m26-4v4m-31 6h20m-20-2v4m20-4v4"/>
+    <g fill="#315e73" stroke="none"><circle cx="79" cy="37" r="3.2"/><circle cx="91" cy="45" r="3.2"/><circle cx="76.5" cy="53" r="3.2"/></g>
+  </g>
+  <text x="86" y="97" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" font-weight="bold" fill="#19363c">Analyze the trial</text>
+  <g text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#3c5356">
+    <text x="86" y="116">Estimate contrasts and</text>
+    <text x="86" y="132">assess the causal gap</text>
+  </g>
+</svg>

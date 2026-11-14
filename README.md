@@ -6,6 +6,12 @@ If a trial replaces some of its concurrent controls with external patients, how 
 
 [**R package and manual**](https://yain22.github.io/Unified_Semiparametric_HCT/r-package.html) · [**Explore the EIF and its three reductions**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html) · [**Replication guide**](https://yain22.github.io/Unified_Semiparametric_HCT/)
 
+## From protocol to analysis
+
+Before enrollment, how many patients should receive concurrent control if outcomes under usual care could differ between the trial and the external cohort? Select a stage to follow that decision from the protocol to the analysis.
+
+<p><a href="https://yain22.github.io/Unified_Semiparametric_HCT/trial-workflow.html#plan"><img src="docs/assets/workflow-plan.svg" width="172" alt="Plan the design"></a>&#8203;<a href="https://yain22.github.io/Unified_Semiparametric_HCT/trial-workflow.html#review"><img src="docs/assets/workflow-review.svg" width="172" alt="Review assumptions"></a>&#8203;<a href="https://yain22.github.io/Unified_Semiparametric_HCT/trial-workflow.html#enroll"><img src="docs/assets/workflow-enroll.svg" width="172" alt="Enroll and follow"></a>&#8203;<a href="https://yain22.github.io/Unified_Semiparametric_HCT/trial-workflow.html#analyze"><img src="docs/assets/workflow-analyze.svg" width="172" alt="Analyze the trial"></a></p>
+
 ## Reproduce a result in R
 
 [Download the replication files](https://yain22.github.io/Unified_Semiparametric_HCT/replication-source.zip), extract them, and open `HCT.Rproj`. Run these lines in the **R console** at the project root:

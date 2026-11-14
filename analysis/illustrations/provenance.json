@@ -24,7 +24,7 @@
     "source": "archive/figures/code/illustrate_hct_standardization_pictorial.R",
     "source_sha256": "e8aa7c6a9efadd6f2af69da235ba313c4cae10b3f1cd21d465def2007a263f50",
     "copy": "illustrate_hct_standardization_pictorial.R",
-    "change": "Relative output paths, configurable sans-serif font, and formatting; numerical parameters and formulas retained.",
-    "public_sha256": "09ab2a8d589f2ccc27b38ebc49bf750a05f28039d76b00e8421a59ee4a802303"
+    "change": "Replaced the archived two-stratum example with a continuous-covariate illustration of the hybrid control mean and internal precision share. The public script checks the formulas and generates PDF, EPS and PNG files.",
+    "public_sha256": "408c44ff76dcf2aa70c058c61016bf0309e734eb13df033ba503babe94ab7504"
   }
 ]

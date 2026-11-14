@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="172" height="140" viewBox="0 0 172 140" role="img" aria-labelledby="title description">
+  <title id="title">Plan the design</title>
+  <desc id="description">A protocol page and pencil mark the start of the design stage. Protocol and statistical analysis plan.</desc>
+  <rect width="172" height="140" fill="#f6f8f4"/>
+  <g fill="none" stroke="#7d9993" stroke-width="1.6">
+    <path d="M114 45h58m-15-4 5 4-5 4"/>
+  </g>
+  <circle cx="86" cy="45" r="28" fill="#dcebe6" stroke="#236760" stroke-width="1.5"/>
+  <g fill="none" stroke="#236760" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M69 30h19l7 7v22H69z" fill="#fffdf6"/>
+    <path d="M88 30v7h7M74 40h10m-10 5h9m-9 5h6"/>
+    <path d="m84 54 2-7 12-12a2.1 2.1 0 0 1 3 3L89 51z" fill="#fffdf6"/>
+    <path d="m96 37 3 3"/>
+  </g>
+  <text x="86" y="97" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15.5" font-weight="bold" fill="#19363c">Plan the design</text>
+  <g text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#3c5356">
+    <text x="86" y="116">Protocol and statistical</text>
+    <text x="86" y="132">analysis plan</text>
+  </g>
+</svg>

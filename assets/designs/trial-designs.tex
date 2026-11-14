@@ -40,9 +40,9 @@
 % after treatment assignment; neither assigns treatment to an external record.
 \newcommand{\compare}[1]{%
   \node[endpoint,fill=black!3,minimum height=.84cm] (comp) at (0,-4.48) {#1};
-  \draw[line] (l.south) -- (l.south |- 0,-3.92) -- (0,-3.92);
-  \draw[line] (r.south) -- (r.south |- 0,-3.92) -- (0,-3.92);
-  \draw[arrow] (0,-3.92) -- (comp.north);
+  \draw[line] (l.south) -- (l.south |- 0,-3.48) -- (0,-3.48);
+  \draw[line] (r.south) -- (r.south |- 0,-3.48) -- (0,-3.48);
+  \draw[arrow] (0,-3.48) -- (comp.north);
 }
 \begin{scope}
   \node[title] at (-2.34,.89) {(a) RCT};
@@ -59,9 +59,9 @@
   \draw[arrow] (c.south) -- (aug.north);
   \draw[arrow] (extern.east) -- (aug.west);
   \node[endpoint,fill=black!3,minimum height=.84cm] (comp) at (0,-4.48) {Hybrid comparison};
-  \draw[line] (t.west) -- (-2.57,-1.80) -- (-2.57,-3.92) -- (0,-3.92);
-  \draw[line] (aug.south) -- (1.23,-3.92) -- (0,-3.92);
-  \draw[arrow] (0,-3.92) -- (comp.north);
+  \draw[line] (t.west) -- (-2.57,-1.80) -- (-2.57,-3.48) -- (0,-3.48);
+  \draw[line] (aug.south) -- (1.23,-3.48) -- (0,-3.48);
+  \draw[arrow] (0,-3.48) -- (comp.north);
 \end{scope}
 \draw[black!18,line width=.6pt] (8.37,1.14) -- (8.37,-4.98);
 \begin{scope}[xshift=11.16cm]

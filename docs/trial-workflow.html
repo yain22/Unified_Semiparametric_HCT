@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>From protocol to analysis | causalgap</title>
+<link rel="icon" href="assets/mark.svg">
+<link rel="stylesheet" href="assets/guide.css">
+<style>
+  .workflow { max-width: 60rem; margin: 2.5rem auto; }
+  .workflow h1 { margin-bottom: .35em; }
+  .workflow figure { margin: 1.8rem 0 1.5rem; }
+  .workflow-stages { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); padding: 0; margin: 0; list-style: none; }
+  .workflow-stages a { display: block; background: #f6f8f4; border-bottom: 3px solid transparent; }
+  .workflow-stages img { display: block; width: 100%; height: auto; }
+  .workflow-stages a:hover, .workflow-stages a:focus-visible { border-color: #955a2d; }
+  .workflow-stages a[aria-current="step"] { border-color: var(--sea); }
+  .workflow figcaption { margin: .55rem 0; color: var(--muted); font: .92rem/1.45 system-ui,sans-serif; }
+  .workflow section { border-top: 1px solid var(--rule); padding: .25rem 0 1rem; max-width: 76ch; }
+  .workflow h2 { margin: .65em 0 .3em; }
+  .workflow section p { margin: .6em 0; }
+  @media (max-width: 650px) { .workflow-stages { grid-template-columns: repeat(2,minmax(0,1fr)); row-gap: .5rem; } }
+</style>
+</head>
+<body>
+<header><nav aria-label="Project"><a class="home" href="index.html">causalgap</a><a href="r-package.html">R package</a><a href="eif-models.html">Model comparison</a><a href="design-lab.html">Design lab</a><a href="index.html">Replication guide</a></nav></header>
+<main class="workflow"><h1>From protocol to analysis</h1>
+<p class="lead">How many controls should a trial randomize when external records are available? The answer depends on the precision gained and how far borrowing could move the estimated contrast from the trial effect.</p>
+<figure aria-label="Trial planning and analysis">
+<ol class="workflow-stages">
+<li><a href="#plan"><img src="assets/workflow-plan.svg" alt="Plan the design" width="172" height="140"></a></li>
+<li><a href="#review"><img src="assets/workflow-review.svg" alt="Review assumptions" width="172" height="140"></a></li>
+<li><a href="#enroll"><img src="assets/workflow-enroll.svg" alt="Enroll and follow" width="172" height="140"></a></li>
+<li><a href="#analyze"><img src="assets/workflow-analyze.svg" alt="Analyze the trial" width="172" height="140"></a></li>
+</ol>
+<figcaption>Select a stage to explore the design decision and its worked example.</figcaption>
+</figure>
+<section id="plan"><h2>Which controls will define the comparison?</h2>
+<p>Specify the trial population, outcome, follow-up window, and treatment effect in the protocol and statistical analysis plan. Compare a randomized trial using concurrent controls, a hybrid trial adding external controls, and a single-arm trial using external controls alone.</p>
+<p>In the schizophrenia example, the team plans to treat 120 children. With 60 concurrent and 300 external controls, the hybrid design has 83.2% power for a two-point improvement under the paper’s Gaussian planning assumptions and equal conditional control means. The randomized design with 120 concurrent controls has 66.5% power under the same assumptions.</p>
+<p><a href="design-lab.html#settings-heading">Vary the number of concurrent and external controls</a></p></section>
+<section id="review"><h2>How much disagreement could the design tolerate?</h2>
+<p>Ask whether patients with the same baseline characteristics would have comparable expected outcomes under control in both sources. Use clinical knowledge to specify plausible discrepancies and, where appropriate, discuss the assumptions with regulatory or health technology assessment advisers before enrollment.</p>
+<p>Consider the same hybrid design. If the expected improvement under control is half a point greater internally than externally at every baseline profile, the borrowed contrast favors treatment by an extra 0.42 points. With no true treatment effect, the probability of declaring a benefit rises from 2.5% to 8.8% under the planning model.</p>
+<p><a href="design-lab.html#case-drift">Try the half-point discrepancy in the design lab</a></p></section>
+<section id="enroll"><h2>Which observations enter the analysis?</h2>
+<p>Apply the eligibility rules in each source and measure the endpoint over comparable follow-up windows. Keep trial-treated participants, randomized controls, and external controls identifiable. Where an external eligibility rule excludes a trial profile, a hybrid design can use its randomized controls at that profile.</p>
+<p>In the six-month continuous glucose monitoring application, the hybrid analysis retained 229 trial-treated participants, 213 randomized controls, and 273 registry controls. Two trial participants fell outside registry eligibility and received an internal-control share of one.</p>
+<p><a href="eif-models.html#record-table">See which rows each design observes in a six-record example</a></p></section>
+<section id="analyze"><h2>What effect does the estimated contrast describe?</h2>
+<p>Fit the prespecified estimator and report its uncertainty. When both randomized arms are present, compare the borrowing estimate with a trial-only estimate for the same target population. In a single-arm trial, interpreting the external comparison as the trial treatment effect also requires an assumption about the trial participants’ unobserved outcomes under control.</p>
+<p>In the glucose monitoring example, the unrestricted hybrid contrast was −0.278 percentage points of HbA1c. The corresponding trial-only augmented estimate was −0.228. Their paired difference of −0.050 estimates how much borrowing moved the contrast in this cohort. Negative contrasts favor glucose monitoring.</p>
+<p><a href="index.html#examine-the-glucose-monitoring-analysis">Inspect the six-month estimates and their intervals</a> · <a href="eif-models.html#estimators">Explore the fitted estimators</a></p></section>
+</main>
+<script>
+  const stages = Array.from(document.querySelectorAll(".workflow-stages a"));
+  function showStage() {
+    const current = stages.find(link => link.hash === location.hash) || stages[0];
+    for (const link of stages) {
+      const chosen = link === current;
+      document.getElementById(link.hash.slice(1)).hidden = !chosen;
+      if (chosen) link.setAttribute("aria-current", "step");
+      else link.removeAttribute("aria-current");
+    }
+  }
+  for (const link of stages) {
+    link.addEventListener("click", event => {
+      if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      if (location.hash !== link.hash) history.pushState(null, "", link.hash);
+      showStage();
+    });
+  }
+  window.addEventListener("hashchange", showStage);
+  showStage();
+</script>
+</body></html>

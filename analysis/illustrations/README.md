@@ -10,4 +10,4 @@ The scripts use base R and Cairo graphics. Parameters are specified in each scri
 
 These are analytical illustrations, not fitted-data results. The observed-data diagram is `assets/main/hct_observed_data.tex`.
 
-The covariate-standardization figure shows the external mean as the proportion in stratum 1 changes. Its open marker uses the external cohort mix and its filled marker uses the trial mix. The script checks the two standardized means (15 and 13) and their corresponding causal-gaps (0 and 1.2). You can set `HCT_FIGURE_FONT` to a locally installed font.
+Figure 2 plots the internal, external and hybrid control means against a single baseline covariate. The adjacent panel shows how the precision share changes with the covariate and the variance ratio. At x = 0.5, equal variances give the internal controls one third of the weight and a hybrid mean of 12. Doubling the external variance raises the internal share to one half. You can set `HCT_FIGURE_FONT` to a locally installed font.
