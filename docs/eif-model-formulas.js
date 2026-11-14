@@ -62,8 +62,8 @@
   });
 
   // A compound token has one tab stop, including its subscripts and arguments.
-  function mark(key, expression) {
-    const item = notation[key];
+  function mark(key, expression, vocabulary = notation) {
+    const item = vocabulary[key];
     if (!item) throw new Error('Unknown EIF notation: ' + key);
     const flat = expression.replace(/<mrow data-notation="[^"]+" role="button" tabindex="0" aria-label="[^"]+">/g, '<mrow>');
     const label = item.label.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');

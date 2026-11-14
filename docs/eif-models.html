@@ -1,19 +1,27 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Four trial models and their influence functions | causalgap</title><meta name="description" content="Compare the unrestricted hybrid-trial efficient influence function with common-mean hybrid, randomized, and externally controlled trials.">
+<title>Trial models, influence functions, and fitted estimators | causalgap</title><meta name="description" content="Explore four trial models, their efficient influence functions, and how each fitted estimator combines participant outcomes.">
 <link rel="icon" href="assets/mark.svg"><link rel="stylesheet" href="assets/guide.css"><link rel="stylesheet" href="eif-models.css"><link rel="stylesheet" href="eif-record-table.css"><link rel="stylesheet" href="eif-notation.css">
 <script src="eif-model-calculator.js" defer></script>
 <script src="eif-model-formulas.js" defer></script>
+<script src="eif-estimator-formulas.js" defer></script>
 <script src="eif-reduction-steps.js" defer></script>
 <script src="eif-notation.js" defer></script>
 <script src="eif-record-table.js" defer></script>
+<script src="eif-estimator-example.js" defer></script>
+<script src="eif-estimators.js" defer></script>
 <script src="eif-models.js" defer></script></head>
 <body><a class="skip" href="#main">Skip to models</a><header><nav aria-label="Project"><a class="home" href="index.html">causalgap</a><a href="r-package.html">R package</a><a aria-current="page" href="eif-models.html">Model comparison</a><a href="eif-lab.html">EIF lab</a><a href="design-lab.html">Design lab</a><a href="index.html">Replication guide</a></nav></header>
-<main id="main"><div class="intro"><p class="kicker">Statistical theory · Theorem 1 and Corollaries 1–3</p><h1>One hybrid trial, three reductions</h1><p class="lead">What changes in the efficient influence function (EIF) when the two control means agree? What changes when an entire control group is absent? Choose a model to see its equation, then follow one observation through the calculation.</p></div>
+<main id="main"><div class="intro"><p class="kicker">Statistical theory · Section 4</p><h1>One hybrid trial, three reductions</h1><p class="lead">What changes in the efficient influence function (EIF) when the two control means agree? What changes when an entire control group is absent? Choose a model to explore its EIF or calculate its fitted estimator from six hypothetical records.</p></div>
 <figure class="map"><img src="assets/trial-models.png" alt="The common-mean hybrid model is nested in the unrestricted hybrid model. Removing external controls gives an RCT; removing internal controls gives an ECT under its own observation law."><figcaption>Equality of the control means restricts an existing model. Removing a source changes which observations are possible.</figcaption></figure>
 <fieldset id="models"><legend>Choose an observation model</legend><div class="choices">
 <label><input type="radio" name="model" value="unrestricted" checked><span>Unrestricted HCT</span></label><label><input type="radio" name="model" value="transportable"><span>Common-mean HCT</span></label><label><input type="radio" name="model" value="rct"><span>Randomized trial</span></label><label><input type="radio" name="model" value="ect"><span>Externally controlled trial</span></label></div></fieldset>
 <h2 id="model-name">Unrestricted hybrid trial</h2>
+<fieldset class="equation-choice" id="estimators">
+  <legend class="visually-hidden">Equation to explore</legend>
+  <label><input type="radio" name="equation-view" value="eif" checked>Population EIF</label>
+  <label><input type="radio" name="equation-view" value="estimator">Fitted estimator</label>
+</fieldset>
 <p class="notation-help">Hover over, tap, or focus a symbol in an equation to read its definition.</p>
 <div class="trace-toolbar" hidden id="trace-toolbar">
   <label for="reduction-path">Follow the derivation for</label>
@@ -33,13 +41,34 @@
   <span id="reduction-announcement" role="status" class="visually-hidden"></span>
 </section>
 <section id="formula" aria-label="Selected model equation"><noscript><p>Enable scripting to compare the four formulas, or download the <a href="examples/model-reductions.R">R example</a> and consult the <a href="https://github.com/yain22/Unified_Semiparametric_HCT/blob/main/assets/tables/eif-components.tex">seven-term equation source</a>.</p></noscript></section>
-<section class="example-records" aria-labelledby="record-heading">
+<section id="fitted-estimator" aria-labelledby="estimator-heading" hidden>
+  <h3 id="estimator-heading"></h3>
+  <label class="estimator-choice" id="adjustment-control" hidden>Trial regression
+    <select id="estimator-adjustment"><option value="anova">ANOVA (unadjusted)</option><option value="ancova">ANCOVA (adjusted for X₁)</option></select>
+  </label>
+  <div id="estimator-formula"></div>
+  <section class="estimator-example" aria-labelledby="estimator-example-heading">
+    <h3 id="estimator-example-heading">Calculate the estimate from the records</h3>
+    <p>These six hypothetical records come from Figure S1. The table shows the records used by the selected design. Choose a participant to inspect the terms in that row.</p>
+    <label class="estimator-choice" id="external-outcomes-control">External control outcomes
+      <select id="external-outcomes"><option value="0">As recorded in the example</option><option value="1">Add 1 outcome unit to each external control</option></select>
+    </label>
+    <p id="estimator-fit-note"></p>
+    <div class="estimator-total"><span>Estimated treatment contrast</span><output id="estimator-result" aria-live="polite"></output><span id="estimator-arithmetic"></span></div>
+    <div class="estimator-rows"><table><caption>Participant contributions to the sum</caption>
+      <thead><tr><th scope="col">Participant</th><th scope="col">Group</th><th scope="col">X₁</th><th scope="col">Outcome</th><th scope="col">Contribution</th></tr></thead>
+      <tbody id="estimator-rows"></tbody></table></div>
+    <details open class="estimator-parts"><summary id="estimator-parts-caption"></summary><dl id="estimator-parts"></dl></details>
+    <p class="example-links"><a href="examples/fitted-estimators.R" download>Reproduce the four estimators in R</a></p>
+  </section>
+</section>
+<section id="population-records" class="example-records" aria-labelledby="record-heading">
   <h2 id="record-heading">Which records does this design observe?</h2>
   <p>Figure S1 in the supplement illustrates a hybrid trial with six hypothetical records. Change the observation model above to see which rows enter each comparison.</p>
   <div id="record-table"></div>
   <p class="example-links"><a href="examples/observed-records.csv" download>Download the six records (CSV)</a> <span aria-hidden="true">·</span> <a href="examples/observed-records.R" download>Reproduce the design subsets in R</a></p>
 </section>
-<section class="experiment"><p class="kicker">Worked example · finite outcome distribution</p><h2>Evaluate one record</h2>
+<section class="experiment" id="population-example"><p class="kicker">Worked example · finite outcome distribution</p><h2>Evaluate one record</h2>
 <p>At baseline stratum X = x, the treated mean is 1 + 0.4x. In a randomized trial or hybrid trial the internal control mean is 0.4x. Where external controls are present their mean starts at 0.4x and can be shifted downward or upward. Under the common-mean restriction their mean is 0.4x. The trial arms have variance one.</p>
 <details class="law-details"><summary>Outcome distribution and baseline mix</summary><p>Within each observed group and stratum, Y = m + √v Z, where m and v are its conditional mean and variance. Z takes the values −√3, 0, and √3 with probabilities 1/6, 2/3, and 1/6. These give mean zero, variance one, third moment zero, and fourth moment three, matching a standard Gaussian through its fourth moment. The example enumerates these three outcomes exactly. The variance-correction terms involve squared residuals, so their covariances and variances can change under other third and fourth moments.</p><p>With the same baseline mix, half of each source has X = 1. With a different mix, two thirds of the trial and one third of the external cohort have X = 1. In the RCT the trial mix alone is used.</p></details>
 <div class="controls"><label>Covariate stratum <select id="x"><option value="0">X = 0</option><option value="1">X = 1</option></select></label><label>Observed group <select id="group"><option value="treated">Trial treated</option><option value="internal">Internal control</option><option value="external" selected>External control</option></select></label><label>Outcome in this group <select id="z"><option value="-1">Low</option><option value="0" selected>At the group mean</option><option value="1">High</option></select></label>
@@ -48,5 +77,5 @@
 <div class="results" aria-live="polite"><div><span id="target-label">Statistical target</span><strong id="target"></strong></div><div>Gap from trial effect<strong id="gap"></strong></div><div>EIF for this record<strong id="score"></strong></div><div>Per-observation bound B<strong id="bound"></strong></div></div>
 <p id="plan-detail"></p><p id="record-detail"></p><table><caption>Signed contributions to this record’s target EIF</caption><thead><tr><th scope="col">Contribution</th><th scope="col">Value</th></tr></thead><tbody id="terms"></tbody></table>
 <p id="zero-note" class="note"></p><p>The bound B is the expected squared EIF under the selected law. The calculation uses independent observations with the displayed source and allocation probabilities. Sample sizes scale the bound, and group counts are expected counts. The calculation concerns uncertainty around the selected target. When the borrowing target differs from the trial effect, its standard error does not measure that gap.</p></section>
-<section><h2>Repeat the example in R</h2><p><a href="examples/model-reductions.R" download>Download the base R example</a> and run <code>source("model-reductions.R")</code>. It prints the four targets and bounds at the default settings. To see why the extra terms are needed, <a href="eif-lab.html#derivative">perturb an outcome distribution in the EIF lab</a>.</p></section></main>
+<section id="population-r"><h2>Repeat the example in R</h2><p><a href="examples/model-reductions.R" download>Download the base R example</a> and run <code>source("model-reductions.R")</code>. It prints the four targets and bounds at the default settings. To see why the extra terms are needed, <a href="eif-lab.html#derivative">perturb an outcome distribution in the EIF lab</a>.</p></section></main>
 <footer><a href="r-package.html">R package</a> · <a href="index.html">Replication guide</a></footer></body></html>

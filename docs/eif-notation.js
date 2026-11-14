@@ -16,12 +16,22 @@
   const role = document.createElement('p');
   role.className = 'notation-role';
   tip.append(title, definition, role);
-  document.body.append(tip);
+  const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  arrow.id = 'eif-notation-arrow';
+  arrow.setAttribute('aria-hidden', 'true');
+  arrow.setAttribute('focusable', 'false');
+  arrow.setAttribute('hidden', '');
+  arrow.innerHTML = '<defs><marker id="notation-arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10 2.5 5Z"/></marker></defs>' +
+    '<path class="arrow-halo"/><path class="arrow-line" marker-end="url(#notation-arrowhead)"/>';
+  const arrowPaths = arrow.querySelectorAll(':scope > path');
+  document.body.append(arrow, tip);
 
   let active = null;
+  let bridge = null;
   let pinned = false;
   let suppressed = null;
   let hoverTimer;
+  let crossTimer;
   let lastPointer;
   let dismissedPointer;
   const observer = new MutationObserver(() => {
@@ -38,6 +48,7 @@
 
   function close() {
     clearTimeout(hoverTimer);
+    clearTimeout(crossTimer);
     observer.disconnect();
     if (active) {
       describe(active, false);
@@ -46,7 +57,11 @@
     active = null;
     pinned = false;
     tip.hidden = true;
+    arrow.setAttribute('hidden', '');
+    bridge = null;
   }
+
+  const clamp = (v, low, high) => Math.max(low, Math.min(high, v));
 
   function position() {
     if (!active) return;
@@ -61,20 +76,43 @@
       close();
       return;
     }
-    const margin = 8;
-    const gutter = 6;
-    const above = box.top - gutter - margin;
-    const below = height - box.bottom - gutter - margin;
+    const margin = 12;
+    const rightEdge = Math.min(width - margin, document.querySelector('main').getBoundingClientRect().right + 180);
     tip.style.maxHeight = '';
     const natural = tip.getBoundingClientRect();
-    const useBelow = below >= natural.height || below >= above;
-    const space = Math.max(0, useBelow ? below : above);
-    if (natural.height > space && space >= 64) tip.style.maxHeight = space + 'px';
-    const h = tip.getBoundingClientRect().height;
-    const x = (box.left + box.right - natural.width) / 2;
-    const y = useBelow ? box.bottom + gutter : box.top - gutter - h;
-    tip.style.left = Math.max(margin, Math.min(x, width - natural.width - margin)) + 'px';
-    tip.style.top = Math.max(margin, Math.min(y, height - h - margin)) + 'px';
+    const centerX = (box.left + box.right) / 2;
+    const centerY = (box.top + box.bottom) / 2;
+    let left = rightEdge - natural.width;
+    let top, fromX, fromY, toX, toY;
+    if (window.matchMedia('(min-width: 900px)').matches && left - box.right >= 48) {
+      top = clamp(centerY - natural.height * .75, margin, height - natural.height - margin);
+      fromX = left;
+      fromY = clamp(centerY - 24, top + 12, top + natural.height - 12);
+      toX = box.right + 4;
+      toY = centerY;
+      bridge = {left: box.right, right: left, top, bottom: top + natural.height,
+                startTop: box.top, startBottom: box.bottom};
+    } else {
+      const gap = 25;
+      const above = box.top - gap - margin;
+      const below = height - box.bottom - gap - margin;
+      const useBelow = below >= natural.height || below >= above;
+      const space = Math.max(0, useBelow ? below : above);
+      if (natural.height > space && space >= 48) tip.style.maxHeight = space + 'px';
+      const h = tip.getBoundingClientRect().height;
+      left = clamp(centerX - natural.width / 2, margin, width - natural.width - margin);
+      top = clamp(useBelow ? box.bottom + gap : box.top - gap - h, margin, height - h - margin);
+      fromX = clamp(centerX, left + 12, left + natural.width - 12);
+      fromY = useBelow ? top : top + h;
+      toX = centerX;
+      toY = useBelow ? box.bottom + 4 : box.top - 4;
+      bridge = null;
+    }
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    const path = 'M' + fromX + ',' + fromY + ' L' + toX + ',' + toY;
+    for (const line of arrowPaths) line.setAttribute('d', path);
+    arrow.removeAttribute('hidden');
   }
 
   function show(node, pin) {
@@ -123,13 +161,15 @@
   function leave() {
     if (pinned || !active) return;
     clearTimeout(hoverTimer);
-    // Allow the pointer to cross the small space between the symbol and its explanation.
+    // Allow small detours when moving the pointer to the definition.
     hoverTimer = setTimeout(close, 180);
   }
 
   function hover(event) {
     if (event.pointerType === 'touch') return;
+    const previousX = lastPointer?.x;
     lastPointer = {x: event.clientX, y: event.clientY};
+    clearTimeout(crossTimer);
     if (dismissedPointer) {
       // Removing the overlay can send pointerover to a different token under a stationary cursor.
       if (lastPointer.x === dismissedPointer.x && lastPointer.y === dismissedPointer.y) return;
@@ -142,6 +182,20 @@
     if (pinned) return;
     const node = nearest(event);
     if (node !== suppressed) suppressed = null;
+    // A reader following the arrow can pass over other symbols on the same line.
+    if (bridge && event.clientX >= bridge.left && event.clientX <= bridge.right &&
+        (previousX === undefined || event.clientX >= previousX)) {
+      const t = (event.clientX - bridge.left) / (bridge.right - bridge.left);
+      const top = (1 - t) * bridge.startTop + t * bridge.top;
+      const bottom = (1 - t) * bridge.startBottom + t * bridge.bottom;
+      if (event.clientY >= top - 6 && event.clientY <= bottom + 6) {
+        clearTimeout(hoverTimer);
+        if (node && node !== active && node !== suppressed) {
+          crossTimer = setTimeout(() => show(node, false), 300);
+        }
+        return;
+      }
+    }
     if (node && node !== suppressed) show(node, false);
     else if (active) leave();
   }

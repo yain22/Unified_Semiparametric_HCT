@@ -131,6 +131,7 @@
       by("model-name").textContent = design.title;
       by("formula").innerHTML = EifFormulaPanels[design.formula];
       EifRecordTable.render(model);
+      if (fittedSelected()) EifEstimatorView.render(model);
       const choosingFromFull = model === "unrestricted";
       by("reduction-path").hidden = !choosingFromFull;
       document.querySelector('label[for="reduction-path"]').hidden = !choosingFromFull;
@@ -185,7 +186,7 @@
     by("zero-note").textContent = zeroNote;
   }
   function markWideEquations() {
-    for (const block of document.querySelectorAll("#formula .formula-block, #reduction-equation .formula-block")) {
+    for (const block of document.querySelectorAll(".formula-block")) {
       const wide = block.scrollWidth > block.clientWidth + 1;
       block.classList.toggle("wide-equation", wide);
       block.tabIndex = wide ? 0 : -1;
@@ -197,6 +198,27 @@
   }));
   window.addEventListener("resize", markWideEquations);
   by("formula").addEventListener("toggle", markWideEquations, true);
+  by("estimator-formula").addEventListener("toggle", markWideEquations, true);
+  function fittedSelected() {
+    return document.querySelector('input[name="equation-view"]:checked').value === "estimator";
+  }
+  function switchView() {
+    const fitted = fittedSelected();
+    window.EifNotationHelp.close();
+    closeTrace();
+    for (const id of ["trace-toolbar", "formula", "population-records", "population-example", "population-r"]) {
+      by(id).hidden = fitted;
+    }
+    by("fitted-estimator").hidden = !fitted;
+    if (fitted) EifEstimatorView.render(document.querySelector('input[name="model"]:checked').value);
+    markWideEquations();
+  }
+  by("estimators").addEventListener("change", switchView);
+  by("estimator-adjustment").addEventListener("change", () => {
+    window.EifNotationHelp.close();
+    EifEstimatorView.render("rct");
+    markWideEquations();
+  });
   by("trace-toggle").addEventListener("click", () => {
     if (traceModel !== null) {
       window.EifNotationHelp.close();
@@ -236,6 +258,16 @@
     if (document.hidden) stopPlayback();
   });
   by("trace-toolbar").hidden = false;
+  function openLinkedView() {
+    if (location.hash === "#estimators") {
+      document.querySelector('input[name="equation-view"][value="estimator"]').checked = true;
+    } else if (["#record-table", "#models"].includes(location.hash)) {
+      document.querySelector('input[name="equation-view"][value="eif"]').checked = true;
+    } else return;
+    switchView();
+  }
   refresh();
+  openLinkedView();
+  window.addEventListener("hashchange", openLinkedView);
   markWideEquations();
 })();

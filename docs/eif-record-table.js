@@ -54,5 +54,10 @@
     key.textContent = "S identifies trial membership and A identifies treatment. The observed group indicators are I₁ = SA (trial treated), I₁,₀ = S(1 − A) (internal control), and I₀ = 1 − S (external control). Each record has one observed outcome Y. The subscripts on Y name its group.";
     mount.replaceChildren(viewport, note, key);
   }
-  window.EifRecordTable = { render };
+  function getRecords() {
+    return records.map(([id, s, a, x, x2, y]) => ({id, s, a, x, x2, y}));
+  }
+  const api = {render, getRecords};
+  if (typeof window !== "undefined") window.EifRecordTable = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
 })();
