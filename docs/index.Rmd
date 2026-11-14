@@ -91,7 +91,7 @@ With Cairo graphics available in R (`capabilities("cairo")`), install the two pa
 
 # A design decision before enrollment
 
-In Scenario I, the randomized controlled trial (RCT) enrolls 120 treated children and 120 concurrent controls. The hybrid trial (HCT) keeps 60 concurrent controls and borrows 300 external controls. The externally controlled single-arm trial (ECT) uses the same external cohort and enrolls only the 120 treated children. Improvement in the negative symptom score is measured in points, with larger values favoring treatment. The planned effect is two points.
+In Scenario I, all three designs enroll 120 treated children. The hybrid trial (HCT) recruits 60 concurrent controls and borrows 300 external controls. The externally controlled single-arm trial (ECT) uses the same external cohort. The randomized controlled trial (RCT) recruits 120 concurrent controls. Improvement in the negative symptom score is measured in points, with larger values favoring treatment. The planned effect is two points.
 
 ## Power when control outcomes agree
 
@@ -136,12 +136,17 @@ false_positive <- sapply(names(se), function(design) {
 })
 
 old_par <- par(mar = c(4.2, 4.2, 0.7, 0.8))
-colors <- c("#00746E", "#9A4925", "#48555D")
-matplot(delta, 100 * false_positive, type = "l", lty = c(1, 2, 3),
+colors <- c("#176CB0", "#C75A18", "#7952A0")
+shapes <- c(16, 1, 17)
+matplot(delta, 100 * false_positive, type = "l", lty = 1,
         col = colors, lwd = 2.6, xlab = "Internal minus external mean (points)",
         ylab = "False-positive probability (%)", las = 1, bty = "l")
+for (j in seq_along(shapes)) {
+  at <- seq(40L + 14L * j, length(delta), by = 95L)
+  points(delta[at], 100 * false_positive[at, j], pch = shapes[j], col = colors[j])
+}
 legend("topleft", legend = c("Hybrid trial", "Externally controlled trial",
-       "Randomized trial"), col = colors, lty = c(1, 2, 3), lwd = 2.6,
+       "Randomized trial (ANCOVA)"), col = colors, lty = 1, pch = shapes, lwd = 2.6,
        bty = "n", cex = 0.85)
 par(old_par)
 ```

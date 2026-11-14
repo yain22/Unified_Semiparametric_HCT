@@ -3,7 +3,7 @@
 // The one-sided 0.025 test and prognostic R-squared are fixed by Scenario I.
 const z975 = 1.959963984540054;
 const residualVariance = 0.75 * 7.5 ** 2;
-const designNames = {rct: 'RCT (ANCOVA)', hct: 'HCT', ect: 'ECT'};
+const designNames = {hct: 'HCT', ect: 'ECT', rct: 'RCT (ANCOVA)'};
 
 function normalCdf(z) {
   // Abramowitz & Stegun 26.2.17. Absolute error below 8e-8.
@@ -27,20 +27,26 @@ function designResult(internal, external, delta) {
   };
 }
 
-function evaluateDesigns(settings) {
+function controlCounts(settings) {
   return {
-    rct: designResult(settings.rct, 0, settings.delta),
-    hct: designResult(settings.hct, settings.external, settings.delta),
-    ect: designResult(0, settings.external, settings.delta)
+    hct: [settings.hct, settings.external],
+    ect: [0, settings.external],
+    rct: [settings.rct, 0]
   };
 }
 
+function evaluateDesigns(settings) {
+  return Object.fromEntries(Object.entries(controlCounts(settings)).map(([key, [internal, external]]) =>
+    [key, designResult(internal, external, settings.delta)]));
+}
+
 function rCode(s) {
+  const groups = Object.entries(controlCounts(s));
   return [
     '# Scenario I: each design enrolls 120 treated participants.',
-    'design <- c("RCT (ANCOVA)", "HCT", "ECT")',
-    'internal <- c(' + s.rct + ', ' + s.hct + ', 0)',
-    'external <- c(0, ' + s.external + ', ' + s.external + ')',
+    'design <- c(' + groups.map(([key]) => '"' + designNames[key] + '"').join(', ') + ')',
+    'internal <- c(' + groups.map(([, [internal]]) => internal).join(', ') + ')',
+    'external <- c(' + groups.map(([, [, external]]) => external).join(', ') + ')',
     'delta <- ' + s.delta.toFixed(2) + '  # internal minus external control mean',
     'v <- 0.75 * 7.5^2',
     'external_share <- external / (internal + external)',
@@ -84,27 +90,40 @@ function plotCurves(canvas, settings, focus) {
   ctx.beginPath(); ctx.moveTo(x(settings.delta), top); ctx.lineTo(x(settings.delta), bottom);
   ctx.strokeStyle = '#81939c'; ctx.setLineDash([2, 3]); ctx.stroke();
   ctx.restore();
-  const styles = {rct: ['#334e65', [7, 4]], hct: ['#ae501d', []], ect: ['#147552', [2, 4]]};
-  const order = Object.keys(styles).filter(key => key !== focus).concat(focus);
+  const order = Object.keys(trend).filter(key => key !== focus).concat(focus);
+  const colors = Object.fromEntries(order.map(key =>
+    [key, getComputedStyle(document.querySelector('.key .' + key)).color]));
   const selected = evaluateDesigns(settings);
   order.forEach(key => {
     const curve = trend[key];
-    const [color, dash] = styles[key];
     ctx.save();
-    ctx.lineWidth = key === focus ? 3.3 : 1.8;
-    ctx.strokeStyle = color; ctx.setLineDash(dash); ctx.beginPath();
+    ctx.lineWidth = key === focus ? 2.7 : 1.7;
+    ctx.strokeStyle = colors[key]; ctx.beginPath();
     for (let i = 0; i <= 160; i++) {
       const delta = -1 + i / 80;
       const rate = normalCdf(curve.externalShare * delta / curve.se - z975);
       if (i === 0) ctx.moveTo(x(delta), y(rate)); else ctx.lineTo(x(delta), y(rate));
     }
     ctx.stroke(); ctx.restore();
-    if (key === focus) {
-      ctx.beginPath();
-      ctx.arc(x(settings.delta), y(selected[key].falsePositive), 4, 0, 2 * Math.PI);
-      ctx.fillStyle = color; ctx.fill();
-    }
   });
+  const positions = {hct: [-.75, .40], ect: [-.55, .62], rct: [-.32, .83]};
+  function mark(key, delta, rate, size) {
+    const cx = x(delta), cy = y(rate);
+    ctx.beginPath();
+    if (key === 'rct') ctx.rect(cx - size, cy - size, 2 * size, 2 * size);
+    else ctx.arc(cx, cy, size, 0, 2 * Math.PI);
+    ctx.fillStyle = key === 'ect' ? '#fff' : colors[key];
+    ctx.fill();
+    if (key === 'ect') {
+      ctx.strokeStyle = colors[key]; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+  }
+  order.forEach(key => {
+    const curve = trend[key];
+    positions[key].forEach(delta =>
+      mark(key, delta, normalCdf(curve.externalShare * delta / curve.se - z975), 3));
+  });
+  mark(focus, settings.delta, selected[focus].falsePositive, 4.5);
 }
 
 function startLab() {

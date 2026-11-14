@@ -34,7 +34,7 @@ efficiency_bounds <- function(nT = 100, nI = 50, nE = 150,
     ect_counts["external"] <- nI + nE
   }
   designs <- list(unrestricted = hybrid_counts, transportable = hybrid_counts,
-                  rct = rct_counts, ect = ect_counts)
+                  ect = ect_counts, rct = rct_counts)
 
   evaluate_design <- function(model) {
     counts <- designs[[model]]
@@ -106,14 +106,15 @@ matches <- function(actual, expected) {
   isTRUE(all.equal(actual, expected, tolerance = 1e-12))
 }
 stopifnot(
-  matches(retained$N, c(300, 300, 150, 250)),
+  identical(retained$model, c("unrestricted", "transportable", "ect", "rct")),
+  matches(retained$N, c(300, 300, 250, 150)),
   matches(retained$target, rep(1, 4)),
-  matches(retained$variance, c(0.015, 0.015, 0.03, 1/60)),
+  matches(retained$variance, c(0.015, 0.015, 1/60, 0.03)),
   matches(equal_total$N, rep(300, 4)),
   matches(equal_total$variance, rep(0.015, 4)),
-  matches(unequal_variances$variance, c(0.01 + 1/87.5, 0.01 + 1/87.5, 0.015, 0.03)),
-  matches(discrepant$target, c(1.15, NA, 1, 1.2)),
-  matches(discrepant$B, c(4.528125, NA, 4.5, 25/6)),
+  matches(unequal_variances$variance, c(0.01 + 1/87.5, 0.01 + 1/87.5, 0.03, 0.015)),
+  matches(discrepant$target, c(1.15, NA, 1.2, 1)),
+  matches(discrepant$B, c(4.528125, NA, 25/6, 4.5)),
   matches(discrepant$SE, sqrt(discrepant$variance))
 )
 examples <- list("Retained groups, equal means" = retained,

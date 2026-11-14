@@ -3,10 +3,10 @@
 const EfficiencyBounds = (() => {
   const defaults = { nT: 100, nI: 50, nE: 150, vT: 1, vI: 1, vE: 1, delta: 0, plan: "retain" };
   const models = {
-    unrestricted: { label: "Unrestricted HCT", color: "#276290", shape: "circle" },
+    unrestricted: { label: "Unrestricted HCT", color: "#176cb0", shape: "circle" },
     transportable: { label: "Common-mean HCT", color: "#076b60", shape: "diamond" },
-    rct: { label: "RCT", color: "#465963", shape: "square" },
-    ect: { label: "ECT", color: "#945020", shape: "triangle" }
+    ect: { label: "ECT", color: "#c75a18", shape: "open-circle" },
+    rct: { label: "RCT", color: "#50575d", shape: "square" }
   };
 
   // Bounds are on the estimator variance scale (E[phi²]/N for each design).
@@ -40,10 +40,10 @@ const EfficiencyBounds = (() => {
         target: 1 + externalShare * delta, bound: base + extraSource + extraInternal + extraExternal },
       { model: "transportable", nT, nI, nE, estimand: "Trial treatment effect",
         target: common ? 1 : null, bound: common ? base : null },
-      { model: "rct", nT, nI: rctControls, nE: 0, estimand: "Trial treatment effect",
-        target: 1, bound: vT / nT + vI / rctControls },
       { model: "ect", nT, nI: 0, nE: ectControls, estimand: "External comparison",
-        target: 1 + delta, bound: vT / nT + vE / ectControls }
+        target: 1 + delta, bound: vT / nT + vE / ectControls },
+      { model: "rct", nT, nI: rctControls, nE: 0, estimand: "Trial treatment effect",
+        target: 1, bound: vT / nT + vI / rctControls }
     ];
     for (const row of rows) {
       row.n = row.nT + row.nI + row.nE;
@@ -89,14 +89,14 @@ const EfficiencyBounds = (() => {
       const value = svgElement("text", { y: y + 4, "font-size": 12, "text-anchor": "end" });
       const missing = svgElement("text", { y: y + 4, "font-size": 12, fill: "#526567" }, "Inapplicable");
       let marker;
-      if (style.shape === "circle") marker = svgElement("circle", { r: 6 });
+      const open = style.shape === "open-circle";
+      if (style.shape === "circle" || open) marker = svgElement("circle", { r: 6 });
       if (style.shape === "square") marker = svgElement("rect", { x: -5.5, y: -5.5, width: 11, height: 11 });
       if (style.shape === "diamond") marker = svgElement("polygon", { points: "0,-7 7,0 0,7 -7,0" });
-      if (style.shape === "triangle") marker = svgElement("polygon", { points: "0,-7 7,6 -7,6" });
       marker.setAttribute("class", "bound-marker");
-      marker.setAttribute("fill", style.color);
-      marker.setAttribute("stroke", "#fff");
-      marker.setAttribute("stroke-width", "1.2");
+      marker.setAttribute("fill", open ? "#fff" : style.color);
+      marker.setAttribute("stroke", open ? style.color : "#fff");
+      marker.setAttribute("stroke-width", open ? "2" : "1.2");
       lane.append(rail, label, value, marker);
       svg.append(lane);
       lanes[model] = { lane, rail, value, marker, missing, y };
@@ -237,8 +237,9 @@ const EfficiencyBounds = (() => {
           " of the control mean to internal controls. " + ordering;
       } else {
         status.textContent = "The designs now estimate different contrasts. The hybrid target is " +
-          format(current.rows[0].target) + " with " + share + " internal weight. The trial effect is 1 and " +
-          "the external comparison is " + format(current.rows[3].target) +
+          format(current.rows.find(row => row.model === "unrestricted").target) + " with " + share +
+          " internal weight. The trial effect is 1 and the external comparison is " +
+          format(current.rows.find(row => row.model === "ect").target) +
           ". The common-mean model is inapplicable.";
       }
     }
