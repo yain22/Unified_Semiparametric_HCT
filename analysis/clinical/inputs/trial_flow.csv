@@ -1,0 +1,3 @@
+"A","arm","randomized","missing_followup","observed_followup","baseline_missing_after_observed_followup","other_covariate_missing_after_observed_pair","final_observed_analysis","baseline_missing_total","both_baseline_followup_missing"
+0,"Internal controls",219,5,214,1,0,213,2,1
+1,"Trial CGM",232,3,229,0,0,229,0,0

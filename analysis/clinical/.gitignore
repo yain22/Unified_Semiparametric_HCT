@@ -1,0 +1,5 @@
+*.rds
+*.RData
+*.zip
+__pycache__/
+validation/

@@ -1,0 +1,16 @@
+"group","label","variable","type","n_total","n_observed","mean","sd","count","percentage"
+"T","Trial CGM","hba1c0","continuous",229,229,7.44192139737991,0.910507749673545,NA,NA
+"T","Trial CGM","age","continuous",229,229,24.5152838427948,14.9750079088738,NA,NA
+"T","Trial CGM","duration","continuous",229,229,13.8227074235808,11.9117518857885,NA,NA
+"T","Trial CGM","male","binary",229,229,NA,NA,107,46.7248908296943
+"T","Trial CGM","pump","binary",229,229,NA,NA,189,82.5327510917031
+"C","Internal controls","hba1c0","continuous",213,213,7.45868544600939,0.839183205549218,NA,NA
+"C","Internal controls","age","continuous",213,213,25.6713615023474,16.6341027434895,NA,NA
+"C","Internal controls","duration","continuous",213,213,13.5572769953052,11.5959128332815,NA,NA
+"C","Internal controls","male","binary",213,213,NA,NA,92,43.1924882629108
+"C","Internal controls","pump","binary",213,213,NA,NA,171,80.2816901408451
+"E","External controls","hba1c0","continuous",273,273,7.84468864468864,1.04715089390843,NA,NA
+"E","External controls","age","continuous",273,273,27.7106227106227,16.2247699152248,NA,NA
+"E","External controls","duration","continuous",273,273,13.7985347985348,12.1058322438352,NA,NA
+"E","External controls","male","binary",273,273,NA,NA,138,50.5494505494505
+"E","External controls","pump","binary",273,273,NA,NA,145,53.1135531135531

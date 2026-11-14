@@ -1,0 +1,23 @@
+{
+  "repetitions_per_size": 5000,
+  "seed": "52461004 + 100000*(nRCT==500) + replicate",
+  "draw_order": "Exact original external-X, external-error, treated-X, control-X, treated-error, control-error order",
+  "method": "OLS Y on intercept, treatment, X1,...,X10, X1^2,...,X10^2 in trial records only; treatment coefficient, HC2 standard error, normal 95% Wald interval",
+  "comparison": "Same outcome basis as the HCT and ECT nuisance regressions; retains original ANOVA and linear ANCOVA. Common quadratic main effects are correct for this DGP; it does not claim complete equality of all estimation/uncertainty procedures.",
+  "gap": "RCT outcomes and estimates are invariant across the external-discrepancy grid; true trial causal gap is zero",
+  "samples_hashed": 10000,
+  "all_hashes_match": true,
+  "max_linear_estimate_error": 5.551115123125783e-16,
+  "max_linear_se_error": 5.273559366969494e-16,
+  "source_files": [
+    "archive/v3/results/heterogeneous_gap/common_gap/sample_pairing.csv",
+    "archive/v3/results/heterogeneous_gap/common_gap/replicates.csv.gz",
+    "archive/v3/results/heterogeneous_gap/common_gap/protocol.json"
+  ],
+  "source_sha256": {
+    "archive/v3/results/heterogeneous_gap/common_gap/sample_pairing.csv": "e2df384dffdbcd041451a8340a0ddb2c5ab8fd42741b6081d471f926e8e1d054",
+    "archive/v3/results/heterogeneous_gap/common_gap/replicates.csv.gz": "368b17462281718f05d10d6b6e8c8fdf09d8df1bb3b34718e9cf68b8ca7773f1",
+    "archive/v3/results/heterogeneous_gap/common_gap/protocol.json": "5678c2927b4a9a03a7f56d3d79350037088333ecf092adda696f3e55dd37ef3e"
+  },
+  "elapsed_seconds": 111.94001793861389
+}

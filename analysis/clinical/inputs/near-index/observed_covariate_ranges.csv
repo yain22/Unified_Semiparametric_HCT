@@ -1,0 +1,16 @@
+"group","variable","min","max","below_external_min","above_external_max"
+"trial_CGM","hba1c0",4.7,10.6,1,1
+"trial_CGM","age",8,72,0,0
+"trial_CGM","duration",1,62.6,0,4
+"trial_CGM","male",0,1,0,0
+"trial_CGM","pump",0,1,0,0
+"internal","hba1c0",5.4,10,0,1
+"internal","age",8,72,0,0
+"internal","duration",1,55.6,0,0
+"internal","male",0,1,0,0
+"internal","pump",0,1,0,0
+"external","hba1c0",5.1,9.9,0,0
+"external","age",8,75,0,0
+"external","duration",1,56,0,0
+"external","male",0,1,0,0
+"external","pump",0,1,0,0

@@ -1,0 +1,33 @@
+{
+  "counts": [
+    167,
+    83,
+    500
+  ],
+  "repetitions": 5000,
+  "seed": "52461004 + replicate",
+  "covariates": "Independent N10(0,I10) in each group; exact saved fitted draw order and datasets verified by SHA256.",
+  "means": "mT=mC=f=.5+.6/sqrt(5)*sum(X1:5)+.25/sqrt(5)*sum(X1:5^2); mE=f-a-X1.",
+  "variances": "vT=1;vC=exp(.4X1);vE=exp(-.4X1)",
+  "K0": 0.8319772890438458,
+  "K1": 0.10253616760494212,
+  "calibration": "HCT a=(xi-K1)/K0; ECT a=xi; trial-only has zero causal-gap.",
+  "oracle_U": "Complete seven-term H_eta at true nuisances, with source and both variance derivative corrections. Fixed-count within-group score covariance.",
+  "oracle_ECT": "True external outcome mean and source odds; same plug-in EIF variance convention as fitted ECT. Fixed-group variance also saved as diagnostic.",
+  "trial_reference": "Saved fitted ANOVA/ANCOVA results reused identically in both rows; no external nuisance stage.",
+  "fitted_source": "v3/results/heterogeneous_gap/common_gap/summary.csv",
+  "limitation": "Oracle is true-input evaluation of the specified complete score, not an efficiency bound for a smaller known-nuisance model. Zero aggregate gap retains heterogeneous discrepancy.",
+  "validation": {
+    "failures": 0,
+    "paired_datasets": 5000,
+    "max_direct_error": 3.552713678800501e-15,
+    "max_bias_z": 0.4061220344921078
+  },
+  "source_sha256": {
+    "archive/v3/results/heterogeneous_gap/common_gap/summary.csv": "eb8d8026aa210c5b060e4e5d6d285520a73b4c739c2353e79a1a8849b614b11f",
+    "archive/v3/results/heterogeneous_gap/common_gap/sample_pairing.csv": "e2df384dffdbcd041451a8340a0ddb2c5ab8fd42741b6081d471f926e8e1d054",
+    "archive/v3/results/heterogeneous_gap/common_gap/calibration.csv": "ff387b5a115d6a66432a4ac428a2a9c48c19f30be47cda398f74fac671fcdfde",
+    "archive/v3/results/heterogeneous_gap/common_gap/protocol.json": "5678c2927b4a9a03a7f56d3d79350037088333ecf092adda696f3e55dd37ef3e"
+  },
+  "elapsed_seconds": 21.922531127929688
+}

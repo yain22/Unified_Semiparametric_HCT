@@ -1,0 +1,315 @@
+{
+  "format_version": 1,
+  "no_participant_data_packaged": true,
+  "provenance_note": "Historical source labels describe provenance, not runtime dependencies or local filesystem locations. Source hashes describe the archived originals; packaged hashes describe the public files after documented transformations.",
+  "sources": [
+    {
+      "source": "historical/v2/code/cgm_estimated_share.R",
+      "source_sha256": "a59332bd437f32e2c7da72b6a2f9ea11d9b81165307b051a75e30188191e5a8d",
+      "packaged": "src/estimated_share.R",
+      "packaged_sha256": "d95a03a1a88410cc3b301630a52a07e1f6d79a8d8e148074a3c08ba0cff11fa4",
+      "transformation": "Exact top-level function extracts: cgm_est_variance, cgm_est_nuisance, cgm_est_score"
+    },
+    {
+      "source": "historical/r/hct_unrestricted_comparators.R",
+      "source_sha256": "519df0a7a3dcc6e988aacb8f67f78a953fd9189cc69fb57051625fb7351116c8",
+      "packaged": "src/unrestricted_primitives.R",
+      "packaged_sha256": "61b79677722dacfc727afd351dc0457ce62954a732d7c70cf79966e10d2e0039",
+      "transformation": "Exact top-level function extracts: hct_unrestricted_ols, hct_unrestricted_logit, hct_unrestricted_group_variance Removed orphan comments for unbundled functions; estimator bodies unchanged."
+    },
+    {
+      "source": "historical/r/cgm_case/hct_eif_comparators.R",
+      "source_sha256": "daecdfebb5607b3678810b970e57f71520c5c5561dbdb48b79f2ed038c99d35f",
+      "packaged": "src/restricted.R",
+      "packaged_sha256": "03f98a11715d33e779cefcf00730157ac6fccc6306fd7ff97ab199eef3dce19a",
+      "transformation": "Exact top-level function extracts: hct_eif_formula, hct_eif_nuisance, hct_eif_from_predictions Removed orphan comments for unbundled functions; estimator bodies unchanged."
+    },
+    {
+      "source": "historical/r/cgm_case/hct_trial_wald.R",
+      "source_sha256": "6b45de939d29b948430cadee4fc8ad60103de8bda8e11cf1cceb07435555b655",
+      "packaged": "src/trial_wald.R",
+      "packaged_sha256": "67b6d88a0c0aa5aaace4010c86df4025419318784a0b41d4e8000b0a4ff1d81e",
+      "transformation": "Exact top-level function extracts: hct_trial_wald_fit, hct_trial_wald_comparators"
+    },
+    {
+      "source": "historical/r/cgm_case/cgm_inference.R",
+      "source_sha256": "1357bcd414a3da8f3eb8e16e983e085d6b1350a4b81352ff377e9929bf4fdb3f",
+      "packaged": "src/folds.R",
+      "packaged_sha256": "a80695abce7c7d72f85f000ad0de7ad6219657ded79b4f2eca2d68a60fa7d6c9",
+      "transformation": "Exact top-level function extracts: cgm_group, cgm_folds"
+    },
+    {
+      "source": "historical/r/cgm_case/cohort_trial_adapter.R",
+      "source_sha256": "d3d504ca227663baf50b2d6faaca7726dfeb44f1670f8d7a2e8a83c3b4c2a203",
+      "packaged": "cohort/cohort_trial_adapter.R",
+      "packaged_sha256": "545bf5d97c68b04809105bdb54e4a358696d13673c6bec393096e85fe79a88ae",
+      "transformation": "Verbatim source-only copy"
+    },
+    {
+      "source": "historical/r/cgm_case/cohort_registry_adapter.R",
+      "source_sha256": "c352d750fcd22d4510a5dd12f70913872284729bdd456d896c7fe788b704ea41",
+      "packaged": "cohort/cohort_registry_adapter.R",
+      "packaged_sha256": "41005910fa8a2b5060e574693b89d7547fb6117a6dc84429b53d233f76f81c40",
+      "transformation": "Verbatim source-only copy"
+    },
+    {
+      "source": "historical/case_study/code/six_months/cohort_6m.R",
+      "source_sha256": "29d8087c8d4240afe83c809f2fdf2b48e8226fdfde9f9d6de8f7377cdbedd93e",
+      "packaged": "cohort/cohort_6m.R",
+      "packaged_sha256": "fa77de1b0dc845d64f5c2d86b66267e1802b7fd300880c6318f62c3a28fa12c2",
+      "transformation": "Cohort construction unchanged; explicit archive paths; memory-only interface; removed unused legacy cache comparison and output writers."
+    },
+    {
+      "source": "historical/case_study/results/six_months/published_cgm_trials.json",
+      "source_sha256": "67bdc0167efe034782b545d47545b5068fea15c664c1196d298d71ba58bc4f4f",
+      "packaged": "inputs/published_cgm_trials.json",
+      "packaged_sha256": "67bdc0167efe034782b545d47545b5068fea15c664c1196d298d71ba58bc4f4f",
+      "transformation": "Verbatim aggregate result; no participant rows"
+    },
+    {
+      "source": "historical/case_study/results/six_months/cohort/cohort_baseline_summary.csv",
+      "source_sha256": "e77c1496acf1d1eebb0783784b4b117d3015360c71e7b901723ac4880977c5a9",
+      "packaged": "inputs/baseline_summary.csv",
+      "packaged_sha256": "e77c1496acf1d1eebb0783784b4b117d3015360c71e7b901723ac4880977c5a9",
+      "transformation": "Verbatim aggregate result; no participant rows"
+    },
+    {
+      "source": "historical/case_study/results/six_months/cohort/cohort_trial_flow.csv",
+      "source_sha256": "e8b05f59fdde9b2224b54bf43f8f0e942e1dd669ccbb79c1515c5c22f06763e6",
+      "packaged": "inputs/trial_flow.csv",
+      "packaged_sha256": "e8b05f59fdde9b2224b54bf43f8f0e942e1dd669ccbb79c1515c5c22f06763e6",
+      "transformation": "Verbatim aggregate result; no participant rows"
+    },
+    {
+      "source": "historical/selection/registry_selection_baseline.csv",
+      "source_sha256": "d60384e41e70d1e24f83aac99098f2f85f1afa0b034dadfeba5db9b2c66173fa",
+      "packaged": "inputs/registry_selection_baseline.csv",
+      "packaged_sha256": "d60384e41e70d1e24f83aac99098f2f85f1afa0b034dadfeba5db9b2c66173fa",
+      "transformation": "Verbatim aggregate result; no participant rows"
+    },
+    {
+      "source": "historical/selection/registry_selection_differences.csv",
+      "source_sha256": "b4801a43f7c1df888a7ae93e5f642d2f7652060030ff63f037ab9dfbdcd13545",
+      "packaged": "inputs/registry_selection_differences.csv",
+      "packaged_sha256": "b4801a43f7c1df888a7ae93e5f642d2f7652060030ff63f037ab9dfbdcd13545",
+      "transformation": "Verbatim aggregate result; no participant rows"
+    },
+    {
+      "source": "historical/selection/subsequent_cgm_status.csv",
+      "source_sha256": "c28a0ea8c684edeb57a2a2e69bafb80da2fed41d6237740a71b413b83a8e0033",
+      "packaged": "inputs/subsequent_cgm_status.csv",
+      "packaged_sha256": "c28a0ea8c684edeb57a2a2e69bafb80da2fed41d6237740a71b413b83a8e0033",
+      "transformation": "Verbatim aggregate result; no participant rows"
+    },
+    {
+      "source": "historical/case_study/code/six_months/cgm6m_inference.R",
+      "source_sha256": "19e3192abe0b1c6c1af5fc62d7cc1bb9244d40aff11fa94bfaf5c1dc7b5efeda",
+      "packaged": "run_clinical.R",
+      "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
+      "transformation": "Nominal .5 validation; current displayed R/RCT comparator orchestration; no legacy fixed-share fitting dependency. Public runner defaults to replication/results/cgm and records input hashes by logical role."
+    },
+    {
+      "source": "historical/v2/code/cgm_ect.R",
+      "source_sha256": "a2fbe812c34dbfe0b37c3370071bbe0cd7bb6971407b81d66171f3f59b479206",
+      "packaged": "run_clinical.R",
+      "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
+      "transformation": "Direct lm/glm equation already validated independently in original source; explicit paths and aggregate-only outputs. Public runner defaults to replication/results/cgm and records input hashes by logical role."
+    },
+    {
+      "source": "historical/selection/cgm_selection_sensitivity.R",
+      "source_sha256": "46c0cd3bde6ed4d31e703223af6836e08363af3ae7000d98ba009def10331a26",
+      "packaged": "run_clinical.R",
+      "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
+      "transformation": "Selection/status and historical character-group sampling order retained; explicit input paths, optional bootstrap. Public runner defaults to replication/results/cgm and records input hashes by logical role."
+    },
+    {
+      "source": "historical/v3/code/focused_clinical_revision.py",
+      "source_sha256": "dca9131345087d0b5f7bd2c580c3f27ac1a083334c8f76e89cf62d43a90cdd7c",
+      "packaged": "render_clinical.py",
+      "packaged_sha256": "ed3de5520eddc7975cd8fb69850a2ec3d0d7d769ff7d8f466e9bb507a55bcf20",
+      "transformation": "Current five-method plot layout adapted to local aggregate inputs; no manuscript editing functions."
+    }
+  ],
+  "generated_files": [
+    {
+      "path": ".gitignore",
+      "sha256": "4aa7da86fee6d2b3ad38c6868021b383991c7764e00f38794f87d4cd9d28ff09"
+    },
+    {
+      "path": "check_results.py",
+      "sha256": "3891e67c38b7e2b0cab7c1d73c6d496815322b9148e6e104e8e2398732f2fa89"
+    },
+    {
+      "path": "cohort/cohort_6m.R",
+      "sha256": "fa77de1b0dc845d64f5c2d86b66267e1802b7fd300880c6318f62c3a28fa12c2"
+    },
+    {
+      "path": "cohort/cohort_registry_adapter.R",
+      "sha256": "41005910fa8a2b5060e574693b89d7547fb6117a6dc84429b53d233f76f81c40"
+    },
+    {
+      "path": "cohort/cohort_trial_adapter.R",
+      "sha256": "545bf5d97c68b04809105bdb54e4a358696d13673c6bec393096e85fe79a88ae"
+    },
+    {
+      "path": "inputs/baseline_summary.csv",
+      "sha256": "e77c1496acf1d1eebb0783784b4b117d3015360c71e7b901723ac4880977c5a9"
+    },
+    {
+      "path": "inputs/near-index/eligibility_and_timing.csv",
+      "sha256": "9e83497d448b359538ed2b861e8e38e003c33e455dce994f03633895743663b3"
+    },
+    {
+      "path": "inputs/near-index/external_weights.csv",
+      "sha256": "11b62fbbc62a3c5f7891a0f6ee65c69888ab5fa8c40662d5e21de37059200f85"
+    },
+    {
+      "path": "inputs/near-index/full_results.csv",
+      "sha256": "fffe0a0874caec2de50bc66031584ea6cdc3bee252dee60343ecf101c6c01e9c"
+    },
+    {
+      "path": "inputs/near-index/observed_covariate_ranges.csv",
+      "sha256": "890e4068ed37fbae16cf51bc00c0fd90c88114c8795f24e3343b788b9a6f01b8"
+    },
+    {
+      "path": "inputs/near-index/partition.csv",
+      "sha256": "660ee8a60958a42780f9cb7582d212a0a08639db62b12a8687b9f08c1459938f"
+    },
+    {
+      "path": "inputs/near-index/point_estimates.csv",
+      "sha256": "e1f15f17391f45e71ccee7d47134077e8d2a2871e5cb141dd67c6413c080f551"
+    },
+    {
+      "path": "inputs/near-index/score_diagnostics.csv",
+      "sha256": "cfbeeb73ac8b2cbf47721f5a44961a053257d6af195d60b796b6d3d27170625f"
+    },
+    {
+      "path": "inputs/near-index/source_probabilities.csv",
+      "sha256": "ceb8be13ab965a1cfe794f00c28703b419e36a3e5eba869efa245a2af6868517"
+    },
+    {
+      "path": "inputs/primary/eligibility_and_timing.csv",
+      "sha256": "9e83497d448b359538ed2b861e8e38e003c33e455dce994f03633895743663b3"
+    },
+    {
+      "path": "inputs/primary/external_weights.csv",
+      "sha256": "0a4e9008ac7f95f055be07e8dbf3a78dff6f55df69b8986845add8d745d9935f"
+    },
+    {
+      "path": "inputs/primary/full_results.csv",
+      "sha256": "96b30fbd2b0c4fd25aaeae62dbb3871b3ce8ebecaad0d2549c9b471795578708"
+    },
+    {
+      "path": "inputs/primary/observed_covariate_ranges.csv",
+      "sha256": "890e4068ed37fbae16cf51bc00c0fd90c88114c8795f24e3343b788b9a6f01b8"
+    },
+    {
+      "path": "inputs/primary/partition.csv",
+      "sha256": "212cf332ab2d4f88aaea5aeb22b1d338eb02999ce274bec8a44ff93f0ae0a4ab"
+    },
+    {
+      "path": "inputs/primary/point_estimates.csv",
+      "sha256": "4bb0bc5b4dbaea58aaa4ab7a758edab195ba8518b25f59e2503dd016b379d5dc"
+    },
+    {
+      "path": "inputs/primary/score_diagnostics.csv",
+      "sha256": "484977589bc570c069bbaff3243f8dd88e0f98012bf5b82e1ec459f3b8642a27"
+    },
+    {
+      "path": "inputs/primary/source_probabilities.csv",
+      "sha256": "ce2ad47aab2b44f84967001515b3b7d1939d6c029c1fcdbaa95c3c6bfad95d80"
+    },
+    {
+      "path": "inputs/published_cgm_trials.json",
+      "sha256": "67bdc0167efe034782b545d47545b5068fea15c664c1196d298d71ba58bc4f4f"
+    },
+    {
+      "path": "inputs/registry_selection_baseline.csv",
+      "sha256": "d60384e41e70d1e24f83aac99098f2f85f1afa0b034dadfeba5db9b2c66173fa"
+    },
+    {
+      "path": "inputs/registry_selection_differences.csv",
+      "sha256": "b4801a43f7c1df888a7ae93e5f642d2f7652060030ff63f037ab9dfbdcd13545"
+    },
+    {
+      "path": "inputs/subsequent/eligibility_and_timing.csv",
+      "sha256": "9e83497d448b359538ed2b861e8e38e003c33e455dce994f03633895743663b3"
+    },
+    {
+      "path": "inputs/subsequent/external_weights.csv",
+      "sha256": "fb84db9848de5d83dfa78a21fdfd2f9eed043e3c5f9d6ee3d05d22491341af81"
+    },
+    {
+      "path": "inputs/subsequent/full_results.csv",
+      "sha256": "9b2f50cf454e80b04be36601ae0ece41e141ca30c6d4cf104ec4ff6fb3635d30"
+    },
+    {
+      "path": "inputs/subsequent/observed_covariate_ranges.csv",
+      "sha256": "890e4068ed37fbae16cf51bc00c0fd90c88114c8795f24e3343b788b9a6f01b8"
+    },
+    {
+      "path": "inputs/subsequent/partition.csv",
+      "sha256": "814a3b0346aacfd7cf21484d169adc965cc775a872d2b26ee8831a939ba19e60"
+    },
+    {
+      "path": "inputs/subsequent/point_estimates.csv",
+      "sha256": "66fc096cf4e3ae9e9cc6964b5a1f19cadb3206d07d810ea6ea71aae6bcc7e8ed"
+    },
+    {
+      "path": "inputs/subsequent/score_diagnostics.csv",
+      "sha256": "ff1cd300b66b1e4a4e34397928aa8d57c38da3c0527bc48e2793a9c030a89690"
+    },
+    {
+      "path": "inputs/subsequent/source_probabilities.csv",
+      "sha256": "bd25696891dd2cb66176695f777efb436d780c53b244c95a81b5b9a8a481bb5d"
+    },
+    {
+      "path": "inputs/subsequent_cgm_status.csv",
+      "sha256": "c28a0ea8c684edeb57a2a2e69bafb80da2fed41d6237740a71b413b83a8e0033"
+    },
+    {
+      "path": "inputs/trial_flow.csv",
+      "sha256": "e8b05f59fdde9b2224b54bf43f8f0e942e1dd669ccbb79c1515c5c22f06763e6"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7e1416f19e943a7babfcd4b4d734ebea1b7553322a2b1f758f156c20f3faf30b"
+    },
+    {
+      "path": "render_clinical.py",
+      "sha256": "ed3de5520eddc7975cd8fb69850a2ec3d0d7d769ff7d8f466e9bb507a55bcf20"
+    },
+    {
+      "path": "run_clinical.R",
+      "sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32"
+    },
+    {
+      "path": "src/estimated_share.R",
+      "sha256": "d95a03a1a88410cc3b301630a52a07e1f6d79a8d8e148074a3c08ba0cff11fa4"
+    },
+    {
+      "path": "src/folds.R",
+      "sha256": "a80695abce7c7d72f85f000ad0de7ad6219657ded79b4f2eca2d68a60fa7d6c9"
+    },
+    {
+      "path": "src/restricted.R",
+      "sha256": "03f98a11715d33e779cefcf00730157ac6fccc6306fd7ff97ab199eef3dce19a"
+    },
+    {
+      "path": "src/trial_wald.R",
+      "sha256": "67b6d88a0c0aa5aaace4010c86df4025419318784a0b41d4e8000b0a4ff1d81e"
+    },
+    {
+      "path": "src/unrestricted_primitives.R",
+      "sha256": "61b79677722dacfc727afd351dc0457ce62954a732d7c70cf79966e10d2e0039"
+    },
+    {
+      "path": "support_gap.R",
+      "sha256": "f56b2d3090648b6a195b003abf58625ae5e0e2338f5b2af5de7be945f89d37c5"
+    },
+    {
+      "path": "validate_synthetic.R",
+      "sha256": "c301bf854092c253c8cdefe7ce05bf0b83e7e1df63f7ea0e4206841eb0b0d8ee"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "sources": {
+    "baseline": {
+      "path": "analysis/comparators/inputs/baseline-summary.csv",
+      "sha256": "eb8d8026aa210c5b060e4e5d6d285520a73b4c739c2353e79a1a8849b614b11f"
+    },
+    "transportability": {
+      "path": "analysis/comparators/inputs/transportability-summary.csv",
+      "sha256": "7e739ae73e90fb85659f4004da38b41bc2e847ecae8bf3bb0d413c57a63540d5"
+    },
+    "extended": {
+      "path": "analysis/comparators/inputs/extended-summary.csv",
+      "sha256": "7f6e5c3fe679c94218556fac2ff15074fd70f8c6588da5c506719102765b9d67"
+    },
+    "oracle": {
+      "path": "analysis/comparators/inputs/oracle-summary.csv",
+      "sha256": "3ded90fd2916720390d2ee0ebe2ecba90850644d29afcaaf8052c38131938ff5"
+    }
+  },
+  "rows": 554,
+  "mean_se": "Mean width/(2 z_.975), checked against saved mean SE where present",
+  "distinction": "delta-identically-zero uses dedicated transportability_reference_summary; it is never inferred from zero aggregate gap."
+}

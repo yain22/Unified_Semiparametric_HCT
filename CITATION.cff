@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Please cite the accompanying manuscript when using these analyses."
+title: "Replication code for prospective causal-gap sensitivity analysis across trial designs"
+type: software
+authors:
+  - family-names: Lee
+    given-names: Se Yoon
+

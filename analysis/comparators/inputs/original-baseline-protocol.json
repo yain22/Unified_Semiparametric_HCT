@@ -1,0 +1,75 @@
+{
+  "stage": "fresh independent full validation of fixed additive-discrepancy setting; pilot retained",
+  "N_trial": [
+    250,
+    500
+  ],
+  "counts": [
+    {
+      "N_trial": 250,
+      "NT": 167,
+      "NC": 83,
+      "N0": 500
+    },
+    {
+      "N_trial": 500,
+      "NT": 333,
+      "NC": 167,
+      "N0": 1000
+    }
+  ],
+  "repetitions_per_size": 5000,
+  "seed_base": 52461004,
+  "seed": "52461004+100000*(N_trial==500)+replicate",
+  "grid": [
+    -0.3,
+    -0.275,
+    -0.25,
+    -0.225,
+    -0.2,
+    -0.175,
+    -0.15,
+    -0.125,
+    -0.1,
+    -0.075,
+    -0.05,
+    -0.025,
+    0,
+    0.025,
+    0.05,
+    0.075,
+    0.1,
+    0.125,
+    0.15,
+    0.175,
+    0.2,
+    0.225,
+    0.25,
+    0.275,
+    0.3
+  ],
+  "X": "All groups independent N10(0,I10); identical covariate laws",
+  "draw_order": "external X matrix column-major; epsE; treated X matrix; control X matrix; epsT; epsC; assemble T,C,E",
+  "f": ".5+(.6/sqrt5)*sum(X1:5)+(.25/sqrt5)*sum(X1:5^2)",
+  "means": "mT=mC=f; mE=f-(a+X1); theta0; fixed slope1 for every method and gap",
+  "variances": "vT=1;vC=exp(.4X1);vE=exp(-.4X1)",
+  "true_share": "lambda(X1)=w*(1-e)/(w*(1-e)+exp(.8X1)); w=nRCT/nE=.5",
+  "calibration": "K0=E(1-lambda),K1=E[(1-lambda)X1]; a_U=a_Rmatched=(xi-K1)/K0; a_Runit=xi/(1-nC/(nC+nE)); a_ECT=xi. 256-node Gaussian quadrature checked at128 and integrate.",
+  "pairing": "All procedures share base covariates and errors. U/R-matched share identical shifted outcomes. ECT/R-unit own amplitudes target the same xi but distinct external outcome laws. Trial-only target gap is zero.",
+  "methods": [
+    "U",
+    "R-matched",
+    "R-unit",
+    "AIPW (ECT)",
+    "ANOVA (RCT)",
+    "ANCOVA (RCT)"
+  ],
+  "HCT_nuisances": "Source-specific and pooled OLS quadratic21; source logistic11; separate logvariance intercept+X1 (2), own HC2 residuals; no clipping/fallback.",
+  "HCT_inference": "Complete law-dependent U and restricted/common-control-score R; full analytic nuisance-stacked joint-M sandwich for all three, fixed T/C/E group-centered meat.",
+  "ECT": "Exact read-only SIM DR quad_lm/glm and published plug-in EIF variance; only treated/external samples; fixed-group variance saved separately.",
+  "trial": "Existing observed-outcome ANOVA/linear10X ANCOVA, HC2 robust standard errors",
+  "failures": "Retain all failed cases and warnings; no incomplete summaries, no tail exclusions.",
+  "path": "Base data include the fixed external -X1 discrepancy; fit intercept shifts a=0,1. Point/influence affine, variance quadratic. Direct refits check gap endpoints andzero on first2 reps/design.",
+  "decision": "Five thousand fresh repetitions per size; seed set disjoint from pilot. Fixed gamma=.4 and additive slope1; no selection or tuning after outcomes. Zero aggregate gap does NOT impose mean transportability. Separate delta=0 reference is saved and not included in gap-grid curves.",
+  "created_before_fits": "2026-10-05 01:49:52 UTC"
+}

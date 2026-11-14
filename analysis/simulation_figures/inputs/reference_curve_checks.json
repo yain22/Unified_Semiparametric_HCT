@@ -1,0 +1,1168 @@
+{
+  "oracle": [
+    {
+      "mode": "Oracle nuisance",
+      "method": "U",
+      "metric": "coverage_theta",
+      "xy_sha256": "6122002f14fb357a420013af04d2b77cf1027120b5be1ec857d9bd9cda2d8240"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "49d73fb2cf9f64eb0075d8deaab17aa04d90d0cc289e78325086842dbd8f09e5"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "30c94c298c49329f9db4a398ffb758803375520ee32844450e544c8dac309416"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "dfb28a78e3a914ee54f06d74fb6942ad64d234f3fc73e38d2e44be32ea3ad25e"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "U",
+      "metric": "bias_theta",
+      "xy_sha256": "8e2c5ecb7eeb896dc1888f7d54a84a888d11d6c0c2505adbc512de168bcdba4b"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "bias_theta",
+      "xy_sha256": "75e7718bd31a6ed22f363cf02a4a5afb24b1d7842f210674f9880eb8d7d3a3a4"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "4ec6b5d806f6e16f2ebe9f2fe0e8b1083a5b0736cf337cc8c7100076421c202e"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "8957addbab6d4c03e376fb33ed51dc2918f40d11849b49d85b625ccce9103281"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "U",
+      "metric": "mse_theta",
+      "xy_sha256": "851ba734965aac726d4b5c7cfec3c71d224c7dfe61b89adb7c7b5291e6cec0f7"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "mse_theta",
+      "xy_sha256": "f87cc293f717803eec1dbf42ea23711dd198af71ea10118539baeac3c4ca333c"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "f2a0f0d55e4d2af0f088a90aae4d7df5a10f97d8365abef56928350d09d6d748"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "8eb137fd46fa5ad19f79b2c23c19db252db165386e9e47bd02780e5fbc120dff"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "U",
+      "metric": "width",
+      "xy_sha256": "a1cbb0f09148be5196607678b7acf815c9fcf013974755ed16bce16cedf88143"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "width",
+      "xy_sha256": "e31b04d46f678343e5be3fa6a088275866baed76c73047fb390abdc58c0523dc"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "f7c22d2a975affefd9a96a4affad90d1432a41f50c499dc57a9151ce440c0be7"
+    },
+    {
+      "mode": "Oracle nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "4fb3a4e84d76677f2b8c85b93a994f8eed359acef96a70c8438ee3ef7d457509"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "U",
+      "metric": "coverage_theta",
+      "xy_sha256": "a8ba98822461cdf0663be74b0f36d4dc467121da4441b879ddf9c7ab296b5756"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "1e466a20772de568998edcbd6c0804e92d2e86c33d863fa3fd674b191d30926e"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "30c94c298c49329f9db4a398ffb758803375520ee32844450e544c8dac309416"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "dfb28a78e3a914ee54f06d74fb6942ad64d234f3fc73e38d2e44be32ea3ad25e"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "U",
+      "metric": "bias_theta",
+      "xy_sha256": "fa67771c7e5726cd2094fd8423153b9f647e10031b42c79a8945a3d0b5c097c1"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "bias_theta",
+      "xy_sha256": "ffc837bb4617eb992273e591a234046617f4260047b1a5e2ce4bee2095493f03"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "4ec6b5d806f6e16f2ebe9f2fe0e8b1083a5b0736cf337cc8c7100076421c202e"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "8957addbab6d4c03e376fb33ed51dc2918f40d11849b49d85b625ccce9103281"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "U",
+      "metric": "mse_theta",
+      "xy_sha256": "18cba314af5ddf7fccdfd32594d20ca64e0c8a4e2f0f1bc4541b2920688594a6"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "mse_theta",
+      "xy_sha256": "87adff05924fc9d083b0bc8244145d3296d28367cd4777dfa820498cf9187b7c"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "f2a0f0d55e4d2af0f088a90aae4d7df5a10f97d8365abef56928350d09d6d748"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "8eb137fd46fa5ad19f79b2c23c19db252db165386e9e47bd02780e5fbc120dff"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "U",
+      "metric": "width",
+      "xy_sha256": "2c0028163c592a4ab8129cc7fd3588a9e7909c544c3c1171602d766dff85639f"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "AIPW (ECT)",
+      "metric": "width",
+      "xy_sha256": "bc5b386361fea39aa965a107abf4966cacf29dff1180828d114dc75038d54da5"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "f7c22d2a975affefd9a96a4affad90d1432a41f50c499dc57a9151ce440c0be7"
+    },
+    {
+      "mode": "Estimated nuisance",
+      "method": "ANCOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "4fb3a4e84d76677f2b8c85b93a994f8eed359acef96a70c8438ee3ef7d457509"
+    }
+  ],
+  "heterogeneous": [
+    {
+      "n": 250,
+      "method": "U",
+      "metric": "coverage_theta",
+      "xy_sha256": "a8ba98822461cdf0663be74b0f36d4dc467121da4441b879ddf9c7ab296b5756"
+    },
+    {
+      "n": 250,
+      "method": "AIPW (ECT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "1e466a20772de568998edcbd6c0804e92d2e86c33d863fa3fd674b191d30926e"
+    },
+    {
+      "n": 250,
+      "method": "ANOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "30c94c298c49329f9db4a398ffb758803375520ee32844450e544c8dac309416"
+    },
+    {
+      "n": 250,
+      "method": "ANCOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "dfb28a78e3a914ee54f06d74fb6942ad64d234f3fc73e38d2e44be32ea3ad25e"
+    },
+    {
+      "n": 250,
+      "method": "U",
+      "metric": "bias_theta",
+      "xy_sha256": "fa67771c7e5726cd2094fd8423153b9f647e10031b42c79a8945a3d0b5c097c1"
+    },
+    {
+      "n": 250,
+      "method": "AIPW (ECT)",
+      "metric": "bias_theta",
+      "xy_sha256": "ffc837bb4617eb992273e591a234046617f4260047b1a5e2ce4bee2095493f03"
+    },
+    {
+      "n": 250,
+      "method": "ANOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "4ec6b5d806f6e16f2ebe9f2fe0e8b1083a5b0736cf337cc8c7100076421c202e"
+    },
+    {
+      "n": 250,
+      "method": "ANCOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "8957addbab6d4c03e376fb33ed51dc2918f40d11849b49d85b625ccce9103281"
+    },
+    {
+      "n": 250,
+      "method": "U",
+      "metric": "mse_theta",
+      "xy_sha256": "18cba314af5ddf7fccdfd32594d20ca64e0c8a4e2f0f1bc4541b2920688594a6"
+    },
+    {
+      "n": 250,
+      "method": "AIPW (ECT)",
+      "metric": "mse_theta",
+      "xy_sha256": "87adff05924fc9d083b0bc8244145d3296d28367cd4777dfa820498cf9187b7c"
+    },
+    {
+      "n": 250,
+      "method": "ANOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "f2a0f0d55e4d2af0f088a90aae4d7df5a10f97d8365abef56928350d09d6d748"
+    },
+    {
+      "n": 250,
+      "method": "ANCOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "8eb137fd46fa5ad19f79b2c23c19db252db165386e9e47bd02780e5fbc120dff"
+    },
+    {
+      "n": 250,
+      "method": "U",
+      "metric": "width",
+      "xy_sha256": "2c0028163c592a4ab8129cc7fd3588a9e7909c544c3c1171602d766dff85639f"
+    },
+    {
+      "n": 250,
+      "method": "AIPW (ECT)",
+      "metric": "width",
+      "xy_sha256": "bc5b386361fea39aa965a107abf4966cacf29dff1180828d114dc75038d54da5"
+    },
+    {
+      "n": 250,
+      "method": "ANOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "f7c22d2a975affefd9a96a4affad90d1432a41f50c499dc57a9151ce440c0be7"
+    },
+    {
+      "n": 250,
+      "method": "ANCOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "4fb3a4e84d76677f2b8c85b93a994f8eed359acef96a70c8438ee3ef7d457509"
+    },
+    {
+      "n": 500,
+      "method": "U",
+      "metric": "coverage_theta",
+      "xy_sha256": "80665a9ef15c0b85f961e75b195c1dc1850185968ed5bec1ee78f67226d2217f"
+    },
+    {
+      "n": 500,
+      "method": "AIPW (ECT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "ce76fb419752266286a353bd21c167d414cebb38f7c6c6d21274f6a001ca54cf"
+    },
+    {
+      "n": 500,
+      "method": "ANOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "55465bca056692532919e2c386b9468956e8cc20161a63ba48c557a83cd1c474"
+    },
+    {
+      "n": 500,
+      "method": "ANCOVA (RCT)",
+      "metric": "coverage_theta",
+      "xy_sha256": "30c94c298c49329f9db4a398ffb758803375520ee32844450e544c8dac309416"
+    },
+    {
+      "n": 500,
+      "method": "U",
+      "metric": "bias_theta",
+      "xy_sha256": "9035360cc33340cfab0c88fb77135278633a07c16be54d705f376d1ea392b99d"
+    },
+    {
+      "n": 500,
+      "method": "AIPW (ECT)",
+      "metric": "bias_theta",
+      "xy_sha256": "efae669e450f2826599f5d67dee1047d9cab429a45842fa216ac12fa6179d732"
+    },
+    {
+      "n": 500,
+      "method": "ANOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "306c89c67bf7be3874809eabcccce3333627e1f5ee0eba7bfa044933e39c8fcd"
+    },
+    {
+      "n": 500,
+      "method": "ANCOVA (RCT)",
+      "metric": "bias_theta",
+      "xy_sha256": "e81db1dfaf93dae0be87e1bebac4b66f2207b16f836a923a99ccae8b24a4be9a"
+    },
+    {
+      "n": 500,
+      "method": "U",
+      "metric": "mse_theta",
+      "xy_sha256": "48ef9fe9917e92a035b32f79a22ebc41f2e880c55b14dbef5222670212a477ee"
+    },
+    {
+      "n": 500,
+      "method": "AIPW (ECT)",
+      "metric": "mse_theta",
+      "xy_sha256": "41b7edb6a6dace8e3924bf85b50964c14ea917ded12ae24cd59c44d0e82395ae"
+    },
+    {
+      "n": 500,
+      "method": "ANOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "2f56a6f20cdc31be5a7b047e82a48e5d65645e31c363cbba6a54c30fae3c9eb4"
+    },
+    {
+      "n": 500,
+      "method": "ANCOVA (RCT)",
+      "metric": "mse_theta",
+      "xy_sha256": "e6b3d284ec9b946809a0844902b4047d21289f7fc4c194101fab72f5bc86c6d4"
+    },
+    {
+      "n": 500,
+      "method": "U",
+      "metric": "width",
+      "xy_sha256": "15d27ce1718843bfb5404799680ae291b79393e75f2d3a6b6d4dae537b75aec4"
+    },
+    {
+      "n": 500,
+      "method": "AIPW (ECT)",
+      "metric": "width",
+      "xy_sha256": "ae222c31d730940fd9c950bcb63e9eacbde923aa59f6f484cb0139d2a8c53c43"
+    },
+    {
+      "n": 500,
+      "method": "ANOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "9058727892d8183754c9d9b7d49f352353f4035fa40195c6e80b8736db56efdb"
+    },
+    {
+      "n": 500,
+      "method": "ANCOVA (RCT)",
+      "metric": "width",
+      "xy_sha256": "bb9689027ec6b0b4315b11334e7de8699750bf6b8fdb1d627fff9f50051de194"
+    }
+  ],
+  "extended": {
+    "fewer_external": [
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "0fb1a4fce955c9aa90f197d6a6ccc9d4d82e9dcb3d2be6a5296f05ec1df68684"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "0c9bb587ae94fd492d943d1415beac6b96c32454d29fe17be6bdfcbe035f6573"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "43b4d23f34302f57df351acea916e92a0430ec3077f760e53d0aa23c36f8b03c"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "9a65f0ad2e989ae7c6e28524f9a8d2e6ab9439d89776027b55926f7a56959932"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "c8b83d9abd64ce7c83f7cbffa4644371349bc912a4022beeb0bfa2b98d8d802d"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "cd1bdf9cd71e8da838b7b4097c40ff989be73ec3270ebaae9762fdad10826be9"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "ad3d97ac74d1d7d9f9fbb0508d522b7baecaaccd3212ad93871ba23fa67a73e8"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "055626a89976dca1957c5906db6c4d4f48f3b13768bb0f7b2e625c5ab01ac6e0"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "0c97110a942bb70f625aed4e5e66893daab4eb72d356b09e798612abd167b1d3"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "6e6723c4530284ca6564fc1db08390f12f4945fa8bd394acac838e9a5784bcd6"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "b6939fd99ebd63dc9c8b77c40dd7f65979ef57a369fd0cc5ba39f907def57fc4"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "56b432226471b2d452d58432700253f1f351ecdd85034a8454c7c3d33ea453e0"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "db78bdcb40874fc72a5b3655c920ed07bff031a97a608f29d52602b1742ef586"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "2036e910ca74639280beb660ed7e7f763055c2fdf7c09d1d2698ab16381cc0c6"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "f63e275c5e6b33d55c86e5d0ef62cefd39bb99ab42e726b7ff75c857a088c9ee"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "587c797adf2cfbf3832510f2b62683d32863fe17027dbc8f2473c0ef68142edd"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "a665a122e89356b7b00edd95f0ca247c6586d73ed00de1d718eb0eda43b2fedd"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "824f6e1633bb84b297633b07d09e30f7144ea3b850f1859fe8f34f81bd0eb9f7"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "43b4d23f34302f57df351acea916e92a0430ec3077f760e53d0aa23c36f8b03c"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "9a65f0ad2e989ae7c6e28524f9a8d2e6ab9439d89776027b55926f7a56959932"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "825a96637e2d22de72106de61048d9d6ccdb87f8dfa5a04c4ecaf9b7409d708b"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "362be16962177c01053810de8e31a480ce0e648749abcfed4d34c8c3401c6748"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "ad3d97ac74d1d7d9f9fbb0508d522b7baecaaccd3212ad93871ba23fa67a73e8"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "055626a89976dca1957c5906db6c4d4f48f3b13768bb0f7b2e625c5ab01ac6e0"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "3aa741a7ee1d5485ef18b82a3275654d17e29e1a775b272900d8f15587f5df2d"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "d73c70872f1be796887edd92236edf7ac6545aaf9951e1fc5f4cf4700d56efd4"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "b6939fd99ebd63dc9c8b77c40dd7f65979ef57a369fd0cc5ba39f907def57fc4"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "56b432226471b2d452d58432700253f1f351ecdd85034a8454c7c3d33ea453e0"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "88f948231ee61303a9cbe218dca0e5058c52acd0d30c56c0c765fda2ba70317c"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "4d96cf075ce340247b2088b792f417d26afd5278b936d2fbaa9658361149ddc1"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "f63e275c5e6b33d55c86e5d0ef62cefd39bb99ab42e726b7ff75c857a088c9ee"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "587c797adf2cfbf3832510f2b62683d32863fe17027dbc8f2473c0ef68142edd"
+      }
+    ],
+    "source_shift": [
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "5a249de8569fb1a6f3ac690e16f1d3b6e2da57cf886ee57b92f2b215f1a4336b"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "bd68b2222cafdeab5bad5a4c89c29bd57853675a8f610d48f15a47b4e445743f"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "78861c9a25c99df1999ab2a2087ab4db2585f323b7af4f0ce41673a1a207cd9b"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "7d2a22b439177686694d0d2b9f455e2d581c9ec1421db668a645831643d03a78"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "09717d0f9c9135d68657d15d5b281007035b7b62b729b32021b73cea6f51e0c2"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "8a52a05fd7d457ad3784e54a95d31ea63e22f54cfa83e192028ba4a198242738"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "c7a1576a41b7940a23f59043be66c43dafcfd8dc604d7d86eb08d6c65cccf04d"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "34da32e00ec552771236303286fdfbe0753ae5b94523243f6e6a4cda9fba0977"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "41ec292a086f53a468e0fbd879fd9506a78e610db13e157a138f81392727993c"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "61fb39c8ee0fcc5553df0f8b12926245995fdcbc28abe31c0094b075cd21f1cf"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "971b4b34b5cbcdd42d126c53a40062914d0c5c6a34d3d5f7caed0e17c0e8a7bb"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "e86d1d69966a2c5472acc030a8362f65d62d46096e0439007ef3a62ad5cded62"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "5d8ab2b563ec61e581d27761ae30065be3850e96b0f984bbcfb2561a9d622c61"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "15ff024af145a43fcc27c07629c2b289567f00fd806379fdd54a057eaf514b8d"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "74aa09c835561cf95c82a6cc6861e28c54adc2ff21cd198b1f706c1d6e8526ea"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "662894d935ba2da5db883becaaddc551d21cc9199ffaa72a90da0e96b09c3215"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "82f5124eeb68d4c624c535501c8125c64bdfbac2610387259ea5b17287a24ede"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "d1d1619e9f6afe9e2c08458f91ec858b4441955aa39fdf8aa7dbfdc6c2ce6b33"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "78861c9a25c99df1999ab2a2087ab4db2585f323b7af4f0ce41673a1a207cd9b"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "7d2a22b439177686694d0d2b9f455e2d581c9ec1421db668a645831643d03a78"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "30200b3797f802870082a3a5fc5575872f5eca5ae72484db91d37616d512cac2"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "3cc67da7cacc97191b29fac8234b19e2f075b755d2f4a0a5c83e5a942169d6cd"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "c7a1576a41b7940a23f59043be66c43dafcfd8dc604d7d86eb08d6c65cccf04d"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "34da32e00ec552771236303286fdfbe0753ae5b94523243f6e6a4cda9fba0977"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "d8c69bd6d5c30a4a044e79c667717776f78ffc80c170f8c2e94b4f818b5de72f"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "2ea1d06b8a332338d09a795d0ddc734a9ee7325b82d803b870b350fb827ac86f"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "971b4b34b5cbcdd42d126c53a40062914d0c5c6a34d3d5f7caed0e17c0e8a7bb"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "e86d1d69966a2c5472acc030a8362f65d62d46096e0439007ef3a62ad5cded62"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "c0061da17333710fe1fe15bc04e3dd6867b56a4cee71d84253c2652ffc3465ad"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "723c0803a491eec0d9cf588c3c2a35403c74696019fe62b1e2b10987ec3f9910"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "74aa09c835561cf95c82a6cc6861e28c54adc2ff21cd198b1f706c1d6e8526ea"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "662894d935ba2da5db883becaaddc551d21cc9199ffaa72a90da0e96b09c3215"
+      }
+    ],
+    "stronger_heteroskedasticity": [
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "b5f5306c74eeeaa2a1427be536b536f9998b406a8ee832005b2ef5b7179dd71c"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "b56e088521e7b76c9ea5cfc1197ceed52f5ff1d12cdf4d23ec506f5c7fda405e"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "343abfebdb27528c87594415a14a491b3ed0641535471bf99e97403bb46c1c89"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "dfb28a78e3a914ee54f06d74fb6942ad64d234f3fc73e38d2e44be32ea3ad25e"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "1fdd4c07f2fb8e9165c3370228ac7157804c3071f37cf0cdbb9a0e209871cd02"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "6bea32e2817e0f7c8a02c69d98f36ff6bbbe1f137cfcc44c071d8cb78a6f5b37"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "f54cc13dee2cc0b3d71023c1b4143388aa84dc61a1036aa9bb1c01c1385d4141"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "430d6fec7e96182ad4fb46f876fbccc43fe2ab1aca888b607846cc6c63e4d91f"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "6ae0fa61ea6586bd7d2f54a8ff09850719e484deea3ee6fd7f0e6bc5710adbf5"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "03e3fa678b660a501f1ae5b3018863c32c6a30230881b44f01342e8560ecb2a9"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "8f8f65f78d7ea3ab171d2d34a0f87c63b1e230da768381f365c6385075d32a2b"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "64e0fe0fce80b6b0e7659d4872b0e82af0f403cc0a0bc08e9691bdf3d4019253"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "5755a11b3824d361a79ee7bd51d17ca92dc408a3aee36c1d239f4e9f20ac3107"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "c6c4832fd7f4df71859b15ab7ac2e8a71c3d3a42120e6163cb3b7f324226937e"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "0d23de4545dc47e81ec753f43eda0cea686de57b0e934716d800f36df14912f0"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "7a20f85b942a2a201ee9c9e931f2fffe37255a5b35b25c92f4ab37fde56f6fd9"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "d4963f24c73b857604e757f064babeec6a5ca01057276427b0629fbe6f2d12b4"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "df60590fcce5525554c65e74128c997665dc047520c285c2138cebdc8160f71d"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "343abfebdb27528c87594415a14a491b3ed0641535471bf99e97403bb46c1c89"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "dfb28a78e3a914ee54f06d74fb6942ad64d234f3fc73e38d2e44be32ea3ad25e"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "6d5776245c91009afdc91275df1483ac4b6c57c211d9435856939a492d57956a"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "d18bcec824b43194d0edd110437e54b7bf4916000da2d9702353cb1c302fbf56"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "f54cc13dee2cc0b3d71023c1b4143388aa84dc61a1036aa9bb1c01c1385d4141"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "430d6fec7e96182ad4fb46f876fbccc43fe2ab1aca888b607846cc6c63e4d91f"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "fc6dde548d4af5a7fd50d27635f98a365c5dfbf42eab157c3b8f65d6c9ad220e"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "d534fe3c1fc880066f2507f6806e16bfd6ba598908f393c457c96451c23b1cb3"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "8f8f65f78d7ea3ab171d2d34a0f87c63b1e230da768381f365c6385075d32a2b"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "64e0fe0fce80b6b0e7659d4872b0e82af0f403cc0a0bc08e9691bdf3d4019253"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "4f7dc3cd186eadb816b126f6ade3ccc0229019847f270f408f1f44595e0bd2ec"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "3cc3fceda321063c3c45591c5eeb43dbf8e3037f151c25be218898fb505fd19b"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "0d23de4545dc47e81ec753f43eda0cea686de57b0e934716d800f36df14912f0"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "7a20f85b942a2a201ee9c9e931f2fffe37255a5b35b25c92f4ab37fde56f6fd9"
+      }
+    ],
+    "quadratic_discrepancy": [
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "113e5f21adf382b71803f3b0becaaa1fc3f3ca09baaaf2eecef75854fbd003d4"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "c3f37d2a5e381371e6be50d6c52510c1a7f1b0eaec5ccf44a3a38f2f0414fc4f"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "d3f3dd65f442a9874b5be73f3b3fb2b14c2729bbdb04cfbe642190fc0a018fed"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "c0ebfcc8260e671585080474373bbde03bb936db63d701ee3a1440712ae91645"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "1183f26cb72011a01e40f244546a5f3ece2779cd13520069a8d2fd5c8c764b75"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "67701572d31d06468c73e275a973911b8354a0b668b78f7a5d59c6cf94b5087d"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "a2815f88c1556217d17c46d9ec57b567aac4b9c2e5d708c616d494b4d2b2514a"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "db468526f6e2cece2d5af2225f1ef1e6bc3349974470deb8e884349766693e71"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "c16b03bdb94086e529b213fa8299c4cececec5745fb04a88f3eea57f2fd46627"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "393e9b9bf48897e6a469fd2768ce6de2a3600eca6bf726fb6f3d82bff9404715"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "c692c0eca9b439c7d46257121b1dd2bd1fe298178644f448d57ad6699e36c08a"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "973d5f2c55ec851f410166dac3a931a953abd85570288fc5a98dd6271c6523a4"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "028571d5e99cd47c9cb43a1b55eb65e69502876d1d6bd3507bd7e3e2ad589948"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "55194b36c6fd15e27d75fe7220a0b7553e530701435e8505167d4febce32ab0d"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "8e0f98f6029aef07f59ecc1cf6b84499ae48bbc53a4fea7d5ac66f2457d37152"
+      },
+      {
+        "mode": "Oracle nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "e8e9c5637616ee9231008fb022ab75abbe42713cd058a45d0ae1176e842c19d3"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "coverage_theta",
+        "xy_sha256": "9823dc36c50e86cc70f3d8a29f11087088d8e044e1858ce0664f80703353a4df"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "08ea59981dac92d7fd576be401d0dc9633589cf263e553d5560296b9fd143604"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "d3f3dd65f442a9874b5be73f3b3fb2b14c2729bbdb04cfbe642190fc0a018fed"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "coverage_theta",
+        "xy_sha256": "c0ebfcc8260e671585080474373bbde03bb936db63d701ee3a1440712ae91645"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "bias_theta",
+        "xy_sha256": "29a5af235f1d92cb1b3791d9115d259c1c9233ca7671c30f8e0fb696c092b4ce"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "bias_theta",
+        "xy_sha256": "709b3b3a15ab9027f11775a4720cc23ae8d0de1671f7eeb9c05cf8e901bc0e23"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "a2815f88c1556217d17c46d9ec57b567aac4b9c2e5d708c616d494b4d2b2514a"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "bias_theta",
+        "xy_sha256": "db468526f6e2cece2d5af2225f1ef1e6bc3349974470deb8e884349766693e71"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "mse_theta",
+        "xy_sha256": "fedc58b4b11caed9b3704f0745448c42e66fada0ffb40e6293524ed81399049b"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "mse_theta",
+        "xy_sha256": "78e27555b48ea1928eec8d29fe656c770c9274847f76a062ad2a559565819129"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "c692c0eca9b439c7d46257121b1dd2bd1fe298178644f448d57ad6699e36c08a"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "mse_theta",
+        "xy_sha256": "973d5f2c55ec851f410166dac3a931a953abd85570288fc5a98dd6271c6523a4"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "U",
+        "metric": "width",
+        "xy_sha256": "f2ab49671efcd64e9c401d74230b94a3501aa83b9d6ce1ebd4293e4b39502fb4"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "AIPW (ECT)",
+        "metric": "width",
+        "xy_sha256": "2f251f7605f7b753887b76602c55f68d3b832dc4672fcf97baa2967848651f90"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "8e0f98f6029aef07f59ecc1cf6b84499ae48bbc53a4fea7d5ac66f2457d37152"
+      },
+      {
+        "mode": "Estimated nuisance",
+        "method": "ANCOVA (RCT)",
+        "metric": "width",
+        "xy_sha256": "e8e9c5637616ee9231008fb022ab75abbe42713cd058a45d0ae1176e842c19d3"
+      }
+    ]
+  }
+}

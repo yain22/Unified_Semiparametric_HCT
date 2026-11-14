@@ -1,0 +1,42 @@
+\begin{table}[!htb]
+\centering
+\caption{Terms in the efficient influence function for the hybrid trial's borrowing target. The seven signed contributions sum to~\eqref{main:tceeif}.}\label{tab:eif-components}
+\renewcommand{\baselinestretch}{1}\fontsize{9}{11}\selectfont
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X@{}}
+\toprule
+Source of variation & Contribution & Interpretation\\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Terms present when the internal share is held fixed}}\\[2pt]
+Trial covariate distribution &
+$\displaystyle \frac{S}{q}\{t_\lambda(X)-\widetilde\theta_\lambda\}$ &
+Standardizes the conditional contrast to the trial population.\\[4pt]
+Treated trial outcomes &
+$\displaystyle \frac{I_1}{q e(X)}\,\varepsilon_1(O)$ &
+Estimates the treated mean from the randomized treatment arm.\\[4pt]
+Internal control outcomes &
+$\displaystyle -\frac{I_{1,0}\lambda(X)}{q\{1-e(X)\}}\,\varepsilon_{1,0}(O)$ &
+Weights internal control residuals by the internal share.\\[4pt]
+External control outcomes &
+$\displaystyle -\frac{I_0 p(X)\{1-\lambda(X)\}}{q\{1-p(X)\}}\,\varepsilon_0(O)$ &
+Reweights external residuals to the trial population and applies the external share.\\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Additional terms when the precision rule determines the internal share}}\\[2pt]
+Source probability &
+$\displaystyle -\frac{c(X)}{q}\frac{S-p(X)}{1-p(X)}$ &
+Accounts for how relative source availability changes the share.\\[4pt]
+Internal control variance &
+$\displaystyle \frac{c(X)}{q}\frac{I_{1,0}}{1-e(X)}
+\left\{\frac{\varepsilon_{1,0}(O)^2}{v_{1,0}(X)}-1\right\}$ &
+Higher internal variance shifts weight to external controls.\\[4pt]
+External control variance &
+$\displaystyle -\frac{c(X)}{q}\frac{I_0 p(X)}{1-p(X)}
+\left\{\frac{\varepsilon_0(O)^2}{v_0(X)}-1\right\}$ &
+Higher external variance shifts weight to internal controls.\\
+\bottomrule
+\end{tabularx}
+\par\smallskip
+\begin{minipage}{\textwidth}\fontsize{8}{10}\selectfont
+Here $\varepsilon_g(O)=Y-m_g(X)$ and $c(X)=\delta(X)\lambda(X)\{1-\lambda(X)\}$. The last three terms vanish wherever the two control means agree. Outside shared support, use the boundary conventions in Theorem~\ref{main:eiftheorem}.
+\end{minipage}
+\end{table}

@@ -1,0 +1,129 @@
+{
+  "scope": "Historical paths are relative to the archived simulation sources. Historical, audited-copy, and public-copy hashes identify different files; public hashes refer to the distributed files. Statistical function bodies are preserved. Only unused generator loader fields, comments, and package references were changed.",
+  "removed_unused_file": "lib/scalar_gap_primary_helpers.R",
+  "files": [
+    {
+      "file": "run_baseline.R",
+      "audited_source": "analysis/simulations/run_baseline.R",
+      "audited_sha256": "e38d02310f4231fd422c930c43a71591f6fb43c5f9300eb163c64d1c144e5038",
+      "public_sha256": "a642da89a1859c828604a5127cfe7f069b3540f05888d4642dc7f4fce00f41d2",
+      "historical_source": "archive/v3/qa/structural_gap_validation_2026-10-04/additive_discrepancy/run_additive_full.R",
+      "historical_sha256": "0c983138d71423aa32f66c9d04b6b278646a5ccf43b4e6d4022ababbc00fd5c6"
+    },
+    {
+      "file": "run_extended.R",
+      "audited_source": "analysis/simulations/run_extended.R",
+      "audited_sha256": "a0539bb6ea84a354d81adc0e6db0b750bb458a34dfccb3f82797c049db97038d",
+      "public_sha256": "cdda325d00ac50e9659954163b9d2c7fd5b47f65c941654cf9fd59c20d3a4efe",
+      "historical_source": "archive/v4/code/extended_scenarios_run.R",
+      "historical_sha256": "dff03297501268281e8a9ae979c1666841c04439a0bcfab09db08b5089d262bd"
+    },
+    {
+      "file": "run_oracle.R",
+      "audited_source": "analysis/simulations/run_oracle.R",
+      "audited_sha256": "5f807e6c2114dab611464adf68970d94c6f524b0dec348e6989206f2deae3430",
+      "public_sha256": "bc3f298372c066f1d7813d5b6f6e7782c70e1921e997e50d7c28b6e2b02897b4",
+      "historical_source": "archive/v4/code/run_nuisance_mode_oracle.R",
+      "historical_sha256": "bc5a6ccba62e51474dba8b6b4bd6c810a31068ca41ff5e69010359934f07ec76"
+    },
+    {
+      "file": "validate.R",
+      "audited_source": "analysis/simulations/validate.R",
+      "audited_sha256": "ccaf06b75834bbec4a694a278b295122ebd3034f58801a09cf30f8be3a2edae2",
+      "public_sha256": "f1ebfe5ed7e9510dc220c1ec479659131b64235777a564eea0a1c8b8d762ac5d"
+    },
+    {
+      "file": "plot_publication.py",
+      "audited_source": "analysis/simulations/plot_publication.py",
+      "audited_sha256": "ab85e864414274463cc021aaa088c77c86fa96caed0f8c0a9430ca58895d3da4",
+      "public_sha256": "448485ee5e00d179fb7fdbb96b20ff877ebee1f546ded0ddbdd9b399057558a3"
+    },
+    {
+      "file": "publication_mapping.csv",
+      "audited_source": "analysis/simulations/publication_mapping.csv",
+      "audited_sha256": "0d97abe74cb2738c5a6bb5bb5b0609a7e678716caa06172d4f4dc7fd591c218a",
+      "public_sha256": "ab9f96d8fe90ee472ec29e868bc42b3a188de36489a2bdc1992ed2abb68c23e1"
+    },
+    {
+      "file": "lib/cli_guard.R",
+      "audited_source": "analysis/simulations/lib/cli_guard.R",
+      "audited_sha256": "ecc3471cfd6c89df84944a2c24d6bab56d60b04ac27d065deccb625618d2b236",
+      "public_sha256": "65e785ac6a51aa4aeeff82c9a02fe60b6933f369b45741b5cece72d7e41e362f"
+    },
+    {
+      "file": "lib/fitted_helpers.R",
+      "audited_source": "analysis/simulations/lib/fitted_helpers.R",
+      "audited_sha256": "c09043622ca7e490a13e034fa03db3e81a2a5feaa03f6b0a01b44856d6a07e53",
+      "public_sha256": "e510c671347ecb90e7605879885ec34bb7fe67af8d57c2eac3dc1600f896559d",
+      "historical_source": "archive/v3/qa/structural_gap_validation_2026-10-04/fitted_helpers.R",
+      "historical_sha256": "ef7e0d09341050be335842594f8c7a961daf41af8d2536fa0c64d18b3fac7c3e"
+    },
+    {
+      "file": "lib/trial_baselines.R",
+      "audited_source": "analysis/simulations/lib/trial_baselines.R",
+      "audited_sha256": "6b45de939d29b948430cadee4fc8ad60103de8bda8e11cf1cceb07435555b655",
+      "public_sha256": "0f92ca927cff1179f37e3ab6cf02fb1902d7f6140c3c72ef12b7d8c00bd49ed6",
+      "historical_source": "archive/simulations/code/trial_baselines.R",
+      "historical_sha256": "a9c193e764314f169038788c4dbebec172227f62118253723aae6c6df559040e"
+    },
+    {
+      "file": "lib/ect_sim_source.R",
+      "audited_source": "analysis/simulations/lib/ect_sim_source.R",
+      "audited_sha256": "80b5a3c3cf2dee27ada8def5aea7e088f6aac6cdb4fc41bd6ecf75bfe18dddb8",
+      "public_sha256": "540c9f9ca24fb8cf64c0180c4c8597b7ed3ae636c9bf99681200c9956dd62789",
+      "historical_source": "archive/simulations/Two_Simulation_Experiments_with_Varying_N1_N0.R",
+      "historical_sha256": "4920802803a8ec871cb2017bf775e20890a9e4ea48aec8653dba0103ea377988",
+      "retained_functions": [
+        "truncate_prob",
+        "as_numeric_matrix",
+        "make_quad_features",
+        "fit_or_model",
+        "predict_or_model",
+        "fit_ps_model",
+        "predict_ps_model",
+        "predict_qhat",
+        "att_hat_dr",
+        "eif_wald_ci_dr"
+      ]
+    },
+    {
+      "file": "lib/hct_unrestricted_comparators.R",
+      "audited_source": "analysis/simulations/lib/hct_unrestricted_comparators.R",
+      "audited_sha256": "519df0a7a3dcc6e988aacb8f67f78a953fd9189cc69fb57051625fb7351116c8",
+      "public_sha256": "54221db51c0bb72c12f3564653411d3dc02eb1887ee5eb56134f81972fadeccd",
+      "historical_source": "archive/simulations/hct_unrestricted_comparators.R",
+      "historical_sha256": "519df0a7a3dcc6e988aacb8f67f78a953fd9189cc69fb57051625fb7351116c8",
+      "retained_functions": [
+        "hct_unrestricted_ols",
+        "hct_unrestricted_logit",
+        "hct_unrestricted_group_variance"
+      ]
+    },
+    {
+      "file": "lib/scalar_gap_estimated_share_helpers.R",
+      "audited_source": "analysis/simulations/lib/scalar_gap_estimated_share_helpers.R",
+      "audited_sha256": "06aa654fe5b924146bc2bba2a75dba868b26409d8dfbcc8c80ecb14cbfcce3f1",
+      "public_sha256": "9355538258a051fba739471783337268648ff0e604f387080ac2b23cf2363093",
+      "historical_source": "archive/v2/code/scalar_gap_estimated_share_helpers.R",
+      "historical_sha256": "fe707fcd7e869d6309da1fa5fb36d63a34ba053c645710ecaca21a5ee504182d",
+      "retained_functions": [
+        "est_share_import",
+        "est_share_load",
+        "est_share_variance"
+      ]
+    },
+    {
+      "file": "lib/scalar_gap_ect_helpers.R",
+      "audited_source": "analysis/simulations/lib/scalar_gap_ect_helpers.R",
+      "audited_sha256": "4cb711fb26d94a4343d35b4e7c843d385ecb6d69f234231fb607c9e7054628c8",
+      "public_sha256": "027d81f23ca80415dfad6551d6f80244da0be2166ded83116dc980398f72b6c4",
+      "historical_source": "archive/v2/code/scalar_gap_ect_helpers.R",
+      "historical_sha256": "389317188e57037b3fd6c410f8c2ae9b315b7ae0724805d59e21ebeaf192cd5e",
+      "retained_functions": [
+        "scalar_ect_import_functions",
+        "scalar_ect_load",
+        "scalar_ect_fit"
+      ]
+    }
+  ]
+}

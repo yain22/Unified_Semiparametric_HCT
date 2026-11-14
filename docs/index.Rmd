@@ -1,0 +1,203 @@
+---
+title: "Prospective causal-gap sensitivity analysis across trial designs"
+subtitle: "R code and worked examples"
+author: "Se Yoon Lee"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: readable
+    highlight: tango
+    self_contained: true
+    math_method: mathml
+    code_folding: show
+    fig_retina: 2
+lang: en
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = "#>", fig.align = "center", warning = FALSE,
+                      message = FALSE, echo = TRUE, dev = "png")
+options(width = 76)
+root <- if (dir.exists("analysis")) "." else ".."
+```
+
+<style>
+:root { --ink: #20303a; --muted: #465c68; --accent: #115b70; }
+body { color: var(--ink); font-family: Georgia, "Times New Roman", serif;
+       font-size: 17px; line-height: 1.64; background: white; }
+.main-container { max-width: 955px !important; padding: 0 28px 60px; }
+#header { border-top: 5px solid var(--accent); margin: 31px 0 18px; padding-top: 18px; }
+h1,h2,h3,h4,.navlinks,#TOC,.table,figcaption,.caption { font-family: "Segoe UI", Arial, sans-serif; }
+h1.title {font-size: clamp(30px,5vw,45px); line-height: 1.13; color: #192e38; max-width: 820px;}
+.subtitle {color: var(--muted); margin: 0.5em 0 0.1em;}
+h4.author {font-size: 16px; margin: 7px 0 17px;}
+h1:not(.title),h2 {margin-top: 1.65em; line-height: 1.25;}
+h1:not(.title) {font-size: 29px; padding-top: 8px; border-top: 1px solid #d2dde1;}
+h2 {font-size: 21px;}
+a {color: var(--accent); text-decoration: underline; text-underline-offset: 2px;}
+#TOC {background: #f4f7f7; border-left: 3px solid #769ba5; padding: 12px 22px;
+      margin: 16px 0 24px; font-size: 15px;}
+#TOC ul {list-style: none; padding-left: 0; margin: 0;}
+#TOC li ul {padding-left: 18px;}
+pre {font-size: 13px; line-height: 1.5; border-color:#d1dce0;}
+table {margin-bottom: 22px;}
+.caption {color: var(--muted); font-size: 14px; text-align: left; margin: 0.65em 0 1.2em;}
+.table {font-size: 15px;}
+.navlinks {margin: 12px 0 20px; display:flex; gap:18px; flex-wrap:wrap;}
+@media(max-width:650px){.main-container{padding:0 13px 40px;overflow-wrap:anywhere;}.table{display:block;overflow:auto;}
+h1:not(.title){font-size:25px;}pre{font-size:12px;}}
+</style>
+
+<div class="navlinks"><a href="replication-source.zip" download>Replication code (.zip)</a> <a href="tables.zip" download>All numerical tables (.zip)</a> <a href="index.Rmd" download>R Markdown source</a></div>
+
+A trial team has 300 external controls and plans to treat 120 children. How many children should it still randomize to concurrent control? We use the schizophrenia example from the paper to calculate the power of three designs and examine how often each would declare a benefit if the treatment had no effect. The continuous glucose monitoring example then shows how the same distinction between the borrowing target and the trial effect can be examined after data collection.
+
+# Reproduce the paper's tables
+
+Extract the replication code and open `HCT.Rproj` or a terminal in the extracted directory. Run the following command there. It uses base R and the bundled aggregate summaries to write CSV files under `results/tables/`.
+
+```sh
+Rscript analysis/paper_tables.R
+```
+
+| Paper display | Calculation or source | Output in `results/tables/` |
+|:--|:--|:--|
+| Main Table 2 | Simulation estimates of coverage, bias, mean squared error, and interval width | `table-2.csv` |
+| Main Table 3 | Gaussian planning calculations for three schizophrenia trial scenarios | `table-3a.csv`, `table-3b.csv` |
+| Main Table 4 | Six-month HbA1c estimates and bootstrap intervals from the saved clinical summaries | `table-4.csv` |
+| Supplementary Tables S4–S12 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | Files beginning `table-s4` through `table-s12` |
+
+Main Table 1 gives the terms of the hybrid trial’s efficient influence function. Tables S1–S3 define notation, observed groups, and nuisance quantities. The exhibit map (`analysis/paper-map.csv`) identifies the source for each figure and table. The simulation and clinical sections below explain how to refit the analyses that produced the saved summaries.
+
+# A design decision before enrollment
+
+In Scenario I, the randomized controlled trial (RCT) enrolls 120 treated children and 120 concurrent controls. The hybrid trial (HCT) keeps 60 concurrent controls and borrows 300 external controls. The externally controlled single-arm trial (ECT) uses the same external cohort and enrolls only the 120 treated children. Improvement in the negative symptom score is measured in points, with larger values favoring treatment. The planned effect is two points.
+
+## Power when control outcomes agree
+
+The planning model assumes a marginal outcome standard deviation of 7.5 and a common prognostic function explaining 25% of outcome variance. The residual variance is therefore $v=7.5^2(1-0.25)$. With equal residual variances, the HCT assigns $60/(60+300)=1/6$ of its control mean to concurrent controls. The calculation uses fixed weights and independent arm means. For RCT ANCOVA, it uses the known prognostic function as a planning approximation to fitted regression adjustment.
+
+```{r planning-calculation}
+treated <- 120
+rct_control <- 120
+hybrid_control <- 60
+external_control <- 300
+residual_variance <- 7.5^2 * (1 - 0.25)
+cutoff <- qnorm(0.975)
+trial_effect <- 2
+
+se <- sqrt(residual_variance * c(
+  HCT = 1 / treated + 1 / (hybrid_control + external_control),
+  ECT = 1 / treated + 1 / external_control,
+  RCT = 1 / treated + 1 / rct_control
+))
+power <- pnorm(trial_effect / se - cutoff)
+
+knitr::kable(
+  data.frame(Design = c("HCT", "ECT", "RCT (ANCOVA)"),
+             "New trial enrollment" = c(180, 120, 240),
+             "Standard error" = unname(se),
+             "Power" = unname(power), check.names = FALSE),
+  digits = c(0, 0, 3, 3), align = c("l", "r", "r", "r"))
+```
+
+At the two-point effect, both borrowing designs exceed the planned 80% power; the candidate randomized ANCOVA design has approximately 67% power. Those values assume equal internal and external mean control outcomes at the same baseline covariates.
+
+## What if the external controls improve less?
+
+Let $\delta$ be the internal mean control outcome minus the external mean for comparable patients. Under a constant discrepancy, the borrowing contrast exceeds the trial effect by $\xi=(1-\lambda)\delta$, where $\lambda$ is the internal share. Here the HCT gap is $5\delta/6$, the ECT gap is $\delta$, and the RCT gap is zero. The graph uses the **same external discrepancy** for both borrowing designs. When the true trial effect is zero, the probability of declaring benefit is $\Phi(\xi/s-z_{0.975})$, where $s$ is the planning standard error.
+
+```{r common-discrepancy, fig.show='hold', fig.width=7.8, fig.height=3.95, out.width="100%", fig.alt="Under the trial null, rejection increases faster for the externally controlled design than for the hybrid design as the internal minus external difference increases. The randomized design stays at 2.5 percent."}
+external_share <- c(HCT = external_control / (hybrid_control + external_control),
+                    ECT = 1, RCT = 0)
+delta <- seq(-0.5, 0.5, length.out = 201)
+false_positive <- sapply(names(se), function(design) {
+  pnorm(external_share[design] * delta / se[design] - cutoff)
+})
+
+old_par <- par(mar = c(4.2, 4.2, 0.7, 0.8))
+colors <- c("#00746E", "#9A4925", "#48555D")
+matplot(delta, 100 * false_positive, type = "l", lty = c(1, 2, 3),
+        col = colors, lwd = 2.6, xlab = "Internal minus external mean (points)",
+        ylab = "False-positive probability (%)", las = 1, bty = "l")
+legend("topleft", legend = c("Hybrid trial", "Externally controlled trial",
+       "Randomized trial"), col = colors, lty = c(1, 2, 3), lwd = 2.6,
+       bty = "n", cex = 0.85)
+par(old_par)
+```
+
+At an internal-minus-external difference of 0.5 points, the hybrid trial declares benefit under the null about 8.8% of the time, the externally controlled trial about 10.6%, and the randomized trial 2.5%. Retaining concurrent controls attenuates the displacement. The hybrid design still exceeds the nominal false-positive probability. To reproduce all three scenarios, including the separate analysis in which the designs have the same *gap*, run:
+
+```sh
+Rscript analysis/paper_analysis.R planning
+```
+
+# Refit the simulations
+
+The simulations fit the hybrid AIPW-U estimator using separate internal and external control regressions, and compare it with ECT AIPW and randomized analyses. Unlike the calculation above, the fitted hybrid procedure estimates the borrowing share and includes its variation in the estimating equation.
+
+Install the R dependencies once, then run four replications to check the code and generate new output. The paired oracle analysis reads the fitted baseline run with the same seed and number of replications.
+
+```r
+install.packages(c("data.table", "digest", "jsonlite"))
+```
+
+```sh
+Rscript analysis/paper_analysis.R validate
+Rscript analysis/paper_analysis.R baseline --reps 4 --output-dir results/smoke/baseline
+Rscript analysis/paper_analysis.R oracle --reps 4 --baseline-dir results/smoke/baseline --output-dir results/smoke/oracle
+Rscript analysis/paper_analysis.R extended --reps 4 --output-dir results/smoke/extended
+```
+
+For the paper's Monte Carlo precision, use the 5,000-replication commands below. The baseline and extended runs accept a worker count. The scripts use the manuscript's seeds by default.
+
+```sh
+Rscript analysis/paper_analysis.R baseline --reps 5000 --workers 4
+Rscript analysis/paper_analysis.R oracle --reps 5000 --baseline-dir results/baseline
+Rscript analysis/paper_analysis.R extended --reps 5000 --workers 4
+Rscript analysis/paper_analysis.R quadratic --reps 5000
+```
+
+The simulations write new estimates under `results/`. To rebuild the affected tables from those outputs, use `Rscript analysis/paper_tables.R --simulation-dir results --output-dir results/refitted-tables`. After a clinical refit, add `--clinical-dir results/cgm` to use those estimates as well. To plot a new simulation run, run `python analysis/simulations/plot_publication.py --help` for the input directories. The plotting dependencies are listed in `requirements.txt`.
+
+# Examine the glucose monitoring analysis
+
+The outcome is six-month change in HbA1c, measured in percentage points. Negative treatment contrasts favor continuous glucose monitoring. In this application the HCT uses all 442 retained trial profiles. The ECT uses 228 registry-eligible treated profiles as its standardization population. The HCT causal-gap estimate compares AIPW-U with the trial-only augmented estimate calculated from the **same fitted trial regressions**.
+
+This code reads the distributed aggregate results. It reproduces the two treatment contrasts underlying the matched gap, and shows the interval calculated from 2,000 paired participant bootstrap refits. The pairing preserves the covariance between the two estimates.
+
+```{r cgm-example}
+file <- file.path(root, "analysis", "clinical", "inputs", "primary", "full_results.csv")
+cgm <- read.csv(file)
+methods <- c("AIPW-U (est)", "trial_augmented", "matching_gap")
+rows <- cgm[match(methods, cgm$method), ]
+stopifnot(!anyNA(rows$estimate),
+          abs(rows$estimate[1] - rows$estimate[2] - rows$estimate[3]) < 1e-10)
+
+knitr::kable(
+  data.frame(Contrast = c("HCT AIPW-U", "Matched trial-only estimate", "Causal-gap"),
+             Estimate = rows$estimate, "Lower 95%" = rows$bootstrap_lower,
+             "Upper 95%" = rows$bootstrap_upper, check.names = FALSE),
+  digits = 3, align = c("l", "r", "r", "r"))
+```
+
+Borrowing shifts the estimated HbA1c contrast by approximately −0.050 percentage points relative to the matched trial score. To refit the estimators or recompute the bootstrap, obtain the JDRF trial and T1D Exchange registry archives separately from the Jaeb Center for Health Research under its access terms. Replace the two filenames below with your authorized local copies. The public bundle contains aggregate estimates and diagnostics; the underlying participant records are held by the distributor.
+
+```sh
+Rscript analysis/paper_analysis.R cgm --trial-zip trial.zip --registry-zip registry.zip --bootstrap-reps 2000
+```
+
+Cohort construction, eligibility windows, and the registry-use sensitivity analysis are documented in `analysis/clinical/README.md`.
+
+# Render this manual
+
+Run the following in R from the extracted replication folder, which contains `analysis/` and `docs/index.Rmd`:
+
+```r
+install.packages(c("rmarkdown", "knitr"))
+rmarkdown::render("docs/index.Rmd", knit_root_dir = normalizePath("."))
+```
+
+Rendering requires Pandoc, which is included with RStudio. The worked planning example uses base R; the clinical example reads the supplied aggregate CSV. The HTML includes the executed results and the figure.
+

@@ -1,0 +1,30 @@
+[
+  {
+    "source": "archive/figures/code/illustrate_hct_eif.R",
+    "source_sha256": "00feb9e4504c7cbd5a570a3967c58e36ff6efc496d8b575e315a40d3fd1355c2",
+    "copy": "illustrate_hct_eif.R",
+    "change": "Relative output paths, configurable sans-serif font, and formatting; numerical parameters and formulas retained.",
+    "public_sha256": "1f6d4de1eca7d060c158f7222d351451906f9d73c3a15b42161522d2d1970673"
+  },
+  {
+    "source": "archive/figures/code/illustrate_hct_target_pictorial.R",
+    "source_sha256": "19955d1b0d9acc1d1d3471e773532d78a58b5c3bcfe8c896e4eb4e6d739d6a83",
+    "copy": "illustrate_hct_target_pictorial.R",
+    "change": "Relative output paths, configurable sans-serif font, and formatting; numerical parameters and formulas retained.",
+    "public_sha256": "0c606f3025b02e137e318466d5f47e785125d403bce765a53786ba8d1c3e29f0"
+  },
+  {
+    "source": "archive/figures/code/illustrate_hct_anchor_pictorial.R",
+    "source_sha256": "f3e3a2458bf0fff221567ef3242cbe2fdb75d8caa200ba12fda35b5a6062d9a9",
+    "copy": "illustrate_hct_anchor_pictorial.R",
+    "change": "Relative output paths, configurable sans-serif font, and formatting; numerical parameters and formulas retained.",
+    "public_sha256": "f52b9184b18edabb011c3c34caccfc54c36855a054182eef897557e0baa4957d"
+  },
+  {
+    "source": "archive/figures/code/illustrate_hct_standardization_pictorial.R",
+    "source_sha256": "e8aa7c6a9efadd6f2af69da235ba313c4cae10b3f1cd21d465def2007a263f50",
+    "copy": "illustrate_hct_standardization_pictorial.R",
+    "change": "Relative output paths, configurable sans-serif font, and formatting; numerical parameters and formulas retained.",
+    "public_sha256": "09ab2a8d589f2ccc27b38ebc49bf750a05f28039d76b00e8421a59ee4a802303"
+  }
+]

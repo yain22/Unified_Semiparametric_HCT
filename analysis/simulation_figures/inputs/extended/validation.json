@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "phase": "full",
+  "repetitions_per_scenario": 5000,
+  "scenarios": 4,
+  "paired_datasets": 20000,
+  "summary_rows": 800,
+  "failures": 0,
+  "warnings": 0,
+  "source_files_unchanged": true,
+  "source_hashes": {
+    "archive/v4/code/extended_scenarios_run.R": "dff03297501268281e8a9ae979c1666841c04439a0bcfab09db08b5089d262bd",
+    "archive/v3/qa/structural_gap_validation_2026-10-04/fitted_helpers.R": "ef7e0d09341050be335842594f8c7a961daf41af8d2536fa0c64d18b3fac7c3e",
+    "archive/v2/code/scalar_gap_ect_helpers.R": "389317188e57037b3fd6c410f8c2ae9b315b7ae0724805d59e21ebeaf192cd5e",
+    "archive/simulations/code/trial_baselines.R": "a9c193e764314f169038788c4dbebec172227f62118253723aae6c6df559040e",
+    "archive/simulations/Two_Simulation_Experiments_with_Varying_N1_N0.R": "4920802803a8ec871cb2017bf775e20890a9e4ea48aec8653dba0103ea377988",
+    "archive/v2/code/scalar_gap_estimated_share_helpers.R": "fe707fcd7e869d6309da1fa5fb36d63a34ba053c645710ecaca21a5ee504182d"
+  },
+  "checkpoint_key": "ca04f5e468900edfeaf5ab889571956795084db1b29f34eb336045f565ce4294",
+  "calibration_max_error": 9.516831767086842e-13,
+  "direct_estimate_max_error": 2.220446049250313e-16,
+  "direct_SE_max_error": 2.7755575615628914e-17,
+  "direct_IF_max_error": 2.1649348980190553e-14,
+  "oracle_system_max_error": 3.552713678800501e-15,
+  "oracle_path_estimate_max_error": 6.245004513516506e-17,
+  "oracle_path_variance_max_error": 1.734723475976807e-18,
+  "max_oracle_bias_z": 2.3658610705602037,
+  "ECT_total_probability_guards": 7,
+  "trial_reference_identical_between_modes": true,
+  "elapsed_seconds": 271.0667669773102
+}

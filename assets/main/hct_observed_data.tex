@@ -1,0 +1,65 @@
+% Hypothetical HCT records in a single-column spreadsheet-style panel.
+% The row colors match the treatment/internal/external palette used elsewhere.
+\begingroup
+\definecolor{sheettreated}{HTML}{1B9E3E}
+\definecolor{sheetinternal}{HTML}{2462B8}
+\definecolor{sheetexternal}{HTML}{7926BE}
+\definecolor{sheetgrid}{HTML}{CED3D8}
+\definecolor{sheetchrome}{HTML}{EEF0F2}
+\newcommand{\hctdatasheetframe}{%
+  \fill[sheetchrome] (0,0) rectangle (7.25,-.42);
+  \fill[sheetchrome] (0,-.42) rectangle (.4,-3.92);
+  \fill[black!4] (.4,-.42) rectangle (7.25,-.92);
+  \foreach \x in {0,.4,1.75,2.5,3.25,4.65,5.85,7.25}
+    \draw[sheetgrid,line width=.35pt] (\x,0)--(\x,-3.92);
+  \foreach \y in {0,-.42,-.92,-1.42,-1.92,-2.42,-2.92,-3.42,-3.92}
+    \draw[sheetgrid,line width=.35pt] (0,\y)--(7.25,\y);
+  \foreach \x/\letter in {1.075/A,2.125/B,2.875/C,3.95/D,5.25/E,6.55/F}
+    \node[text=black!60,font=\sffamily\fontsize{7.5}{8.5}\selectfont] at (\x,-.21) {\letter};
+  \foreach \x/\heading in {1.075/ID,2.125/$S$,2.875/$A$,3.95/$X_1$,5.25/$X_2$,6.55/$Y$}
+    \node[font=\sffamily\bfseries\fontsize{9}{10}\selectfont] at (\x,-.67) {\heading};
+  \foreach \row in {1,...,7}{
+    \node[text=black!55,font=\sffamily\fontsize{7.5}{8.5}\selectfont]
+      at (.2,{-.67-.5*(\row-1)}) {\row};
+  }
+}
+\newcommand{\hctdatasheetrow}[8]{%
+  \pgfmathsetmacro{\rowtop}{-.92-.5*(#1-1)}
+  \begin{scope}[on background layer]
+    \fill[#2!8] (.4,\rowtop) rectangle (7.25,{\rowtop-.5});
+  \end{scope}
+  \fill[#2] (.41,{\rowtop-.05}) rectangle (.46,{\rowtop-.45});
+  \node[text=#2!80!black,font=\sffamily\bfseries\fontsize{9}{10}\selectfont]
+    at (1.075,{\rowtop-.25}) {#3};
+  \foreach \x/\value in {2.125/#4,2.875/#5,3.95/#6,5.25/#7,6.55/#8}
+    \node at (\x,{\rowtop-.25}) {\value};
+}
+% Subscripts identify the group of the observed outcomes, not potential outcomes.
+\newcommand{\hctdatasheetoutcomegroup}[4]{%
+  \pgfmathsetmacro{\grouptop}{-.92-.5*(#2-1)-.07}
+  \pgfmathsetmacro{\groupbottom}{-.92-.5*#3+.07}
+  \draw[#1,line width=.8pt]
+    (7.33,\grouptop)--(7.44,\grouptop)--(7.44,\groupbottom)--(7.33,\groupbottom);
+  \node[anchor=west,text=#1!80!black,font=\fontsize{10}{11}\selectfont]
+    at (7.52,{.5*(\grouptop+\groupbottom)}) {$#4$};
+}
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[x=1cm,y=1cm,every node/.style={font=\sffamily\fontsize{9}{10}\selectfont,inner sep=1pt}]
+  \hctdatasheetframe
+  \hctdatasheetrow{1}{sheettreated}{P01}{1}{1}{0.20}{0}{8.4}
+  \hctdatasheetrow{2}{sheettreated}{P02}{1}{1}{0.70}{1}{10.1}
+  \hctdatasheetrow{3}{sheetinternal}{P03}{1}{0}{0.30}{1}{7.2}
+  \hctdatasheetrow{4}{sheetinternal}{P04}{1}{0}{0.80}{0}{8.5}
+  \hctdatasheetrow{5}{sheetexternal}{P05}{0}{0}{0.25}{0}{6.9}
+  \hctdatasheetrow{6}{sheetexternal}{P06}{0}{0}{0.65}{1}{8.0}
+  \hctdatasheetoutcomegroup{sheettreated}{1}{2}{Y_1}
+  \hctdatasheetoutcomegroup{sheetinternal}{3}{4}{Y_{1,0}}
+  \hctdatasheetoutcomegroup{sheetexternal}{5}{6}{Y_0}
+  \foreach \x/\groupcolor/\groupname in {.35/sheettreated/Trial treated,2.75/sheetinternal/Internal control,5.45/sheetexternal/External control}{
+    \fill[fill=\groupcolor!12,draw=\groupcolor,line width=.6pt] (\x,-4.51) rectangle ({\x+.26},-4.25);
+    \node[anchor=west,font=\sffamily\fontsize{8}{9}\selectfont] at ({\x+.36},-4.38) {\groupname};
+  }
+\end{tikzpicture}%
+}
+\endgroup

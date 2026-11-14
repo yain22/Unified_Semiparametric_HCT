@@ -1,0 +1,22 @@
+\begin{table}[!htbp]
+\centering
+\caption{Comparison with equally rich outcome adjustment in the baseline experiment. Quadratic ANCOVA uses the same ten linear and ten squared covariate terms as the borrowing procedures. The original ANOVA and linear ANCOVA analyses are retained. Results use the same 5,000 datasets per trial size; HCT and ECT are evaluated at zero aggregate causal-gap under heterogeneous discrepancies, and RCT procedures have zero causal-gap.}\label{tab:quadratic-rct}
+\small
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}rlrrr@{}}
+\toprule
+$n_{\mathrm{RCT}}$ & Procedure & Causal MSE & Mean width & Coverage\\
+\midrule
+250 & AIPW-U (HCT) & $0.0109$ & $0.401$ & $0.9446$ \\
+ & AIPW (ECT) & $0.0145$ & $0.471$ & $0.9470$ \\
+ & ANOVA (RCT) & $0.0268$ & $0.652$ & $0.9526$ \\
+ & Linear ANCOVA (RCT) & $0.0216$ & $0.581$ & $0.9492$ \\
+ & Quadratic ANCOVA (RCT) & $0.0202$ & $0.561$ & $0.9508$ \\
+\midrule
+500 & AIPW-U (HCT) & $0.0055$ & $0.282$ & $0.9406$ \\
+ & AIPW (ECT) & $0.0073$ & $0.331$ & $0.9474$ \\
+ & ANOVA (RCT) & $0.0133$ & $0.460$ & $0.9552$ \\
+ & Linear ANCOVA (RCT) & $0.0104$ & $0.407$ & $0.9526$ \\
+ & Quadratic ANCOVA (RCT) & $0.0095$ & $0.388$ & $0.9534$ \\
+\bottomrule
+\end{tabular*}
+\end{table}

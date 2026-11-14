@@ -1,0 +1,2 @@
+# Preserve bytes used in the reference integrity checks across platforms.
+* -text

@@ -1,0 +1,11 @@
+label,runner,result,selection,renderer_or_table
+main:oc,run_baseline.R + run_oracle.R,oracle/summary.csv,N_trial=250 and both nuisance modes,../simulation_figures/renderers/oracle_plot.py
+fig:estimatednuisancesizes,run_baseline.R,baseline/summary.csv,N_trial=250 and 500; four methods,../simulation_figures/renderers/heterogeneous_plot.py
+fig:scenariovariance,run_extended.R,extended/summary.csv,scenario=stronger_heteroskedasticity,../simulation_figures/renderers/extended_plot.py
+tab:focusedsimulation,run_baseline.R,baseline/summary.csv,gaps=-.15/0/.15; trial rows at zero,Manuscript table selected from baseline/summary.csv
+tab:quadratic-rct,run_baseline.R + ../comparators/quadratic_rct_comparator.R,baseline/summary.csv + quadratic_rct_summary.csv,gap=0; both sizes,../comparators/quadratic-rct-table.tex
+tab:own-tce-calibration,run_baseline.R + run_oracle.R + run_extended.R,baseline/summary.csv + baseline/transportability_reference_summary.csv + oracle/oracle_summary.csv + extended/summary.csv,heterogeneous endpoints/zero and separate delta=0,../comparators/collect_calibration.py
+fig:scenariofewerexternal,run_extended.R,extended/summary.csv,scenario=fewer_external,../simulation_figures/renderers/extended_plot.py
+fig:scenariosourceshift,run_extended.R,extended/summary.csv,scenario=source_shift,../simulation_figures/renderers/extended_plot.py
+fig:scenarioquadratic,run_extended.R,extended/summary.csv,scenario=quadratic_discrepancy,../simulation_figures/renderers/extended_plot.py
+tab:extendedzerogap,run_extended.R,extended/summary.csv,gap=0; HCT U,Manuscript table selected from extended/summary.csv
