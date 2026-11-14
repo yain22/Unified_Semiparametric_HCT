@@ -110,8 +110,14 @@ function plotCurves(canvas, settings, focus) {
   function mark(key, delta, rate, size) {
     const cx = x(delta), cy = y(rate);
     ctx.beginPath();
-    if (key === 'rct') ctx.rect(cx - size, cy - size, 2 * size, 2 * size);
-    else ctx.arc(cx, cy, size, 0, 2 * Math.PI);
+    if (key === 'rct') {
+      ctx.moveTo(cx, cy - size);
+      ctx.lineTo(cx + size, cy + size);
+      ctx.lineTo(cx - size, cy + size);
+      ctx.closePath();
+    } else {
+      ctx.arc(cx, cy, size, 0, 2 * Math.PI);
+    }
     ctx.fillStyle = key === 'ect' ? '#fff' : colors[key];
     ctx.fill();
     if (key === 'ect') {
