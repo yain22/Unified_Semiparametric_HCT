@@ -1,14 +1,14 @@
 # causalgap: external controls in clinical trials
 
-[<img src="docs/assets/mark.svg" align="right" width="122" alt="causalgap R package: nested hybrid models and two trial-design branches">](https://yain22.github.io/causal-gap-trial-design/r-package.html)
+[<img src="docs/assets/mark.svg" align="right" width="122" alt="causalgap R package: nested hybrid models and two trial-design branches">](https://yain22.github.io/Unified_Semiparametric_HCT/r-package.html)
 
 If a trial replaces some of its concurrent controls with external patients, how much precision does it gain, and what effect does it estimate? This repository accompanies Se Yoon Lee's *A Unified Semiparametric Framework for Prospective Causal-Gap Sensitivity Analysis Across Randomized, Externally Controlled, and Hybrid Trials*.
 
-[**R package and manual**](https://yain22.github.io/causal-gap-trial-design/r-package.html) · [**Explore the EIF and its three reductions**](https://yain22.github.io/causal-gap-trial-design/eif-models.html) · [**Replication guide**](https://yain22.github.io/causal-gap-trial-design/)
+[**R package and manual**](https://yain22.github.io/Unified_Semiparametric_HCT/r-package.html) · [**Explore the EIF and its three reductions**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html) · [**Replication guide**](https://yain22.github.io/Unified_Semiparametric_HCT/)
 
 ## Reproduce a result in R
 
-[Download the replication files](https://yain22.github.io/causal-gap-trial-design/replication-source.zip), extract them, and open `HCT.Rproj`. Run these lines in the **R console** at the project root:
+[Download the replication files](https://yain22.github.io/Unified_Semiparametric_HCT/replication-source.zip), extract them, and open `HCT.Rproj`. Run these lines in the **R console** at the project root:
 
 ```r
 source("analysis/reproduce.R")
@@ -32,7 +32,7 @@ Figures require R with Cairo graphics and the `jsonlite` package (`install.packa
 
 ## Use the estimator
 
-Download the [R source package](https://yain22.github.io/causal-gap-trial-design/downloads/causalgap_0.1.0.tar.gz), then select that file in R:
+Download the [R source package](https://yain22.github.io/Unified_Semiparametric_HCT/downloads/causalgap_0.1.0.tar.gz), then select that file in R:
 
 ```r
 install.packages(file.choose(), repos = NULL, type = "source")
@@ -45,11 +45,11 @@ Here one quarter of the hybrid control mean comes from internal controls. If the
 
 ## Explore the theory
 
-[<img src="docs/assets/trial-models.png" width="640" alt="Model diagram: the common-mean hybrid model is nested within the unrestricted hybrid model; separate branches redefine the observation law for randomized or externally controlled trials.">](https://yain22.github.io/causal-gap-trial-design/eif-models.html)
+[<img src="docs/assets/trial-models.png" width="640" alt="Model diagram: the common-mean hybrid model is nested within the unrestricted hybrid model; separate branches redefine the observation law for randomized or externally controlled trials.">](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html)
 
-- [**Compare the four influence functions.**](https://yain22.github.io/causal-gap-trial-design/eif-models.html) Select a model, read its formula, and evaluate it for a treated patient or a control. In an externally controlled single-arm trial, the borrowing target is identified under overlap, but its gap from the trial effect is not identified without an additional assumption.
-- [**Check a pathwise derivative.**](https://yain22.github.io/causal-gap-trial-design/eif-lab.html) Perturb a conditional outcome law and compare the resulting target change with its EIF prediction.
-- [**Plan a trial.**](https://yain22.github.io/causal-gap-trial-design/design-lab.html) Change the number of internal controls or the discrepancy between sources to compare power and false positives.
+- [**Compare the four influence functions.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-models.html) Select a model, read its formula, and evaluate it for a treated patient or a control. In an externally controlled single-arm trial, the borrowing target is identified under overlap, but its gap from the trial effect is not identified without an additional assumption.
+- [**Check a pathwise derivative.**](https://yain22.github.io/Unified_Semiparametric_HCT/eif-lab.html) Perturb a conditional outcome law and compare the resulting target change with its EIF prediction.
+- [**Plan a trial.**](https://yain22.github.io/Unified_Semiparametric_HCT/design-lab.html) Change the number of internal controls or the discrepancy between sources to compare power and false positives.
 
 ## Refit the analyses
 
