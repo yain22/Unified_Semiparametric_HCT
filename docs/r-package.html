@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>causalgap | R package for hybrid trials</title>
+<meta name="description" content="Compute a hybrid trial’s borrowing target, trial effect and causal gap in R. Reproduce a finite example and explore two interactive lessons.">
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/guide.css"></head>
+<body><header><nav aria-label="Main navigation"><a class="home" href="index.html">Causal-gap trial designs</a><a href="r-package.html" aria-current="page">R package</a><a href="eif-lab.html">EIF lab</a><a href="design-lab.html">Design lab</a><a href="index.html">Replication guide</a></nav></header>
+<main><section class="hero"><div><div class="kicker">R package · Version 0.1.0</div><h1>causalgap</h1><p class="lead">What changes when a randomized trial borrows external controls? Compute the hybrid contrast and its gap from the trial effect, then inspect the observations that contribute to each estimate.</p><p class="by">Se Yoon Lee</p><div class="actions"><a class="button primary" href="downloads/causalgap_0.1.0.tar.gz" download>Download R package</a><a class="button" href="downloads/causalgap-reference.pdf">Reference manual</a></div></div><img src="assets/mark.svg" alt="causalgap R package mark"></section>
+<section aria-label="Interactive lessons"><div class="grid"><article class="card"><div class="kind">Theory · Interactive</div><h3>What makes an influence function efficient?</h3><p>Change the control means, perturb the data law, and compare the change in the target with the prediction from its influence function.</p><a href="eif-lab.html">Explore the EIF example →</a></article><article class="card"><div class="kind">Trial design · Interactive</div><h3>How many controls should the trial recruit?</h3><p>Vary enrollment and the difference between control sources. Compare power and false-positive probability across three schizophrenia trial designs.</p><a href="design-lab.html">Compare enrollment plans →</a></article></div></section>
+<div class="bodycopy"><h2 id="install">Install in R</h2><p>Download the source package above, then choose that <code>.tar.gz</code> file when prompted. Both functions use base R and its standard <code>stats</code> package.</p>
+<pre><code>install.packages(file.choose(), repos = NULL, type = "source")
+library(causalgap)
+?precision_share
+?aipw_u</code></pre>
+<h2 id="first-example">Calculate the internal-control share</h2>
+<p>Suppose half the records come from the trial, two thirds of trial participants receive treatment, and the two control variances are equal at a given covariate profile. One sixth of all records are internal controls, while one half are external controls. The internal share of the control comparison is one quarter.</p>
+<pre><code>precision_share(p = 0.5, e = 2/3, v_internal = 1, v_external = 1)
+# [1] 0.25</code></pre>
+<h2 id="reproduce">Reproduce the EIF lab in R</h2><p><a href="examples/hybrid-eif.R" download>Download the worked R example</a> and source it after installing the package. The script enumerates a small synthetic population exactly. The calculations have no simulation error.</p>
+<pre><code>source("hybrid-eif.R")
+fit &lt;- hybrid_example(delta = 0.2, external_variance = 1)
+round(fit$estimate, 3)
+#   tce trial   gap
+#  1.15  1.00  0.15
+
+mean(fit$influence$tce^2)
+# [1] 4.528125</code></pre>
+<p>The external control mean is 0.2 lower than the internal control mean at each covariate value. The 75% external share therefore shifts the contrast upward by 0.15. The last number is the variance bound per record for the borrowing target under this law. For 300 independent records, the corresponding asymptotic standard error is about 0.123.</p>
+<p>Now set <code>delta = 0</code>. The gap is zero, but in a model that allows unequal control means, a small change in either source can open it. The <a href="eif-lab.html">EIF lab</a> shows why this distinction matters for its uncertainty.</p>
+<h2>Using fitted predictions</h2>
+<dl><dt><code>precision_share()</code></dt><dd>Computes the internal share from the source probability, trial treatment probability and two conditional control variances.</dd><dt><code>aipw_u()</code></dt><dd>Accepts observed source, treatment and outcome and one row of nuisance predictions per record. Returns the borrowing contrast, matched trial contrast, their difference and the influence values. The seven signed contributions are available separately.</dd></dl>
+<p>The package evaluates the scores; supply your own fitted outcome means, variances and source probabilities. For the model fitting, bootstrap and simulations used in the paper, use the <a href="index.html">replication guide</a>. Clinical records are obtained separately under the data distributor’s terms.</p></div></main><footer><a href="index.html">Replication guide</a> · <a href="eif-lab.html">EIF lab</a> · <a href="design-lab.html">Design lab</a></footer></body></html>

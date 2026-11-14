@@ -1,0 +1,23 @@
+name: R package and learning examples
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2
+      - name: Check the R package
+        run: |
+          R CMD build packages/causalgap
+          R CMD check --no-manual causalgap_*.tar.gz
+      - name: Reproduce the worked example
+        run: |
+          mkdir -p "$RUNNER_TEMP/r-library"
+          R CMD INSTALL --library="$RUNNER_TEMP/r-library" causalgap_*.tar.gz
+          R_LIBS_USER="$RUNNER_TEMP/r-library" Rscript --vanilla docs/examples/hybrid-eif.R
+      - name: Check the interactive calculations
+        run: node analysis/validation/check_interactive_labs.js

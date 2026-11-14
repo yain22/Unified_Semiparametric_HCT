@@ -1,6 +1,23 @@
+[<img src="docs/assets/mark.svg" alt="causalgap R package mark" align="right" width="132">](https://yain22.github.io/causal-gap-trial-design/r-package.html)
+
 # Prospective causal-gap sensitivity analysis across trial designs
 
 Replication code for *A Unified Semiparametric Framework for Prospective Causal-Gap Sensitivity Analysis Across Randomized, Externally Controlled, and Hybrid Trials*, by Se Yoon Lee. The analyses compare a randomized controlled trial (RCT), a hybrid trial that supplements randomized controls with external controls (HCT), and an externally controlled single-arm trial (ECT).
+
+[![Tested with R 4.5.1](docs/assets/r-version.svg)](packages/causalgap/DESCRIPTION)
+
+The **causalgap** R package estimates the hybrid contrast and its gap from the trial effect using supplied nuisance predictions. [Package and manual](https://yain22.github.io/causal-gap-trial-design/r-package.html) · [Interactive EIF lab](https://yain22.github.io/causal-gap-trial-design/eif-lab.html) · [Trial design lab](https://yain22.github.io/causal-gap-trial-design/design-lab.html).
+
+**Try it in R.** Download the [source package, version 0.1.0](https://yain22.github.io/causal-gap-trial-design/downloads/causalgap_0.1.0.tar.gz), select it in the first command, and compute the internal-control share when half the records come from the trial and two thirds of trial participants receive treatment:
+
+~~~r
+install.packages(file.choose(), repos = NULL, type = "source")
+library(causalgap)
+precision_share(p = 0.5, e = 2/3, v_internal = 1, v_external = 1)
+# [1] 0.25
+~~~
+
+[Run the full EIF example in R](https://yain22.github.io/causal-gap-trial-design/examples/hybrid-eif.R) to reproduce the lab's 0.15 gap and 4.528125 per-record variance bound. The original paper replication scripts below run independently of the package.
 
 [Read the replication guide](https://yain22.github.io/causal-gap-trial-design/) for worked examples, downloadable tables, and the simulation commands.
 

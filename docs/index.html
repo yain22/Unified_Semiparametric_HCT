@@ -517,6 +517,9 @@ display: none;
 
 
 
+<nav aria-label="Project navigation" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.75em 1.6em;padding:1em 0 0.2em;font:600 15px/1.4 system-ui,sans-serif">
+<a href="r-package.html">R package</a><a href="eif-lab.html">EIF lab</a><a href="design-lab.html">Design lab</a><a href="index.html" aria-current="page">Replication guide</a>
+</nav>
 
 <div id="header">
 
@@ -532,13 +535,16 @@ display: none;
 
 <h1 class="title toc-ignore">Prospective causal-gap sensitivity analysis
 across trial designs</h1>
-<h3 class="subtitle">R code and worked examples</h3>
+<h3 class="subtitle">R package, interactive lessons and replication
+code</h3>
 <h4 class="author">Se Yoon Lee</h4>
 
 </div>
 
 <div id="TOC">
 <ul>
+<li><a href="#r-package-and-interactive-examples" id="toc-r-package-and-interactive-examples">R package and interactive
+examples</a></li>
 <li><a href="#reproduce-the-papers-tables" id="toc-reproduce-the-papers-tables">Reproduce the paper’s
 tables</a></li>
 <li><a href="#a-design-decision-before-enrollment" id="toc-a-design-decision-before-enrollment">A design decision before
@@ -566,6 +572,10 @@ font-size: 17px; line-height: 1.64; background: white; }
 h1,h2,h3,h4,.navlinks,#TOC,.table,figcaption,.caption { font-family: "Segoe UI", Arial, sans-serif; }
 h1.title {font-size: clamp(30px,5vw,45px); line-height: 1.13; color: #192e38; max-width: 820px;}
 .subtitle {color: var(--muted); margin: 0.5em 0 0.1em;}
+#header {position:relative;}
+#header .title{padding-right:92px;}
+#header::after{content:'';position:absolute;width:75px;height:85px;top:17px;right:1px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTYgMTc2IiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Y2F1c2FsZ2FwIFIgcGFja2FnZTwvdGl0bGU+CiAgPGRlc2MgaWQ9ImRlc2MiPlR3byBjb250cm9sIG1lYW5zIGFuZCBhIHdlaWdodGVkIG1lYW4gYmV0d2VlbiB0aGVtLCBpbnNpZGUgYSBoZXhhZ29uLjwvZGVzYz4KICA8cGF0aCBkPSJNNzggNCAxNTEgNDV2ODVsLTczIDQyLTczLTQyVjQ1WiIgZmlsbD0iIzE4MzYzYyIgc3Ryb2tlPSIjMGQyNTJhIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTMyIDU3SDEyM00zMiA5MEgxMjMiIHN0cm9rZT0iIzUyNzg3YyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICAgIDxwYXRoIGQ9Ik01MyA1N3Y5bDQwIDE2djhNMTEyIDU3djlsLTE5IDE2IiBzdHJva2U9IiNlM2U1ZDgiIHN0cm9rZS13aWR0aD0iMi41Ii8+CiAgPC9nPgogIDxjaXJjbGUgY3g9IjUzIiBjeT0iNTciIHI9IjcuNSIgZmlsbD0iI2Y1Yjk2NyIvPgogIDxjaXJjbGUgY3g9IjExMiIgY3k9IjU3IiByPSI3LjUiIGZpbGw9IiM3N2NlYzMiLz4KICA8cGF0aCBkPSJtOTMgODIgOCA4LTggOC04LThaIiBmaWxsPSIjZmZmIi8+CiAgPHRleHQgeD0iNzgiIHk9IjEyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjIzIj5jYXVzYWxnYXA8L3RleHQ+CiAgPHRleHQgeD0iNzgiIHk9IjE0MyIgZmlsbD0iI2M5ZTVkZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgbGV0dGVyLXNwYWNpbmc9IjEuOCI+UiBQQUNLQUdFPC90ZXh0Pgo8L3N2Zz4K) center / contain no-repeat;}
+@media(max-width:650px){#header .title{padding-right:54px;}#header::after{width:47px;height:54px;}}
 h4.author {font-size: 16px; margin: 7px 0 17px;}
 h1:not(.title),h2 {margin-top: 1.65em; line-height: 1.25;}
 h1:not(.title) {font-size: 29px; padding-top: 8px; border-top: 1px solid #d2dde1;}
@@ -596,6 +606,18 @@ benefit if the treatment had no effect. The continuous glucose
 monitoring example then shows how the same distinction between the
 borrowing target and the trial effect can be examined after data
 collection.</p>
+<div id="r-package-and-interactive-examples" class="section level1">
+<h1>R package and interactive examples</h1>
+<p>The <a href="r-package.html">causalgap package</a> evaluates the
+hybrid contrast and its gap from the trial effect given fitted nuisance
+values. The <a href="eif-lab.html">EIF lab</a> lets you change a control
+variance, inspect a score along a probability model, and compare
+variance bounds. Its default example can also be run <a href="examples/hybrid-eif.R">in R</a>.</p>
+<p>For a planning question, open the <a href="design-lab.html">trial
+design lab</a>. Choose the enrollment counts and the difference between
+control sources to compare randomized, hybrid and externally controlled
+trials. The R code underneath the plot uses your current settings.</p>
+</div>
 <div id="reproduce-the-papers-tables" class="section level1">
 <h1>Reproduce the paper’s tables</h1>
 <p>Extract the replication code and open <code>HCT.Rproj</code> or a

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 156 176" role="img" aria-labelledby="title desc">
+  <title id="title">causalgap R package</title>
+  <desc id="desc">Two control means and a weighted mean between them, inside a hexagon.</desc>
+  <path d="M78 4 151 45v85l-73 42-73-42V45Z" fill="#18363c" stroke="#0d252a" stroke-width="3"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 57H123M32 90H123" stroke="#52787c" stroke-width="1.5"/>
+    <path d="M53 57v9l40 16v8M112 57v9l-19 16" stroke="#e3e5d8" stroke-width="2.5"/>
+  </g>
+  <circle cx="53" cy="57" r="7.5" fill="#f5b967"/>
+  <circle cx="112" cy="57" r="7.5" fill="#77cec3"/>
+  <path d="m93 82 8 8-8 8-8-8Z" fill="#fff"/>
+  <text x="78" y="124" fill="#fff" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="23">causalgap</text>
+  <text x="78" y="143" fill="#c9e5df" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.8">R PACKAGE</text>
+</svg>

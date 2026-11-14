@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Explore the borrowing target, its efficient influence function and its variance bound in a synthetic hybrid trial.">
+<title>Efficient influence functions in a hybrid trial</title>
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="eif-lab.css">
+<script src="eif-lab.js" defer></script>
+</head>
+<body>
+<a href="#main" class="skip">Skip to the experiment</a>
+<main id="main">
+<header>
+<nav aria-label="Project"><a href="index.html">Replication tutorial</a><a href="r-package.html">R package</a><a href="design-lab.html">Design lab</a></nav>
+<h1>Efficient influence functions in a hybrid trial</h1>
+<p class="lede">What happens to a treatment contrast when an external control cohort becomes more variable, even if its mean outcome stays the same? Follow that change from a borrowing rule to its efficient influence function (EIF) and its sampling uncertainty.</p>
+<nav aria-label="Experiments" class="chapters"><a href="#law">Borrowing and the gap</a><a href="#derivative">Check the derivative</a><a href="#bound">Compare efficiency bounds</a></nav>
+</header>
+<noscript><p class="notice">Enable JavaScript to run the experiments. The equations and worked example are available below.</p></noscript>
+
+<section id="law">
+<h2>Borrowing and the gap</h2>
+<p>Consider an iid mixture of trial and external records. Each record has a binary covariate <i>X</i>. Trial participants (<i>S</i> = 1) receive treatment (<i>A</i> = 1) with known probability ⅔ or concurrent control with probability ⅓. External participants (<i>S</i> = 0) all receive control. Treatment adds one unit to the trial control mean in both strata.</p>
+
+<form id="settings" class="controls">
+<div><label for="delta">Internal minus external control mean, δ</label><div class="range"><input id="delta" type="range" min="-1" max="1" step=".05" value=".2"><output for="delta" id="delta-value">0.20</output></div></div>
+<div><label for="v0">External control variance, <i>v</i>₀</label><div class="range"><input id="v0" type="range" min=".25" max="4" step=".05" value="1"><output for="v0" id="v0-value">1.00</output></div></div>
+<div><label for="pattern">Discrepancy across strata</label><select id="pattern"><option value="constant">Same δ in both strata</option><option value="concentrated">Zero at X = 0 and 2δ at X = 1</option></select></div>
+<div><label for="overlap">Trial membership probability, <i>p</i>(<i>x</i>)</label><select id="overlap"><option value="even">½ in each stratum</option><option value="uneven">⅓ at X = 0 and ⅔ at X = 1</option></select></div>
+</form>
+
+<div class="table-wrap" role="region" aria-label="Calculated stratum values" tabindex="0">
+<table><caption>How each covariate stratum enters the target</caption>
+<thead><tr><th scope="col"><i>x</i></th><th scope="col">Pr(<i>S</i> = 1 | <i>x</i>)</th><th scope="col">Trial mix<br>Pr(<i>x</i> | <i>S</i> = 1)</th><th scope="col">Discrepancy<br>δ(<i>x</i>)</th><th scope="col">Internal share<br>λ(<i>x</i>)</th><th scope="col">Stratum gap<br>[1 − λ(<i>x</i>)]δ(<i>x</i>)</th></tr></thead>
+<tbody id="strata-rows"></tbody></table></div>
+<div class="measures" aria-live="polite" aria-atomic="true">
+<div><span>Trial effect θ</span><strong id="trial-value">1.000</strong></div>
+<div><span>Borrowing target θ̃</span><strong id="tce-value">1.150</strong></div>
+<div><span>Causal-gap ξ = θ̃ − θ</span><strong id="gap-value">0.150</strong></div>
+</div>
+<p>The precision rule assigns internal controls a share proportional to their availability divided by their variance. At the starting settings, the external share is ¾. A control discrepancy of 0.20 then shifts the borrowing target by 0.15 outcome units. Increase the external variance to see why a less precise external cohort has a smaller effect on the contrast.</p>
+<details><summary>See the data law and target formulas</summary>
+<p>At the central law, Pr(<i>X</i> = 1) = ½. Set <i>e</i> = ⅔ and <i>q</i> = Pr(<i>S</i> = 1). Conditional means are <i>m</i><sub>1,0</sub>(<i>x</i>) = 0.4<i>x</i> for internal controls, <i>m</i><sub>1</sub>(<i>x</i>) = 0.4<i>x</i> + 1 for treated participants, and <i>m</i><sub>0</sub>(<i>x</i>) = 0.4<i>x</i> − δ(<i>x</i>) for external controls. The two trial variances are one. For each group <i>g</i>, generate <i>Y</i> = <i>m</i><sub>g</sub>(<i>x</i>) + √<i>v</i><sub>g</sub>(<i>x</i>) <i>Z</i>, with <i>Z</i> equal to −√3, 0, or √3 with probabilities ⅙, ⅔, and ⅙. Exact sums over these 18 possible records give every expectation below.</p>
+<p class="equation">π<sub>I</sub>(<i>x</i>) = <i>p</i>(<i>x</i>)(1 − <i>e</i>) / <i>v</i><sub>1,0</sub>(<i>x</i>), &nbsp; π<sub>E</sub>(<i>x</i>) = [1 − <i>p</i>(<i>x</i>)] / <i>v</i><sub>0</sub>(<i>x</i>)</p>
+<p class="equation">λ(<i>x</i>) = π<sub>I</sub>(<i>x</i>) / [π<sub>I</sub>(<i>x</i>) + π<sub>E</sub>(<i>x</i>)]</p>
+<p>The transported causal estimand (TCE) θ̃ averages <i>m</i><sub>1</sub>(<i>X</i>) − λ(<i>X</i>)<i>m</i><sub>1,0</sub>(<i>X</i>) − [1 − λ(<i>X</i>)]<i>m</i><sub>0</sub>(<i>X</i>) over trial covariates. The trial effect θ averages <i>m</i><sub>1</sub>(<i>X</i>) − <i>m</i><sub>1,0</sub>(<i>X</i>) over the same distribution. Their difference averages [1 − λ(<i>X</i>)]δ(<i>X</i>) over trial covariates.</p>
+</details>
+</section>
+
+<section id="derivative">
+<h2>Check the derivative along a path</h2>
+<p>A path changes one part of the data law by a small amount ε. Its score ℓ(<i>O</i>) is the derivative of the record’s log probability at ε = 0. For a target <i>T</i>, an influence function φ has mean zero and satisfies <i>dT</i>/<i>d</i>ε = E[φ(<i>O</i>)ℓ(<i>O</i>)] for every allowed path. Select a target and compare this prediction to a direct recalculation.</p>
+<form id="directions" class="controls">
+<div><label for="target">Target for both experiments below</label><select id="target"><option value="tce">Borrowing target θ̃</option><option value="trial">Trial effect θ</option><option value="gap">Causal-gap ξ</option></select></div>
+<div><label for="path">Change in the data law</label><select id="path"><option value="external-variance">External control variance</option><option value="external-mean">External control mean</option><option value="internal-variance">Internal control variance</option><option value="source">Trial membership odds</option><option value="case-mix">Covariate distribution</option></select></div>
+</form>
+<p id="path-note"></p>
+<div class="figure">
+<svg id="path-chart" viewBox="0 0 620 210" role="img" aria-labelledby="chart-title chart-desc">
+<title id="chart-title">Change in the selected target along the chosen path</title>
+<desc id="chart-desc">The solid curve shows the recalculated target change. The dashed line shows the local linear prediction using its efficient influence function.</desc>
+<g id="chart-drawing"></g>
+</svg>
+<div class="legend"><span><b class="line"></b>Recalculated change</span><span><b class="line tangent"></b>EIF tangent at ε = 0</span></div>
+</div>
+<div class="measures pair" aria-live="polite" aria-atomic="true">
+<div><span>Slope from E[φℓ]</span><strong id="gradient">−0.03750</strong></div>
+<div><span>Slope by finite difference</span><strong id="difference">−0.03750</strong></div>
+</div>
+<p>At the starting settings, a first-order increase in external log variance moves the TCE at −0.0375 units per unit ε. The trial effect stays fixed. The two slopes come from separate calculations. The first uses the EIF at ε = 0. The second evaluates the selected target at ε = ±0.0001 and divides the difference by 0.0002.</p>
+<details><summary>Trace the score through the EIF</summary>
+<p>For the selected path, ℓ(<i>O</i>) = <strong id="path-score"></strong>. Here <i>I</i><sub>0</sub> indicates an external control, and <i>I</i><sub>1,0</sub> an internal control. An outcome path multiplies each baseline atom’s probability by exp(εℓ) and normalizes the probabilities within its stratum and group. The source and covariate paths instead add ε to the corresponding log odds.</p>
+<table class="components"><caption>Contributions to the slope for <span id="selected-target"></span></caption><thead><tr><th scope="col">EIF terms (main paper, Table 1)</th><th scope="col">E[term × ℓ]</th></tr></thead><tbody>
+<tr><th scope="row">Trial standardization and outcome means</th><td id="fixed-part"></td></tr>
+<tr><th scope="row">Borrowing share through source probabilities</th><td id="source-part"></td></tr>
+<tr><th scope="row">Borrowing share through internal variance</th><td id="internal-part"></td></tr>
+<tr><th scope="row">Borrowing share through external variance</th><td id="external-part"></td></tr>
+</tbody></table>
+<p>The first row treats the share as fixed when taking the derivative. For the borrowing target, the remaining rows differentiate the share itself. At each stratum they enter the target derivative through −δ(<i>x</i>) <i>d</i>λ(<i>x</i>)/<i>d</i>ε. For the gap, subtract the trial-effect EIF from the TCE EIF. The trial effect itself has no borrowing-share terms.</p>
+</details>
+</section>
+
+<section id="bound">
+<h2>What makes an influence function efficient?</h2>
+<p>With known randomization probability <i>e</i>, the assignment residual <i>U</i> = <i>S</i>(<i>A</i> − <i>e</i>) is orthogonal to every allowed score. Adding <i>cU</i> to the EIF therefore preserves the pathwise derivatives. Move <i>c</i> to see how two influence functions for the same target can imply different precision.</p>
+<form id="efficiency" class="controls">
+<div><label for="penalty">Coefficient <i>c</i> on the assignment residual</label><div class="range"><input type="range" id="penalty" min="-6" max="6" step=".25" value="2"><output for="penalty" id="c-value">2.0</output></div></div>
+<div><label for="size">Total iid records, <i>N</i></label><select id="size"><option>100</option><option selected>300</option><option>1000</option></select></div>
+</form>
+<div class="table-wrap"><table><caption>Variance per record and first-order standard error for <i>N</i> records</caption>
+<thead><tr><th scope="col">Influence function</th><th scope="col">Variance</th><th scope="col">Standard error</th></tr></thead>
+<tbody><tr><th scope="row">EIF φ</th><td id="efficient-bound"></td><td id="efficient-se"></td></tr><tr><th scope="row">φ + <i>cU</i></th><td id="alternative-var"></td><td id="alternative-se"></td></tr></tbody></table></div>
+<div class="variance-bars" aria-hidden="true"><span>φ</span><div><i id="efficient-bar"></i></div><span>φ + <i>cU</i></span><div><i class="alternative-bar"></i></div></div>
+<p>The additional variance per record is <strong id="extra-var"></strong>. The canonical gradient lies in the closure of the score space. Since <i>U</i> is orthogonal to that space, its squared contribution simply adds to the variance. Here E[<i>U</i>ℓ] = <span id="orthogonal-pair"></span> for the selected path, and the extra variance is <i>c</i>²<i>q e</i>(1 − <i>e</i>).</p>
+<h3>Compare restrictions at a common law</h3>
+<p>If the internal and external control means agree at each <i>x</i>, the TCE and trial effect have the same value. An efficiency bound also depends on which departures the model allows.</p>
+<button id="equal-means" type="button">Set both control means equal</button>
+<p id="restriction" aria-live="polite"></p>
+<details><summary>Connect the examples to the manuscript</summary>
+<p>Section 4 and Table 1 of the paper derive the unrestricted HCT-TCE EIF and its terms. The section on the efficiency bound works through the variance perturbation. The design-specific corollaries describe the common-control-mean model. Supporting Information Section S4 provides the proofs. The discrete outcome law here has the same first four standardized moments as a Gaussian law, so the starting example gives the paper’s per-record TCE variance bound of 4.528125.</p>
+<p>For background on scores, tangent spaces and canonical gradients, see <a href="https://arxiv.org/abs/1709.06418">Kennedy, “Semiparametric theory”</a>. For external-control borrowing under a common conditional mean, see <a href="https://academic.oup.com/biometrics/article/79/1/394/7478074">Li et al., “Improving Efficiency of Inference in Clinical Trials with External Control Data”</a>.</p>
+</details>
+</section>
+<footer><button id="reset" type="button">Restore starting values</button><p><a href="examples/hybrid-eif.R" download>Reproduce the starting example in R</a> using the <a href="r-package.html">causalgap package</a>.</p>
+<nav aria-label="Continue exploring"><a href="index.html">Replication tutorial</a><a href="r-package.html">R package</a></nav></footer>
+</main>
+</body>
+</html>
