@@ -3,11 +3,11 @@
 args <- commandArgs(trailingOnly = TRUE)
 if (any(args %in% c("--help", "-h"))) {
   cat(paste(
-    "Usage: Rscript run_planning.R [--output-dir PATH] [--python-reference-dir PATH]",
+    "Usage: Rscript run_planning.R [--output-dir PATH] [--reference-dir PATH]",
     "",
-    "Compute Table 1, planning curves, gap thresholds, and exact reference values.",
+    "Compute schizophrenia planning scenarios, sensitivity curves, and gap thresholds.",
     "--output-dir            Output folder (default: results/planning-r).",
-    "--python-reference-dir  Compare with a complete run_planning.py output folder.",
+    "--reference-dir         Compare numerical results with a prior full run.",
     "--help                  Show this message.",
     sep = "\n"
   ), "\n")
@@ -19,14 +19,18 @@ value <- function(flag, default = NULL) {
   if (i == length(args) || startsWith(args[i + 1], "--")) stop("Missing value for ", flag)
   args[i + 1]
 }
-unknown <- args[startsWith(args, "--") & !args %in% c("--output-dir", "--python-reference-dir")]
+unknown <- args[startsWith(args, "--") & !args %in% c("--output-dir", "--reference-dir")]
 if (length(unknown)) stop("Unknown option: ", paste(unknown, collapse = ", "))
 filearg <- grep("^--file=", commandArgs(FALSE), value = TRUE)
 script <- normalizePath(sub("^--file=", "", filearg), mustWork = TRUE)
 out <- value("--output-dir", file.path(dirname(script), "..", "..", "results", "planning-r"))
 dir.create(out, recursive = TRUE, showWarnings = FALSE)
 out <- normalizePath(out, mustWork = TRUE)
-reference <- value("--python-reference-dir")
+reference <- value("--reference-dir")
+if (!is.null(reference)) {
+  reference <- normalizePath(reference, mustWork = TRUE)
+  if (identical(reference, out)) stop("Reference and output must be different directories.")
+}
 alpha <- .025
 theta_star <- 2
 r_squared <- .25
@@ -220,7 +224,6 @@ compare <- function(actual, path, keys, numeric_cols) {
   data.frame(reference = relative_path, column = names(errors), max_abs_error = errors, passed = TRUE)
 }
 if (!is.null(reference)) {
-  reference <- normalizePath(reference, mustWork = TRUE)
   curves <- file.path(reference, "curves")
   tables <- file.path(reference, "tables")
   comparisons[[1]] <- compare(
@@ -248,11 +251,11 @@ if (!is.null(reference)) {
   comparisons[[7]] <- compare(scaling, file.path(curves, "scalar_reference_scaling.csv"), "method", scalar_columns)
   comparisons[[8]] <- compare(precision, file.path(tables, "precision_scaling.csv"), "k", names(precision))
   comparisons[[9]] <- compare(figure2, file.path(tables, "targets_and_sampling.csv"), "delta", names(figure2))
-  put(do.call(rbind, comparisons), "python_comparison.csv", "validation")
+  put(do.call(rbind, comparisons), "reference_comparison.csv", "validation")
 }
 put(data.frame(check = c(
   "zero_gap_coverage", "zero_gap_rejection", "pooling_variance_identity",
-  "threshold_equation", "python_comparison_requested"
+  "threshold_equation", "reference_comparison_requested"
 ), value = c(.95, .025, 1, 1, !is.null(reference))), "checks.csv", "validation")
 writeLines(c(
   "Independent base-R known-input, fixed-weight Gaussian planning calculation.",

@@ -1,14 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 156 176" role="img" aria-labelledby="title desc">
-  <title id="title">causalgap R package</title>
-  <desc id="desc">Two control means and a weighted mean between them, inside a hexagon.</desc>
-  <path d="M78 4 151 45v85l-73 42-73-42V45Z" fill="#18363c" stroke="#0d252a" stroke-width="3"/>
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M32 57H123M32 90H123" stroke="#52787c" stroke-width="1.5"/>
-    <path d="M53 57v9l40 16v8M112 57v9l-19 16" stroke="#e3e5d8" stroke-width="2.5"/>
-  </g>
-  <circle cx="53" cy="57" r="7.5" fill="#f5b967"/>
-  <circle cx="112" cy="57" r="7.5" fill="#77cec3"/>
-  <path d="m93 82 8 8-8 8-8-8Z" fill="#fff"/>
-  <text x="78" y="124" fill="#fff" text-anchor="middle" font-family="Georgia,serif" font-weight="bold" font-size="23">causalgap</text>
-  <text x="78" y="143" fill="#c9e5df" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" letter-spacing="1.8">R PACKAGE</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 178" role="img" aria-labelledby="t d">
+<title id="t">causalgap R package</title><desc id="d">A hybrid-trial model contains the common-mean model. Separate branches lead to RCT and ECT.</desc>
+<path d="M80 4 153 46v85l-73 43-73-43V46Z" fill="#182f38" stroke="#50747d" stroke-width="3"/>
+<ellipse cx="80" cy="55" rx="43" ry="20" fill="#193d55" stroke="#8ab9e8" stroke-width="2.7"/>
+<ellipse cx="80" cy="61.5" rx="26" ry="8" fill="#19483f" stroke="#75c8b0" stroke-width="2.5"/>
+<g fill="none" stroke-width="2.6" stroke-linejoin="round"><path d="M56 72 47 81v6m-4-4 4 5 4-5" stroke="#c1cbd1"/><path d="m104 72 9 9v6m-4-4 4 5 4-5" stroke="#edb16e"/></g>
+<g font-family="Arial,sans-serif" font-size="10.5" font-weight="bold" text-anchor="middle"><text x="47" y="100" fill="#eef3f4">RCT</text><text x="113" y="100" fill="#ffd493">ECT</text></g>
+<text x="80" y="126" text-anchor="middle" font-family="Georgia,serif" font-size="25" font-weight="bold" fill="white">causalgap</text>
+<text x="80" y="144" text-anchor="middle" font-family="Arial,sans-serif" font-size="8.7" letter-spacing="1.6" fill="#deede9">R PACKAGE</text></svg>

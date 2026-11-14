@@ -4,7 +4,7 @@ subtitle: "R package, interactive lessons and replication code"
 author: "Se Yoon Lee"
 output:
   html_document:
-    toc: true
+    toc: false
     toc_depth: 2
     theme: readable
     highlight: tango
@@ -51,27 +51,25 @@ table {margin-bottom: 22px;}
 .caption {color: var(--muted); font-size: 14px; text-align: left; margin: 0.65em 0 1.2em;}
 .table {font-size: 15px;}
 .navlinks {margin: 12px 0 20px; display:flex; gap:18px; flex-wrap:wrap;}
-@media(max-width:650px){.main-container{padding:0 13px 40px;overflow-wrap:anywhere;}.table{display:block;overflow:auto;}
+@media(max-width:650px){.main-container :not(pre)>code{white-space:normal;overflow-wrap:anywhere;}.main-container{padding:0 13px 40px;overflow-wrap:anywhere;}.table{display:block;overflow:auto;}
 h1:not(.title){font-size:25px;}pre{font-size:12px;}}
+.portal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block:1px solid #c5d6d5;padding:18px 0;gap:16px;margin:18px 0 24px}.portal a{display:block;text-decoration:none;border-left:3px solid #5a8883;padding-left:12px;font-family:system-ui,sans-serif}.portal strong,.portal span{display:block}.portal strong{font-size:17px}.portal span{font-size:14px;line-height:1.4;color:#435958;margin-top:3px}.portal a:hover strong{text-decoration:underline}@media(max-width:620px){.portal{grid-template-columns:1fr;gap:12px}}
 </style>
 
 
-<div class="navlinks"><a href="replication-source.zip" download>Replication code (.zip)</a> <a href="tables.zip" download>All numerical tables (.zip)</a> <a href="index.Rmd" download>R Markdown source</a></div>
+<div class="portal" aria-label="Start here"><a href="r-package.html"><strong>Estimate in R</strong><span>Install the package and fit AIPW-U.</span></a><a href="eif-models.html"><strong>Compare the four models</strong><span>Read the equations and inspect one record.</span></a><a href="#reproduce-the-papers-tables"><strong>Reproduce the paper</strong><span>Generate the numbered tables and figures.</span></a></div>
 
-A trial team has 300 external controls and plans to treat 120 children. How many children should it still randomize to concurrent control? We use the schizophrenia example from the paper to calculate the power of three designs and examine how often each would declare a benefit if the treatment had no effect. The continuous glucose monitoring example then shows how the same distinction between the borrowing target and the trial effect can be examined after data collection.
+A trial team has 300 external controls and plans to treat 120 children. How many children should it still randomize to concurrent control? The [trial design lab](design-lab.html) lets you compare enrollment plans before fitting a model. The [EIF lab](eif-lab.html) shows how a change in the control distribution affects the borrowing contrast. For a worked application after data collection, see the [glucose monitoring analysis](#examine-the-glucose-monitoring-analysis).
 
-# R package and interactive examples
+<div class="navlinks"><a href="replication-source.zip" download>Download replication project (.zip)</a><a href="tables.zip" download>Download numerical tables (.zip)</a><a href="index.Rmd" download>Guide source (.Rmd)</a></div>
 
-The [causalgap package](r-package.html) evaluates the hybrid contrast and its gap from the trial effect given fitted nuisance values. The [EIF lab](eif-lab.html) lets you change a control variance, inspect a score along a probability model, and compare variance bounds. Its default example can also be run [in R](examples/hybrid-eif.R).
+# Reproduce the paper's tables {#reproduce-the-papers-tables}
 
-For a planning question, open the [trial design lab](design-lab.html). Choose the enrollment counts and the difference between control sources to compare randomized, hybrid and externally controlled trials. The R code underneath the plot uses your current settings.
+Extract the replication code, open `HCT.Rproj` in RStudio, and use the R console. The package need not be installed. These commands use base R and bundled aggregate summaries to write CSVs under `results/tables/`.
 
-# Reproduce the paper's tables
-
-Extract the replication code and open `HCT.Rproj` or a terminal in the extracted directory. Run the following command there. It uses base R and the bundled aggregate summaries to write CSV files under `results/tables/`.
-
-```sh
-Rscript analysis/paper_tables.R
+```r
+source("analysis/reproduce.R")
+reproduce("tables")
 ```
 
 | Paper display | Calculation or source | Output in `results/tables/` |
@@ -82,6 +80,10 @@ Rscript analysis/paper_tables.R
 | Supplementary Tables S4–S12 | Analytical examples, additional simulations, planning calculations, and clinical diagnostics | Files beginning `table-s4` through `table-s12` |
 
 Main Table 1 gives the terms of the hybrid trial’s efficient influence function. Tables S1–S3 define notation, observed groups, and nuisance quantities. The exhibit map (`analysis/paper-map.csv`) identifies the source for each figure and table. The simulation and clinical sections below explain how to refit the analyses that produced the saved summaries.
+
+# Reproduce the figures
+
+With Cairo graphics available in R (`capabilities("cairo")`), install `jsonlite` once and run `reproduce("figures")` in the same session. This writes `Figure-01.pdf` through `Figure-11.pdf`, `Figure-S01.pdf` through `Figure-S09.pdf`, and `figure-index.csv` under `results/figures/`. Sampling plots use supplied synthetic draws, simulation plots use saved summaries, and the clinical forest plot uses aggregate estimates. The [exhibit index](https://github.com/yain22/causal-gap-trial-design/blob/main/analysis/paper-map.csv) lists the source for each display. Neither this command nor the table command refits a simulation or needs participant records.
 
 # A design decision before enrollment
 
@@ -172,7 +174,7 @@ Rscript analysis/paper_analysis.R extended --reps 5000 --workers 4
 Rscript analysis/paper_analysis.R quadratic --reps 5000
 ```
 
-The simulations write new estimates under `results/`. To rebuild the affected tables from those outputs, use `Rscript analysis/paper_tables.R --simulation-dir results --output-dir results/refitted-tables`. After a clinical refit, add `--clinical-dir results/cgm` to use those estimates as well. To plot a new simulation run, run `python analysis/simulations/plot_publication.py --help` for the input directories. The plotting dependencies are listed in `requirements.txt`.
+For the full sequence, including the quadratic comparator, calibration, one-sided operating characteristics, tables and figures from new runs, use `source("analysis/reproduce.R"); reproduce("refit", workers = 4)` in the project R console. For four paired repetitions, use `reproduce("smoke")`. That test does not reproduce the Monte Carlo precision of the paper. To plot already completed runs, use `Rscript analysis/simulations/plot_publication.R --help`.
 
 # Examine the glucose monitoring analysis
 

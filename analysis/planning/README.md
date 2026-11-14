@@ -1,63 +1,36 @@
-# Planning calculations
+# Trial planning calculations and figures
 
-Reproduces the schizophrenia planning table, causal-gap sensitivity curves, and Gaussian reference calculations.
-The numerical runner uses base R. Python produces the figures. The sampling-distribution plot also
-uses R with Cairo graphics. No participant data are required.
+For each schizophrenia trial scenario, the analysis evaluates the probability of declaring efficacy at a planned effect of 2, the probability of a false positive under the trial null, and confidence interval coverage of the trial effect. A separate Gaussian example shows how those probabilities and interval widths change with enrollment.
 
-## Install
+Run from the repository root. The figures need R with Cairo graphics support and the **jsonlite** R package. The numerical calculations alone use base R.
 
-Tested with R 4.5.1 and Python 3.12. Install the Python dependencies from the
-repository root:
-
-```sh
-python -m pip install -r analysis/planning/requirements.txt
+```r
+install.packages("jsonlite")
 ```
 
-## Run
-
 ```sh
-Rscript analysis/planning/run_planning.R
-python analysis/planning/run_planning.py
+Rscript analysis/planning/plot_planning.R --output-dir results/planning
 ```
 
-The defaults are `results/planning-r` and `results/planning`. Both runners
-accept `--output-dir PATH` and `--help`. For Python, use `--rscript PATH` if
-Rscript is not on `PATH`, or `--skip-r` to omit the sampling-distribution plot. Its font defaults
-to the system sans-serif font; `--font-family Arial` selects the paper's font
-when installed.
+The command writes eight figures to `figures/`, together with `curves/`, `tables/`, and `validation/` within the output directory. All eight figures have vector PDF versions. The line plots also have PNG versions, and the baseline power and matched-gap plots have SVG versions. Use `--font-family Arial` to select the paper's graphics font when available. The sampling-distribution figure uses the bundled synthetic draws in `data/exact_sampling/`.
 
-After a complete Python run, compare its results with the independent R
-calculations:
+To calculate the numerical tables without rendering graphics, run
 
 ```sh
-Rscript analysis/planning/run_planning.R --python-reference-dir results/planning
+Rscript analysis/planning/run_planning.R --output-dir results/planning-tables
 ```
 
-Outputs are organized as `tables/`, `curves/`, `figures/`, and `validation/`.
-The R comparison checks row identities and numeric agreement within
-`1e-12`; it writes `validation/python_comparison.csv`. The Python scripts
-check calibration, curve properties, and plot layout. The sampling-distribution plot reuses the
-bundled synthetic estimates in `data/exact_sampling/`.
+Both commands accept `--reference-dir PATH` to compare with the numeric output of a previous full planning-figure run. Use a different directory for the new output. Comparisons check row identities and numerical agreement to `1e-12`. The results are in `validation/reference_comparison.csv`.
 
-## Assumptions
+## Reading the figures
 
-These are Gaussian calculations with known sampling variances and fixed
-population weights. They do not simulate fitted AIPW-U nuisance estimation.
-The discrepancy is the internal-minus-external control mean, and the causal
-gap is `(1 - lambda) * delta`, where `lambda` is the internal-control share.
+The schizophrenia calculations hold the planning variances and population borrowing weights fixed. The one-sided significance level is .025, and baseline adjustment explains 25% of the outcome variance. The internal share in the hybrid design is 1/6 in all three scenarios. At a matched causal-gap, each borrowing design requires its own source discrepancy. At a common discrepancy, the hybrid gap is five-sixths of the external-only gap. The randomized comparison has gap zero across both displays and uses its own concurrent-control enrollment.
 
-The schizophrenia examples use `alpha = .025`, a planned effect of `2`,
-and `R-squared = .25`. At a matched gap, HCT and ECT discrepancies are
-calibrated separately; at a common discrepancy, their gaps differ. RCT
-references always retain zero gap and use their own internal-control count.
-CSV values retain full precision; the paper rounds them for display.
+The scalar Gaussian plots vary the number of trial and external participants or the outcome standard deviation. The fixed- and local-gap figure distinguishes a gap that persists as enrollment grows from one that decreases with the standard error. The horizontal spans in that figure are population-reference quantities.
 
-## Code map
+The observed-data model diagram, which uses no simulation data, has its own command.
 
-- `run_planning.R`: independent numerical calculations and comparisons.
-- `study_design_scenarios.py`: scenario inputs, standard errors, and Gaussian probabilities.
-- `plot_zero_gap_power_publication.py`, `plot_study_design_sensitivity.py`: power and matched-gap curves.
-- `common_discrepancy.py`: common-source-discrepancy curves and summaries.
-- `gap_analytical_figures.py`: Gaussian gap and enrollment-scaling curves.
-- `illustrate_hct_targets_and_sampling.R`: Gaussian target and sampling-distribution illustration.
-- `planning_paths.py`, `single_row_legends.py`: shared output and plotting helpers.
+```sh
+Rscript analysis/model_relationships.R --output-dir results/model-relationships
+```
+

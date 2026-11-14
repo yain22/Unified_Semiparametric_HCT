@@ -1,0 +1,273 @@
+# Render the eight planning figures from the scenario calculations and saved draws.
+args <- commandArgs(TRUE)
+if (any(args %in% c("-h", "--help"))) {
+  cat("Usage: Rscript analysis/planning/plot_planning.R [--output-dir PATH]",
+      "[--reference-dir PATH] [--font-family FONT]\n",
+      "The default output directory is results/planning. The reference directory",
+      "is an optional earlier planning run for numerical checks.\n")
+  quit()
+}
+options_allowed <- c("--output-dir", "--reference-dir", "--font-family")
+if (length(args) %% 2L ||
+    (length(args) && any(!args[seq(1L, length(args), 2L)] %in% options_allowed)))
+  stop("Expected option/value pairs. See --help.")
+option <- function(name, default = NULL) {
+  i <- match(name, args)
+  if (is.na(i)) default else args[i + 1L]
+}
+script <- sub("^--file=", "", grep("^--file=", commandArgs(FALSE), value = TRUE))
+here <- dirname(normalizePath(script))
+out <- option("--output-dir", file.path(here, "..", "..", "results", "planning"))
+dir.create(out, recursive = TRUE, showWarnings = FALSE)
+out <- normalizePath(out, winslash = "/")
+font <- option("--font-family", "sans")
+reference <- option("--reference-dir")
+if (!requireNamespace("jsonlite", quietly = TRUE))
+  stop("Install the jsonlite R package for the validation reports.")
+if (!capabilities("cairo")) stop("The PDF, PNG, and SVG figures require R with Cairo graphics.")
+run_r <- function(file, args) {
+  command <- file.path(R.home("bin"), "Rscript")
+  status <- system2(command, shQuote(c(file.path(here, file), args)))
+  if (status != 0) stop("Failed to run ", file)
+}
+run_r("run_planning.R", c("--output-dir", out,
+                         if (!is.null(reference)) c("--reference-dir", reference)))
+run_r("illustrate_hct_targets_and_sampling.R", c("--output-dir", out, "--font-family", font))
+read_output <- function(directory, stem) {
+  read.csv(file.path(out, directory, paste0(stem, ".csv")), stringsAsFactors = FALSE)
+}
+baseline <- read_output("curves", "baseline_power")
+matched <- read_output("curves", "matched_gap")
+common <- read_output("curves", "common_discrepancy")
+main <- read_output("curves", "scalar_design_sensitivity")
+signed <- read_output("curves", "scalar_reference_signed")
+scaling <- read_output("curves", "scalar_reference_scaling")
+precision <- read_output("tables", "precision_scaling")
+power_points <- read_output("tables", "table1_panel_a")
+thresholds <- read_output("tables", "thresholds")
+write_report <- function(stem, record) {
+  path <- file.path(out, "validation", paste0(stem, ".json"))
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  jsonlite::write_json(record, path, pretty = TRUE, auto_unbox = TRUE, digits = NA,
+                       dataframe = "rows", na = "null")
+}
+source(file.path(here, "planning_summaries.R"), local = TRUE)
+
+figure <- function(stem, width, height, draw, svg = FALSE, dpi = 220) {
+  for (ext in c("pdf", "png", if (svg) "svg")) {
+    path <- file.path(out, "figures", paste0(stem, ".", ext))
+    switch(ext,
+      pdf = cairo_pdf(path, width = width, height = height, family = font),
+      png = png(path, width = width, height = height, units = "in", res = dpi, type = "cairo"),
+      svg = grDevices::svg(path, width = width, height = height, family = font)
+    )
+    tryCatch(draw(), finally = dev.off())
+  }
+}
+styles <- data.frame(key = c("AIPW-U (HCT)", "AIPW (ECT)", "ANOVA (RCT)", "ANCOVA (RCT)"),
+                     name = c("HCT reference", "ECT reference", "ANOVA (RCT)", "ANCOVA (RCT)"),
+                     colour = c("#176CB0", "#D56713", "#525252", "#8250A5"), line = c(1, 2, 3, 4))
+common_styles <- styles[c(1, 2, 4), ]
+common_styles$key <- c("HCT", "ECT", "RCT ANCOVA")
+common_styles$name <- c("HCT: gap 5\u03b4/6", "ECT: gap \u03b4", "RCT ANCOVA: zero gap")
+scalar_styles <- function(data) {
+  labels <- unique(data$method)
+  names <- labels
+  names[names == "RCT: zero-gap reference"] <- "RCT (100, 50): zero-gap reference"
+  i <- seq_along(labels)
+  data.frame(key = labels, name = names,
+             colour = c("#333333", "#D55E00", "#0072B2", "#009E73", "#AA4499")[i],
+             line = c(3, 2, 1, 4, 5)[i])
+}
+# Reserve an actual row for the key so it cannot cross the bottom axes.
+panels <- function(rows, columns, key_height, pointsize = 9) {
+  cells <- matrix(seq_len(rows * columns), nrow = rows, byrow = TRUE)
+  layout(rbind(cells, rep(rows * columns + 1L, columns)),
+         heights = c(rep(1, rows), key_height))
+  par(family = font, ps = pointsize, cex = 1, las = 1, mgp = c(1.7, .36, 0),
+      tcl = -.18, xaxs = "i", yaxs = "i")
+}
+frame <- function(xlim, ylim, xticks, yticks, heading = "", xlabel = "",
+                  ylabel = "", show_x = TRUE, margins = c(2.3, 2.9, 1.6, .7)) {
+  par(mar = margins)
+  plot.new()
+  plot.window(xlim, ylim)
+  abline(v = xticks, h = yticks, col = "#E4E6E8", lwd = .6)
+  axis(1, at = xticks, labels = if (show_x) xticks else FALSE, cex.axis = .83, lwd = .65)
+  axis(2, at = yticks, cex.axis = .83, lwd = .65)
+  box(col = "#454545", lwd = .7)
+  if (length(heading) && !identical(heading, ""))
+    mtext(heading, 3, line = .42, adj = 0, font = 2, cex = .96)
+  if (length(xlabel) && !identical(xlabel, "")) mtext(xlabel, 1, line = 1.38, cex = .88)
+  if (length(ylabel) && !identical(ylabel, "")) mtext(ylabel, 2, line = 2.22, las = 0, cex = .90)
+}
+key <- function(style, size = .90, pch = NA_integer_, xlabel = NULL) {
+  par(mar = rep(0, 4))
+  plot.new()
+  plot.window(c(0, 1), c(0, 1))
+  if (!is.null(xlabel)) text(.5, .84, xlabel, cex = .99)
+  ypos <- if (is.null(xlabel)) .51 else .32
+  linekey <- function(size, draw) {
+    legend(.5, ypos, xjust = .5, yjust = .5, legend = style$name, horiz = TRUE, text.width = NA,
+           col = style$colour, lty = style$line, lwd = 1.25, pch = pch,
+           bty = "n", cex = size, seg.len = 2, x.intersp = .5, plot = draw)
+  }
+  measured <- linekey(size, FALSE)
+  if (measured$rect$w > .95) size <- size * .95 / measured$rect$w
+  measured <- linekey(size, TRUE)
+  stopifnot(measured$rect$left >= 0, measured$rect$left + measured$rect$w <= 1)
+}
+series <- function(data, x, y, style, group = "method") {
+  for (i in seq_len(nrow(style))) {
+    d <- data[data[[group]] == style$key[i], ]
+    stopifnot(nrow(d) > 0L, all(is.finite(d[[y]])))
+    lines(d[[x]], d[[y]], col = style$colour[i], lty = style$line[i], lwd = 1.2)
+  }
+}
+power_plot <- function() {
+  panels(1, 3, .19)
+  for (i in seq_along(scenarios$id)) {
+    id <- scenarios$id[i]
+    s <- baseline[baseline$scenario == id, ]
+    points_i <- power_points[power_points$scenario == id, ]
+    heading <- paste0("(", letters[i], ") Scenario ", id, "  (\u03c3 = ", scenarios$sigma[i], ")")
+    frame(c(-2.15, 4.15), c(-.04, 1.04), c(-2, 0, 2, 4), seq(0, 1, .2), heading,
+          expression(theta~"(treatment effect)"), if (i == 1L) "Power" else "")
+    abline(h = .80, v = 2, lty = 3, col = "gray45", lwd = .9)
+    series(s, "theta", "power", styles)
+    for (j in seq_len(nrow(styles))) {
+      y <- points_i$power[match(styles$key[j], points_i$method)]
+      points(2, y, col = styles$colour[j], pch = if (j == 2L) 1 else 16,
+             cex = if (j == 2L) .95 else .58)
+    }
+  }
+  key(styles, pch = c(16, 1, 16, 16))
+}
+figure("zero_gap_power", 6.75, 2.95, power_plot, svg = TRUE, dpi = 360)
+
+sensitivity <- function(shared_discrepancy) {
+  data <- if (shared_discrepancy) common else matched
+  style <- if (shared_discrepancy) common_styles else styles
+  group <- if (shared_discrepancy) "design" else "method"
+  x <- if (shared_discrepancy) "source_discrepancy" else "plotted_gap"
+  xlabel <- if (shared_discrepancy) expression("Common source discrepancy " * delta == m["1,0"] - m[0]) else
+    expression("Posited causal gap " * xi[lambda*","*delta])
+  metrics <- c("coverage", "null_rejection", "efficacy_declaration")
+  headers <- c("Causal coverage", "Null rejection", "Efficacy declaration")
+  ticks <- if (shared_discrepancy)
+    list(c(.88, .90, .92, .95), c(0, .025, .05, .075, .10), seq(.4, 1, .2)) else
+    list(c(.85, .9, .95), seq(0, .2, .05), seq(.4, 1, .2))
+  limits <- if (shared_discrepancy) list(c(.875, .958), c(0, .125), c(.3, 1.015)) else
+    list(c(.82, .965), c(0, .2), c(.30, 1.025))
+  panels(3, 3, .37)
+  for (i in seq_along(scenarios$id)) {
+    id <- scenarios$id[i]
+    s <- data[data$scenario == id, ]
+    for (j in seq_along(metrics)) {
+      frame(c(-.52, .52), limits[[j]], c(-.5, 0, .5), ticks[[j]],
+        if (i == 1) headers[j] else "", ylabel = if (j == 1) paste("Scenario", id) else "",
+        show_x = i == 3, margins = c(if (i == 3) 1.6 else .6, 3.6, if (i == 1) 1.7 else .65, .45))
+      stopifnot(all(s[[metrics[j]]] >= limits[[j]][1]), all(s[[metrics[j]]] <= limits[[j]][2]))
+      guides <- list(.95, c(.025, .10), .80)[[j]]
+      if (!shared_discrepancy || j == 3L) abline(h = guides, col = "gray55", lwd = .7, lty = 3)
+      series(s, x, metrics[j], style, group)
+      if (!shared_discrepancy && j == 2L) {
+        markers <- thresholds[thresholds$scenario == id & thresholds$within_plotted_range, ]
+        for (k in seq_len(nrow(markers))) {
+          idx <- match(markers$method[k], style$key)
+          segments(markers$xi_tol[k], 0, markers$xi_tol[k], .10, col = style$colour[idx], lty = 3)
+          points(markers$xi_tol[k], .10, pch = if (idx == 2) 1 else 16,
+                 col = style$colour[idx], cex = if (idx == 2) 1.0 else .6)
+        }
+      }
+    }
+  }
+  key(style, xlabel = xlabel)
+}
+figure("study_design_sensitivity", 6.75, 6.80, function() sensitivity(FALSE), svg = TRUE, dpi = 300)
+figure("common_source_discrepancy", 6.75, 6.15, function() sensitivity(TRUE))
+
+causal_gap_label <- expression("Causal gap " * xi[lambda*","*delta])
+scalar_x <- c(-.30, -.15, 0, .15, .30)
+scalar_main <- function() {
+  panels(1, 3, .24, pointsize = 8)
+  style <- scalar_styles(main)
+  metrics <- c("coverage_theta", "null_rejection", "power")
+  headers <- c("(a) Coverage", "(b) Causal-null rejection", "(c) Efficacy declaration")
+  for (j in seq_along(metrics)) {
+    frame(c(-.31, .31), c(0, 1.02), scalar_x, seq(0, 1, .25), headers[j], causal_gap_label)
+    if (j <= 2) abline(h = c(.95, .025)[j], col = "gray60", lty = 3)
+    series(main, "xi_axis", metrics[j], style)
+  }
+  key(style, size = .85)
+}
+figure("scalar_gap_design_sensitivity", 6.75, 2.8, scalar_main)
+
+performance_plot <- function(data, scaled = FALSE) {
+  panels(2, 4, .29, pointsize = 8)
+  style <- scalar_styles(data)
+  metrics <- c("coverage_theta", "bias_theta", "mse_theta", "width")
+  titles <- c("Coverage", "Bias", "MSE", "Width")
+  ranges <- list(c(0, 1.02), c(-.325, .325), c(0, 1.07 * max(data$mse_theta)), c(0, 1.07 * max(data$width)))
+  ticks <- lapply(ranges, function(r) {
+    v <- pretty(r, n = 3)
+    v[v >= min(r) & v <= max(r)]
+  })
+  ticks[1:2] <- list(c(0, .5, 1), c(-.3, 0, .3))
+  for (i in 1:2) {
+    ne <- c(150, 300)[i]
+    d <- data[data$baseline_external_n == ne, ]
+    for (j in seq_along(metrics)) {
+      heading <- sprintf("(%s) %s", letters[(i - 1L) * 4L + j], titles[j])
+      row_label <- if (j == 1L) paste(if (scaled) "Base ext. n =" else "External n =", ne) else ""
+      frame(c(-.31, .31), ranges[[j]], scalar_x, ticks[[j]], heading,
+            if (i == 2L) causal_gap_label else "", row_label, show_x = i == 2L,
+            margins = c(if (i == 2L) 2.45 else .60, if (j == 1L) 3.2 else 2.25, 1.55, .45))
+      if (j <= 2L) abline(h = c(.95, 0)[j], col = "gray55", lwd = .7, lty = 3)
+      series(d, "xi_axis", metrics[j], style)
+    }
+  }
+  key(style, size = .85)
+}
+figure("scalar_gap_reference_signed_lines", 6.75, 3.65, function() performance_plot(signed))
+figure("scalar_gap_reference_scaling_lines", 6.75, 3.65, function() performance_plot(scaling, TRUE))
+
+precision_plot <- function() {
+  panels(1, 2, .20, pointsize = 8)
+  colors <- c("#D55E00", "#7B3294")
+  for (j in 1:2) {
+    gap <- precision[[c("xi_fixed", "xi_local")[j]]]
+    y <- 4:1
+    par(mar = c(2.8, 3.4, 2.2, .7))
+    plot.new()
+    plot.window(c(-.15, .42), c(.5, 4.5))
+    xt <- seq(-.1, .4, .1)
+    abline(v = xt, h = y, col = "#E4E6E8", lwd = .6)
+    axis(1, at = xt, cex.axis = .9)
+    axis(2, at = y, labels = precision$k, cex.axis = .9)
+    box(col = "#454545", lwd = .7)
+    mtext(c("(a) Fixed causal gap", "(b) Local causal gap")[j], 3, adj = 0, line = 1.18, font = 2)
+    mtext(c(expression(xi == .15), expression(xi == .15 / sqrt(k)))[j], 3, line = .10, cex = .85)
+    mtext("Treatment-effect scale", 1, line = 1.45)
+    mtext(expression("Sample-size multiplier " * k), 2, line = 2.15, las = 0)
+    abline(v = 0, col = "#0072B2", lty = 3)
+    segments(gap - precision$half_width, y, gap + precision$half_width, y, col = colors[j])
+    for (side in c(-1, 1)) {
+      tip <- gap + side * precision$half_width
+      segments(tip, y - .07, tip, y + .07, col = colors[j])
+    }
+    lines(gap, y, col = colors[j], lty = 2)
+    points(gap, y, col = colors[j], pch = 16, cex = .75)
+    text(gap, y + .2, format(gap, trim = TRUE, scientific = FALSE, drop0trailing = TRUE), cex = .82)
+  }
+  legend_style <- data.frame(name = c("Trial effect = 0", "Fixed gap: TCE-centered span",
+                              "Local gap: TCE-centered span"), colour = c("#0072B2", colors), line = c(3, 1, 1))
+  key(legend_style, pch = c(NA, 16, 16))
+}
+figure("scalar_gap_precision_scaling", 6.75, 3.6, precision_plot)
+for (stem in c("scalar_gap_design_sensitivity", "scalar_gap_reference_signed_lines",
+               "scalar_gap_reference_scaling_lines", "scalar_gap_precision_scaling")) {
+  write_report(file.path("legends", stem), list(legend_rows = 1L, horizontal_bounds_checked = TRUE))
+}
+cat("Wrote eight planning figures and their numerical summaries.\n")
+

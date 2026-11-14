@@ -1,14 +1,19 @@
 # Simulation figures
 
-From the repository root:
+From the repository root, run
 
 ```sh
-python analysis/simulation_figures/plot_simulations.py
+Rscript analysis/simulation_figures/plot_simulations.R
 ```
 
-This writes six PDFs to `results/simulation-figures/figures/` from the saved summaries in `inputs/`. It checks all 192 curve-coordinate hashes against the reference results. It does not rerun any simulations.
+R draws the six PDFs under `results/simulation-figures/figures/` from the retained aggregate summaries. Use `--output-dir DIR` to select another destination. The renderer uses base R with Cairo PDF support, `jsonlite`, and `digest`.
 
-`--output-dir PATH` selects another destination. `--check-vectors` additionally compares the plot geometry with the reference PDFs in `assets/` and requires PyMuPDF. Use `--pdf-python PATH` if PyMuPDF is installed in another Python environment.
+Each figure shows coverage, bias, mean squared error, and interval width for four methods. The baseline figure compares two trial sizes. The other five figures compare oracle and estimated nuisances under matched simulated datasets. All panels use the 25-point causal-gap grid; the trial-only curves have zero achieved gap throughout.
 
-For newly generated 5,000-repetition results, use `analysis/simulations/plot_publication.py`. The publication renderers require complete summaries, so they should not be applied to four-repetition smoke runs.
+The driver verifies the three archived summary checksums, the 5,000-repetition counts, the achieved gaps, and the RCT reference curves. It recomputes all four extended-scenario calibration integrals. The `validation/curve_coordinates.csv` file records the 4,800 plotted coordinate pairs. The published-curve hashes from the earlier renderer remain in `inputs/reference_curve_checks.json`.
 
+To plot newly fitted runs, supply their full summary directories:
+
+```sh
+Rscript analysis/simulations/plot_publication.R --baseline results/baseline --oracle results/oracle --extended results/extended --output-dir results/refitted-figures
+```

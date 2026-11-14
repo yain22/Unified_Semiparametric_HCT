@@ -20,4 +20,20 @@ jobs:
           R CMD INSTALL --library="$RUNNER_TEMP/r-library" causalgap_*.tar.gz
           R_LIBS_USER="$RUNNER_TEMP/r-library" Rscript --vanilla docs/examples/hybrid-eif.R
       - name: Check the interactive calculations
-        run: node analysis/validation/check_interactive_labs.js
+        run: |
+          node analysis/validation/check_interactive_labs.js
+          node analysis/validation/check_eif_models.js
+      - name: Reproduce the numbered exhibits in R
+        shell: Rscript {0}
+        run: |
+          install.packages(c("jsonlite", "digest", "data.table"), repos = "https://cloud.r-project.org")
+          source("analysis/reproduce.R")
+          reproduce("tables")
+          reproduce("figures")
+          stopifnot(length(list.files("results/tables", pattern = "[.]csv$")) == 15L)
+          stopifnot(nrow(read.csv("results/figures/figure-index.csv")) == 20L)
+          source("docs/examples/model-reductions.R")
+      - name: Verify aggregate inputs and finite-law identities
+        run: |
+          Rscript analysis/validation/verify_package.R
+          Rscript analysis/validation/theory_algebra_check.R

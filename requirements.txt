@@ -1,9 +1,0 @@
-# Tested figure environment: Python 3.12.3
-numpy==1.26.4
-pandas==2.2.2
-scipy==1.11.4
-matplotlib==3.8.4
-
-# Optional for --check-vectors on the simulation figure runner:
-# PyMuPDF
-

@@ -519,7 +519,7 @@ display: none;
 
 <nav aria-label="Project navigation" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.75em 1.6em;padding:1em 0 0.2em;font:600 15px/1.4 system-ui,sans-serif">
 <a href="r-package.html">R package</a><a href="eif-lab.html">EIF lab</a><a href="design-lab.html">Design lab</a><a href="index.html" aria-current="page">Replication guide</a>
-</nav>
+<a href="eif-models.html">Model comparison</a></nav>
 
 <div id="header">
 
@@ -541,27 +541,6 @@ code</h3>
 
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#r-package-and-interactive-examples" id="toc-r-package-and-interactive-examples">R package and interactive
-examples</a></li>
-<li><a href="#reproduce-the-papers-tables" id="toc-reproduce-the-papers-tables">Reproduce the paper’s
-tables</a></li>
-<li><a href="#a-design-decision-before-enrollment" id="toc-a-design-decision-before-enrollment">A design decision before
-enrollment</a>
-<ul>
-<li><a href="#power-when-control-outcomes-agree" id="toc-power-when-control-outcomes-agree">Power when control outcomes
-agree</a></li>
-<li><a href="#what-if-the-external-controls-improve-less" id="toc-what-if-the-external-controls-improve-less">What if the external
-controls improve less?</a></li>
-</ul></li>
-<li><a href="#refit-the-simulations" id="toc-refit-the-simulations">Refit the simulations</a></li>
-<li><a href="#examine-the-glucose-monitoring-analysis" id="toc-examine-the-glucose-monitoring-analysis">Examine the glucose
-monitoring analysis</a></li>
-<li><a href="#render-this-manual" id="toc-render-this-manual">Render
-this manual</a></li>
-</ul>
-</div>
 
 <style>
 :root { --ink: #20303a; --muted: #465c68; --accent: #115b70; }
@@ -574,7 +553,7 @@ h1.title {font-size: clamp(30px,5vw,45px); line-height: 1.13; color: #192e38; ma
 .subtitle {color: var(--muted); margin: 0.5em 0 0.1em;}
 #header {position:relative;}
 #header .title{padding-right:92px;}
-#header::after{content:'';position:absolute;width:75px;height:85px;top:17px;right:1px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTYgMTc2IiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+Y2F1c2FsZ2FwIFIgcGFja2FnZTwvdGl0bGU+CiAgPGRlc2MgaWQ9ImRlc2MiPlR3byBjb250cm9sIG1lYW5zIGFuZCBhIHdlaWdodGVkIG1lYW4gYmV0d2VlbiB0aGVtLCBpbnNpZGUgYSBoZXhhZ29uLjwvZGVzYz4KICA8cGF0aCBkPSJNNzggNCAxNTEgNDV2ODVsLTczIDQyLTczLTQyVjQ1WiIgZmlsbD0iIzE4MzYzYyIgc3Ryb2tlPSIjMGQyNTJhIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTMyIDU3SDEyM00zMiA5MEgxMjMiIHN0cm9rZT0iIzUyNzg3YyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICAgIDxwYXRoIGQ9Ik01MyA1N3Y5bDQwIDE2djhNMTEyIDU3djlsLTE5IDE2IiBzdHJva2U9IiNlM2U1ZDgiIHN0cm9rZS13aWR0aD0iMi41Ii8+CiAgPC9nPgogIDxjaXJjbGUgY3g9IjUzIiBjeT0iNTciIHI9IjcuNSIgZmlsbD0iI2Y1Yjk2NyIvPgogIDxjaXJjbGUgY3g9IjExMiIgY3k9IjU3IiByPSI3LjUiIGZpbGw9IiM3N2NlYzMiLz4KICA8cGF0aCBkPSJtOTMgODIgOCA4LTggOC04LThaIiBmaWxsPSIjZmZmIi8+CiAgPHRleHQgeD0iNzgiIHk9IjEyNCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmb250LXNpemU9IjIzIj5jYXVzYWxnYXA8L3RleHQ+CiAgPHRleHQgeD0iNzgiIHk9IjE0MyIgZmlsbD0iI2M5ZTVkZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOSIgbGV0dGVyLXNwYWNpbmc9IjEuOCI+UiBQQUNLQUdFPC90ZXh0Pgo8L3N2Zz4K) center / contain no-repeat;}
+#header::after{content:'';position:absolute;width:75px;height:85px;top:17px;right:1px;background:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMTc4IiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idCBkIj4KPHRpdGxlIGlkPSJ0Ij5jYXVzYWxnYXAgUiBwYWNrYWdlPC90aXRsZT48ZGVzYyBpZD0iZCI+QSBoeWJyaWQtdHJpYWwgbW9kZWwgY29udGFpbnMgdGhlIGNvbW1vbi1tZWFuIG1vZGVsLiBTZXBhcmF0ZSBicmFuY2hlcyBsZWFkIHRvIFJDVCBhbmQgRUNULjwvZGVzYz4KPHBhdGggZD0iTTgwIDQgMTUzIDQ2djg1bC03MyA0My03My00M1Y0NloiIGZpbGw9IiMxODJmMzgiIHN0cm9rZT0iIzUwNzQ3ZCIgc3Ryb2tlLXdpZHRoPSIzIi8+CjxlbGxpcHNlIGN4PSI4MCIgY3k9IjU1IiByeD0iNDMiIHJ5PSIyMCIgZmlsbD0iIzE5M2Q1NSIgc3Ryb2tlPSIjOGFiOWU4IiBzdHJva2Utd2lkdGg9IjIuNyIvPgo8ZWxsaXBzZSBjeD0iODAiIGN5PSI2MS41IiByeD0iMjYiIHJ5PSI4IiBmaWxsPSIjMTk0ODNmIiBzdHJva2U9IiM3NWM4YjAiIHN0cm9rZS13aWR0aD0iMi41Ii8+CjxnIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMi42IiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNTYgNzIgNDcgODF2Nm0tNC00IDQgNSA0LTUiIHN0cm9rZT0iI2MxY2JkMSIvPjxwYXRoIGQ9Im0xMDQgNzIgOSA5djZtLTQtNCA0IDUgNC01IiBzdHJva2U9IiNlZGIxNmUiLz48L2c+CjxnIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwLjUiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj48dGV4dCB4PSI0NyIgeT0iMTAwIiBmaWxsPSIjZWVmM2Y0Ij5SQ1Q8L3RleHQ+PHRleHQgeD0iMTEzIiB5PSIxMDAiIGZpbGw9IiNmZmQ0OTMiPkVDVDwvdGV4dD48L2c+Cjx0ZXh0IHg9IjgwIiB5PSIxMjYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjI1IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiPmNhdXNhbGdhcDwvdGV4dD4KPHRleHQgeD0iODAiIHk9IjE0NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iOC43IiBsZXR0ZXItc3BhY2luZz0iMS42IiBmaWxsPSIjZGVlZGU5Ij5SIFBBQ0tBR0U8L3RleHQ+PC9zdmc+Cg==) center / contain no-repeat;}
 @media(max-width:650px){#header .title{padding-right:54px;}#header::after{width:47px;height:54px;}}
 h4.author {font-size: 16px; margin: 7px 0 17px;}
 h1:not(.title),h2 {margin-top: 1.65em; line-height: 1.25;}
@@ -590,41 +569,39 @@ table {margin-bottom: 22px;}
 .caption {color: var(--muted); font-size: 14px; text-align: left; margin: 0.65em 0 1.2em;}
 .table {font-size: 15px;}
 .navlinks {margin: 12px 0 20px; display:flex; gap:18px; flex-wrap:wrap;}
-@media(max-width:650px){.main-container{padding:0 13px 40px;overflow-wrap:anywhere;}.table{display:block;overflow:auto;}
+@media(max-width:650px){.main-container :not(pre)>code{white-space:normal;overflow-wrap:anywhere;}.main-container{padding:0 13px 40px;overflow-wrap:anywhere;}.table{display:block;overflow:auto;}
 h1:not(.title){font-size:25px;}pre{font-size:12px;}}
+.portal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-block:1px solid #c5d6d5;padding:18px 0;gap:16px;margin:18px 0 24px}.portal a{display:block;text-decoration:none;border-left:3px solid #5a8883;padding-left:12px;font-family:system-ui,sans-serif}.portal strong,.portal span{display:block}.portal strong{font-size:17px}.portal span{font-size:14px;line-height:1.4;color:#435958;margin-top:3px}.portal a:hover strong{text-decoration:underline}@media(max-width:620px){.portal{grid-template-columns:1fr;gap:12px}}
 </style>
-<div class="navlinks">
-<a href="replication-source.zip" download>Replication code (.zip)</a>
-<a href="tables.zip" download>All numerical tables (.zip)</a>
-<a href="index.Rmd" download>R Markdown source</a>
+<div class="portal" aria-label="Start here">
+<a href="r-package.html"><strong>Estimate in R</strong><span>Install the
+package and fit
+AIPW-U.</span></a><a href="eif-models.html"><strong>Compare the four
+models</strong><span>Read the equations and inspect one
+record.</span></a><a href="#reproduce-the-papers-tables"><strong>Reproduce
+the paper</strong><span>Generate the numbered tables and
+figures.</span></a>
 </div>
 <p>A trial team has 300 external controls and plans to treat 120
 children. How many children should it still randomize to concurrent
-control? We use the schizophrenia example from the paper to calculate
-the power of three designs and examine how often each would declare a
-benefit if the treatment had no effect. The continuous glucose
-monitoring example then shows how the same distinction between the
-borrowing target and the trial effect can be examined after data
-collection.</p>
-<div id="r-package-and-interactive-examples" class="section level1">
-<h1>R package and interactive examples</h1>
-<p>The <a href="r-package.html">causalgap package</a> evaluates the
-hybrid contrast and its gap from the trial effect given fitted nuisance
-values. The <a href="eif-lab.html">EIF lab</a> lets you change a control
-variance, inspect a score along a probability model, and compare
-variance bounds. Its default example can also be run <a href="examples/hybrid-eif.R">in R</a>.</p>
-<p>For a planning question, open the <a href="design-lab.html">trial
-design lab</a>. Choose the enrollment counts and the difference between
-control sources to compare randomized, hybrid and externally controlled
-trials. The R code underneath the plot uses your current settings.</p>
+control? The <a href="design-lab.html">trial design lab</a> lets you
+compare enrollment plans before fitting a model. The <a href="eif-lab.html">EIF lab</a> shows how a change in the control
+distribution affects the borrowing contrast. For a worked application
+after data collection, see the <a href="#examine-the-glucose-monitoring-analysis">glucose monitoring
+analysis</a>.</p>
+<div class="navlinks">
+<a href="replication-source.zip" download>Download replication project
+(.zip)</a><a href="tables.zip" download>Download numerical tables
+(.zip)</a><a href="index.Rmd" download>Guide source (.Rmd)</a>
 </div>
 <div id="reproduce-the-papers-tables" class="section level1">
 <h1>Reproduce the paper’s tables</h1>
-<p>Extract the replication code and open <code>HCT.Rproj</code> or a
-terminal in the extracted directory. Run the following command there. It
-uses base R and the bundled aggregate summaries to write CSV files under
+<p>Extract the replication code, open <code>HCT.Rproj</code> in RStudio,
+and use the R console. The package need not be installed. These commands
+use base R and bundled aggregate summaries to write CSVs under
 <code>results/tables/</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">Rscript</span> analysis/paper_tables.R</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">source</span>(<span class="st">&quot;analysis/reproduce.R&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">reproduce</span>(<span class="st">&quot;tables&quot;</span>)</span></code></pre></div>
 <table>
 <colgroup>
 <col width="33%" />
@@ -673,6 +650,19 @@ nuisance quantities. The exhibit map
 (<code>analysis/paper-map.csv</code>) identifies the source for each
 figure and table. The simulation and clinical sections below explain how
 to refit the analyses that produced the saved summaries.</p>
+</div>
+<div id="reproduce-the-figures" class="section level1">
+<h1>Reproduce the figures</h1>
+<p>With Cairo graphics available in R
+(<code>capabilities(&quot;cairo&quot;)</code>), install <code>jsonlite</code> once
+and run <code>reproduce(&quot;figures&quot;)</code> in the same session. This
+writes <code>Figure-01.pdf</code> through <code>Figure-11.pdf</code>,
+<code>Figure-S01.pdf</code> through <code>Figure-S09.pdf</code>, and
+<code>figure-index.csv</code> under <code>results/figures/</code>.
+Sampling plots use supplied synthetic draws, simulation plots use saved
+summaries, and the clinical forest plot uses aggregate estimates. The <a href="https://github.com/yain22/causal-gap-trial-design/blob/main/analysis/paper-map.csv">exhibit
+index</a> lists the source for each display. Neither this command nor
+the table command refits a simulation or needs participant records.</p>
 </div>
 <div id="a-design-decision-before-enrollment" class="section level1">
 <h1>A design decision before enrollment</h1>
@@ -821,14 +811,14 @@ The scripts use the manuscript’s seeds by default.</p>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="ex">Rscript</span> analysis/paper_analysis.R oracle <span class="at">--reps</span> 5000 <span class="at">--baseline-dir</span> results/baseline</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="ex">Rscript</span> analysis/paper_analysis.R extended <span class="at">--reps</span> 5000 <span class="at">--workers</span> 4</span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="ex">Rscript</span> analysis/paper_analysis.R quadratic <span class="at">--reps</span> 5000</span></code></pre></div>
-<p>The simulations write new estimates under <code>results/</code>. To
-rebuild the affected tables from those outputs, use
-<code>Rscript analysis/paper_tables.R --simulation-dir results --output-dir results/refitted-tables</code>.
-After a clinical refit, add <code>--clinical-dir results/cgm</code> to
-use those estimates as well. To plot a new simulation run, run
-<code>python analysis/simulations/plot_publication.py --help</code> for
-the input directories. The plotting dependencies are listed in
-<code>requirements.txt</code>.</p>
+<p>For the full sequence, including the quadratic comparator,
+calibration, one-sided operating characteristics, tables and figures
+from new runs, use
+<code>source(&quot;analysis/reproduce.R&quot;); reproduce(&quot;refit&quot;, workers = 4)</code>
+in the project R console. For four paired repetitions, use
+<code>reproduce(&quot;smoke&quot;)</code>. That test does not reproduce the Monte
+Carlo precision of the paper. To plot already completed runs, use
+<code>Rscript analysis/simulations/plot_publication.R --help</code>.</p>
 </div>
 <div id="examine-the-glucose-monitoring-analysis" class="section level1">
 <h1>Examine the glucose monitoring analysis</h1>

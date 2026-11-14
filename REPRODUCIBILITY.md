@@ -1,12 +1,24 @@
-# Numerical checks
+# Check the replication
 
-The checks below answer different questions. Run them from the repository root. Each writes its report under `results/`.
+For a first check, open `HCT.Rproj` and enter the following in R. The examples use synthetic observations and published group summaries.
 
-| Command | What it checks |
-| --- | --- |
-| `Rscript analysis/paper_analysis.R validate` | The unrestricted score, its joint nuisance Jacobian, trial HC2 and ECT variances, clinical routines on synthetic observations, Gaussian planning calculations and four paired quadratic-ANCOVA refits per trial size. |
-| `python analysis/validation/theory_algebra_check.py` | Directional derivatives at a finite observed-data law and the exact nuisance-drift identity. |
-| `python analysis/validation/verify_package.py` | Integrity of supplied analytical files, the saved quadratic simulation results, CGM summaries and Gaussian planning endpoints. |
-| `python analysis/clinical/check_results.py --local-refits results/cgm` | Recomputes the bootstrap standard errors from three locally generated 2,000-refit runs and checks the hybrid-minus-trial identity in each draw. Requires independently obtained clinical data and completion of all three CGM analyses. |
+```r
+install.packages(c("data.table", "digest", "jsonlite"))
+source("analysis/reproduce.R")
+reproduce("validate")
+reproduce("smoke")
+source("docs/examples/model-reductions.R")
+```
 
-The numbered-table command in the main README uses saved Monte Carlo summaries and published CGM aggregates. It recomputes the fixed-weight Gaussian planning quantities. To repeat estimation from individual observations, use the full simulation drivers or the local clinical commands. Small simulation runs exercise those drivers with fewer repetitions.
+`validate` checks estimator scores, Jacobians and variances, the clinical fitting routines on synthetic data, Gaussian planning calculations, and a short paired quadratic-ANCOVA run. `smoke` fits four repetitions of the baseline, oracle, extended and quadratic analyses. A four-repetition run checks code execution, not agreement with the published Monte Carlo estimates.
+
+Additional checks can be run from the project terminal:
+
+| Command | Scope |
+|:--|:--|
+| `Rscript analysis/validation/theory_algebra_check.R` | Compare changes in the target along finite probability paths with the EIF; check the exact nuisance-drift identity. |
+| `Rscript analysis/validation/verify_package.R` | Check registry of distributed analysis files, aggregate the saved quadratic simulation draws, and recompute planning endpoints. |
+| `Rscript analysis/clinical/check_results.R` | Check the supplied CGM estimates, intervals and group counts. Add `--local-refits results/cgm` only after completing all three participant bootstrap analyses with authorized data. |
+| `Rscript docs/examples/model-reductions.R` | Compare the target and variance bound under four small finite laws, exactly. |
+
+To repeat the paper's simulation estimation, use `reproduce("refit", workers = 4)`. To recreate its numerical displays from the archived outputs, use `reproduce("tables")` and `reproduce("figures")`. Original vector artwork and typeset equations are retained under `assets/` for comparison. R draws the figures anew; fonts and line breaks may differ by graphics device.

@@ -1,2 +1,4 @@
 # Preserve bytes used in the reference integrity checks across platforms.
 * -text
+# The editable source of this knitted guide is docs/index.Rmd.
+docs/index.html linguist-generated=true

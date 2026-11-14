@@ -22,9 +22,9 @@ Use a separate output directory for each run. Failures and warnings are saved; f
 To regenerate publication figures from the retained summaries:
 
 ```sh
-python plot_publication.py --output-dir=../../results/simulation-figures
+Rscript plot_publication.R --output-dir=../../results/simulation-figures
 ```
 
-This requires NumPy, pandas, Matplotlib, and SciPy, plus the sibling `simulation_figures` directory. Add `--baseline=PATH --oracle=PATH --extended=PATH` to plot complete regenerated runs. Publication plots require 5,000 repetitions; short runs are implementation checks.
+The renderer uses base R graphics and `jsonlite`. Add `--baseline=PATH --oracle=PATH --extended=PATH` to plot complete regenerated runs. Each selected summary must contain 5,000 repetitions and the full 25-point causal-gap grid. The six PDFs appear directly in the specified directory. The `validation` subdirectory contains the plotted coordinates and a check of the gap calibration.
 
 `publication_mapping.csv` maps the simulations to paper figures and tables. The paired quadratic trial comparator is in `../comparators`. `lib` contains the numerical and estimation functions used by these drivers; the ECT functions preserve upstream bodies and the drivers use only quadratic OLS and logistic source models. `provenance.json` identifies historical sources and distinguishes their hashes from the distributed files.

@@ -58,12 +58,31 @@ names(method_labels) <- methods
 
 columns <- c('N_trial', 'method', 'replicate', 'seed', 'xi_index', 'xi',
   'estimate', 'se', 'target_TCE')
-raw <- fread(file.path(baseline, 'replicates.csv.gz'), select=columns)
+# Decompress in chunks with base R so data.table does not need an optional
+# compression package to read a million-row simulation file.
+read_draws <- function(path, select) {
+  tmp <- tempfile(fileext = ".csv")
+  on.exit(unlink(tmp), add = TRUE)
+  src <- gzfile(path, "rb")
+  tryCatch({
+    dst <- file(tmp, "wb")
+    tryCatch({
+      repeat {
+        bytes <- readBin(src, "raw", n = 1024L * 1024L)
+        if (!length(bytes)) break
+        writeBin(bytes, dst)
+      }
+    }, finally = close(dst))
+  }, finally = close(src))
+  fread(tmp, select = select)
+}
+
+raw <- read_draws(file.path(baseline, 'replicates.csv.gz'), select=columns)
 raw <- raw[method %in% methods]
-reference <- fread(file.path(baseline, 'transportability_reference.csv.gz'),
+reference <- read_draws(file.path(baseline, 'transportability_reference.csv.gz'),
   select=setdiff(columns, c('xi_index', 'xi')))
 reference <- reference[method %in% methods]
-quadratic <- fread(quadratic_file,
+quadratic <- read_draws(quadratic_file,
   select=c('N_trial', 'method', 'replicate', 'seed', 'estimate', 'se'))
 stopifnot(nrow(raw)==1000000L, nrow(reference)==40000L, nrow(quadratic)==10000L,
   !anyDuplicated(raw[, .(N_trial, method, replicate, xi_index)]),
