@@ -1,7 +1,14 @@
 # Matched-score inference for the population causal-gap, using the baseline draws.
 # From the replication package root:
-#   Rscript analysis/simulations/check_gap_inference.R [repetitions] [output.csv]
+#   Rscript analysis/simulations/check_gap_inference.R [repetitions] [output.csv] [--baseline-dir DIR]
 args <- commandArgs(trailingOnly = TRUE)
+flag <- match("--baseline-dir", args)
+baseline_dir <- NULL
+if (!is.na(flag)) {
+  if (flag >= length(args)) stop("Supply the directory for --baseline-dir.")
+  baseline_dir <- args[flag + 1L]
+  args <- args[-c(flag, flag + 1L)]
+}
 reps <- if (length(args)) as.integer(args[1]) else 500L
 out <- if (length(args) >= 2L) args[2] else file.path("results", "gap_inference_summary.csv")
 stopifnot(length(args) <= 2L, !is.na(reps), reps >= 2L, reps <= 5000L)
@@ -19,6 +26,15 @@ stopifnot(length(generator) == 1L)
 eval(generator[[1L]])
 paired <- read.csv(file.path(here, "..", "comparators", "inputs", "paired_reference.csv"))
 paired <- paired[paired$N_trial == 250L, ]
+comparators <- file.path(here, "..", "comparators")
+source(file.path(comparators, "paired_samples.R"))
+source(file.path(comparators, "inputs", "trial_hc2_helper.R"))
+fp <- read.csv(file.path(comparators, "inputs", "portable-sample-hashes.csv.gz"))
+fp <- fp[fp$N_trial == 250L, ]
+trial_fits <- read_trial_fits(comparators)
+trial_fits <- trial_fits[trial_fits$N_trial == 250L, ]
+local_pairs <- if (!is.null(baseline_dir)) read.csv(file.path(baseline_dir, "sample_pairing.csv"))
+if (!is.null(local_pairs)) local_pairs <- local_pairs[local_pairs$N_trial == 250L, ]
 gaps <- c(0, .15)
 
 # For delta(x) = intercept + x1, the gap is intercept*K0 + K1.
@@ -66,8 +82,9 @@ estimates <- standard_errors <- matrix(NA_real_, reps, length(gaps))
 for (b in seq_len(reps)) {
   original <- generate(250L, b)
   record <- paired[match(b, paired$replicate), ]
-  stopifnot(original$seed == record$seed,
-            digest::digest(original$data, algo = "sha256") == record$full_sample_sha256)
+  local <- if (!is.null(local_pairs)) local_pairs[local_pairs$replicate == b, , drop = FALSE]
+  check_paired_sample(original$data, original$seed, record, fp[fp$replicate == b, ], local)
+  check_paired_fits(original$data, record, trial_fits[trial_fits$replicate == b, ])
   for (j in seq_along(gaps)) {
     data <- original$data
     data$Y <- data$Y - (1 - data$S) * amplitudes[j]

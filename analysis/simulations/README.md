@@ -15,6 +15,8 @@ The baseline uses trial counts `(167,83)` and `(333,167)`, with 500 and 1,000 ex
 
 Published seed bases are `52461004` for baseline/oracle and `74461005` for extensions. `--seed-base=INTEGER` changes them. Each replicate has its own deterministic seed. Methods share covariates and errors within replicates, and the oracle checks baseline dataset hashes.
 
+The matched-gap diagnostic also checks each draw against the portable sample fingerprint and both archived ANCOVA fits. To require identical full-sample bytes to a fresh baseline, run `Rscript analysis/simulations/check_gap_inference.R 4 results/gap-smoke.csv --baseline-dir results/smoke/baseline` from the project root after the smoke run.
+
 HCT uses the complete estimated-share score and a joint nuisance–target sandwich centered within sampling groups. ECT retains the original plug-in EIF variance and probability guard. Trial comparisons use HC2 standard errors. Intervals are two-sided normal 95% intervals; the unused trial helper `p_value` field is an upper-tail value.
 
 Use a separate output directory for each run. Failures and warnings are saved; failed runs do not produce an incomplete summary. Check `validation.json` or the oracle's `protocol.json` before using results. Output paths are checked before writing, and oracle input and output directories must not overlap. Checkpoints resume completed replicates when code, design, seed, and R version match.

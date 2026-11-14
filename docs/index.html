@@ -654,9 +654,10 @@ to refit the analyses that produced the saved summaries.</p>
 <div id="reproduce-the-figures" class="section level1">
 <h1>Reproduce the figures</h1>
 <p>With Cairo graphics available in R
-(<code>capabilities(&quot;cairo&quot;)</code>), install <code>jsonlite</code> once
-and run <code>reproduce(&quot;figures&quot;)</code> in the same session. This
-writes <code>Figure-01.pdf</code> through <code>Figure-11.pdf</code>,
+(<code>capabilities(&quot;cairo&quot;)</code>), install the two packages with
+<code>install.packages(c(&quot;jsonlite&quot;, &quot;digest&quot;))</code> and run
+<code>reproduce(&quot;figures&quot;)</code> in the same session. This writes
+<code>Figure-01.pdf</code> through <code>Figure-11.pdf</code>,
 <code>Figure-S01.pdf</code> through <code>Figure-S09.pdf</code>, and
 <code>figure-index.csv</code> under <code>results/figures/</code>.
 Sampling plots use supplied synthetic draws, simulation plots use saved
@@ -833,7 +834,7 @@ fitted trial regressions</strong>.</p>
 two treatment contrasts underlying the matched gap, and shows the
 interval calculated from 2,000 paired participant bootstrap refits. The
 pairing preserves the covariance between the two estimates.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(root, <span class="st">&quot;analysis&quot;</span>, <span class="st">&quot;clinical&quot;</span>, <span class="st">&quot;inputs&quot;</span>, <span class="st">&quot;primary&quot;</span>, <span class="st">&quot;full_results.csv&quot;</span>)</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>file <span class="ot">&lt;-</span> <span class="st">&quot;analysis/clinical/inputs/primary/full_results.csv&quot;</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>cgm <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(file)</span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>methods <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;AIPW-U (est)&quot;</span>, <span class="st">&quot;trial_augmented&quot;</span>, <span class="st">&quot;matching_gap&quot;</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>rows <span class="ot">&lt;-</span> cgm[<span class="fu">match</span>(methods, cgm<span class="sc">$</span>method), ]</span>

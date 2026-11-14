@@ -26,7 +26,7 @@ This recreates 15 CSVs using base R and bundled inputs. Table 3 is calculated fr
 | Figures 1–11 and S1–S9 | `reproduce("figures")` | `results/figures/` |
 | A short estimator check on synthetic data | `reproduce("validate")` | `results/validate/` |
 
-Figures require R with Cairo graphics and the `jsonlite` package (`install.packages("jsonlite")`). The estimator check and simulation refits also need `data.table` and `digest`.
+Figures require R with Cairo graphics and two packages: `install.packages(c("jsonlite", "digest"))`. The estimator check and simulation refits also need `data.table`.
 
 [Find an individual figure or table](analysis/paper-map.csv). Table 1 displays the EIF; Tables S1–S3 define notation and data structures. Table 4 and Tables S10–S12 describe the CGM analysis.
 

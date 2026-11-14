@@ -21,7 +21,7 @@ paper_help <- function() {
     "  --reps INTEGER          Simulation repetitions (full paper: 5000)",
     "  --workers INTEGER       Baseline/extended workers, 1-8 (default 1)",
     "  --seed-base INTEGER     Optional simulation seed override; default published seed",
-    "  --baseline-dir PATH     Completed baseline output required for oracle",
+    "  --baseline-dir PATH     Completed baseline for oracle or exact quadratic pairing",
     "  --cohort PATH           Existing authorized CGM cohort_data.rds",
     "  --trial-zip PATH        Original trial archive, alternative to --cohort",
     "  --registry-zip PATH     Original registry archive; needed to rebuild or select",
@@ -76,7 +76,7 @@ paper_main <- function() {
     baseline = c("reps", "workers", "seed-base"),
     extended = c("reps", "workers", "seed-base"),
     oracle = c("reps", "seed-base", "baseline-dir"),
-    quadratic = "reps",
+    quadratic = c("reps", "baseline-dir"),
     cgm = c("cohort", "trial-zip", "registry-zip", "bootstrap-reps", "selection", "analysis"),
     stop("Unknown task: ", task, "; see --help.")
   )
@@ -119,11 +119,11 @@ paper_main <- function() {
     stop("Choose a separate results directory, not the manuscript root.")
   for (p in protected) if (canonical(output) == canonical(p) || startsWith(canonical(output), paste0(canonical(p), "/")))
     stop("Choose an output directory outside published assets/reference results.")
-  if (task == "oracle") {
+  if (task == "oracle" || (task == "quadratic" && !is.null(get("baseline-dir")))) {
     baseline <- get("baseline-dir")
     if (is.null(baseline) || !dir.exists(baseline)) stop("Supply --baseline-dir for a completed baseline run.")
     if (inside(output, baseline) || inside(baseline, output))
-      stop("Oracle output and baseline input directories must be separate and non-overlapping.")
+      stop("Output and baseline input directories must be separate and non-overlapping.")
   }
   dir.create(output, recursive = TRUE, showWarnings = FALSE)
   output <- normalizePath(output, winslash = "/", mustWork = TRUE)
@@ -160,7 +160,9 @@ paper_main <- function() {
       paste0("--seed-base=", integer_option("seed-base", 52461004L)), paste0("--output-dir=", output)
     ))
   } else if (task == "quadratic") {
-    run("comparators/quadratic_rct_comparator.R", c("--repetitions", as.character(integer_option("reps", 5000L, 1L, 5000L)), "--output-dir", output))
+    baseline <- get("baseline-dir")
+    run("comparators/quadratic_rct_comparator.R", c("--repetitions", as.character(integer_option("reps", 5000L, 1L, 5000L)),
+        "--output-dir", output, if (!is.null(baseline)) c("--baseline-dir", baseline)))
   } else if (task == "cgm") {
     cohort <- get("cohort")
     trial <- get("trial-zip")

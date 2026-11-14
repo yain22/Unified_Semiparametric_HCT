@@ -12,6 +12,8 @@ source("docs/examples/model-reductions.R")
 
 `validate` checks estimator scores, Jacobians and variances, the clinical fitting routines on synthetic data, Gaussian planning calculations, and a short paired quadratic-ANCOVA run. `smoke` fits four repetitions of the baseline, oracle, extended and quadratic analyses. A four-repetition run checks code execution, not agreement with the published Monte Carlo estimates.
 
+In the smoke and full refit runs, the quadratic comparator requires exact sample hashes from the freshly fitted baseline. Across R builds, validation also checks the archived portable sample fingerprints and both ANCOVA estimates and standard errors. [Pairing checks](analysis/comparators/README.md)
+
 Additional checks can be run from the project terminal:
 
 | Command | Scope |

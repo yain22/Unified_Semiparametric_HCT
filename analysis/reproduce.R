@@ -47,7 +47,7 @@ reproduce <- function(what = c("tables", "figures", "validate", "smoke", "refit"
   task("baseline", "--reps", reps, "--workers", as.character(workers), "--output-dir", dir("baseline"))
   task("oracle", "--reps", reps, "--baseline-dir", dir("baseline"), "--output-dir", dir("oracle"))
   task("extended", "--reps", reps, "--workers", as.character(workers), "--output-dir", dir("extended"))
-  task("quadratic", "--reps", reps, "--output-dir", dir("quadratic"))
+  task("quadratic", "--reps", reps, "--baseline-dir", dir("baseline"), "--output-dir", dir("quadratic"))
   if (what == "refit") {
     run("comparators/collect_calibration.R", "--simulation-dir", out)
     run("simulations/fitted_operating_characteristics.R",

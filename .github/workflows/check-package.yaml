@@ -23,10 +23,43 @@ jobs:
         run: |
           node analysis/validation/check_interactive_labs.js
           node analysis/validation/check_eif_models.js
+      - name: Install replication dependencies
+        shell: Rscript {0}
+        run: |
+          packages <- c("jsonlite", "digest", "data.table")
+          install.packages(packages, repos = "https://cloud.r-project.org")
+          stopifnot(all(vapply(packages, requireNamespace, logical(1), quietly = TRUE)))
+      - name: Run independent validation and two-worker refits
+        shell: Rscript {0}
+        env:
+          OPENBLAS_NUM_THREADS: "1"
+          OMP_NUM_THREADS: "1"
+        run: |
+          source("analysis/reproduce.R")
+          reproduce("validate")
+          reproduce("smoke", workers = 2L)
+          completed <- function(path) "Status: completed" %in% readLines(file.path(path, "run-completed.txt"))
+          stages <- c("baseline", "oracle", "extended", "quadratic")
+          stopifnot(completed(file.path("results", "validate")),
+                    all(vapply(file.path("results", "smoke", stages), completed, logical(1))))
+          marker <- function(...) jsonlite::read_json(file.path("results", "smoke", ...), simplifyVector = TRUE)
+          baseline <- marker("baseline", "validation.json")
+          oracle <- marker("oracle", "protocol.json")$validation
+          extended <- marker("extended", "validation.json")
+          quadratic <- marker("quadratic", "quadratic_rct_protocol.json")
+          stopifnot(isTRUE(baseline$success), identical(as.integer(baseline$repetitions_per_size), 4L),
+                    identical(as.integer(baseline$failures), 0L),
+                    identical(as.integer(oracle$paired_datasets), 4L),
+                    identical(as.integer(oracle$failures), 0L),
+                    isTRUE(extended$success), identical(as.integer(extended$paired_datasets), 16L),
+                    identical(as.integer(extended$failures), 0L),
+                    identical(as.integer(quadratic$repetitions_per_size), 4L),
+                    identical(as.integer(quadratic$samples_hashed), 8L),
+                    identical(as.integer(quadratic$portable_hash_matches), 8L),
+                    identical(as.integer(quadratic$local_baseline_raw_hash_matches), 8L))
       - name: Reproduce the numbered exhibits in R
         shell: Rscript {0}
         run: |
-          install.packages(c("jsonlite", "digest", "data.table"), repos = "https://cloud.r-project.org")
           source("analysis/reproduce.R")
           reproduce("tables")
           reproduce("figures")

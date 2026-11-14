@@ -25,5 +25,5 @@
       "sha256": "a9c193e764314f169038788c4dbebec172227f62118253723aae6c6df559040e"
     }
   },
-  "paired_reference": "All 10,000 recreated datasets matched original SHA256 and original linear estimates/SEs before this portable reference was extracted; see quadratic_rct_protocol.json and QA validation CSV."
+  "paired_reference": "The 10,000 original samples were verified against their exact SHA256 hashes. The portable-sample-hashes index was certified from the same samples using paired_samples.R. Per-sample checks also compare the archived linear and quadratic estimates and HC2 standard errors."
 }

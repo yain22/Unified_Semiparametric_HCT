@@ -7,10 +7,10 @@ here <- dirname(script)
 bio <- normalizePath(file.path(here, '../..'), winslash = '/')
 cli <- commandArgs(trailingOnly = TRUE)
 if ("--help" %in% cli) {
-  cat("Rscript quadratic_rct_comparator.R [--repetitions 5000] [--output-dir PATH]\n")
+  cat("Rscript quadratic_rct_comparator.R [--repetitions 5000] [--output-dir PATH] [--baseline-dir PATH]\n")
   quit(status = 0)
 }
-allowed <- c("--repetitions", "--output-dir")
+allowed <- c("--repetitions", "--output-dir", "--baseline-dir")
 if (length(cli) %% 2L || (length(cli) && any(!cli[seq(1L, length(cli), 2L)] %in% allowed))) stop("Use --help for valid options")
 option <- function(key, default) {
   pos <- match(key, cli)
@@ -25,51 +25,29 @@ if (identical(output, here)) stop("Use a separate output directory; published re
 library(data.table)
 setDTthreads(1L)
 source(file.path(here, 'inputs/trial_hc2_helper.R'))
+source(file.path(here, 'paired_samples.R'))
 pairing <- fread(file.path(here, 'inputs/paired_reference.csv'))
-old <- pairing[, .(N_trial, replicate, estimate = linear_estimate, se = linear_se)]
-source_files <- file.path(here, 'inputs', c('paired_reference.csv', 'original-baseline-protocol.json', 'trial_hc2_helper.R'))
+fingerprints <- as.data.table(read.csv(file.path(here, 'inputs/portable-sample-hashes.csv.gz')))
+archived_fits <- as.data.table(read_trial_fits(here))
+baseline_dir <- option("--baseline-dir", NULL)
+local_pairs <- if (!is.null(baseline_dir)) fread(file.path(baseline_dir, 'sample_pairing.csv'))
+source_files <- c(file.path(here, 'inputs', c('paired_reference.csv', 'portable-sample-hashes.csv.gz',
+                  'original-baseline-protocol.json', 'trial_hc2_helper.R')),
+                  file.path(here, 'quadratic_rct_replicates.csv.gz'))
 hashes <- vapply(source_files, function(f) digest::digest(file = f, algo = 'sha256'), character(1))
-linear <- as.formula(paste('~', paste(paste0('X', 1:10), collapse = '+')))
-quadratic <- as.formula(paste('~', paste(c(paste0('X', 1:10), paste0('I(X', 1:10, '^2)')), collapse = '+')))
-generate <- function(n, b) {
-  nT <- if (n == 250L) 167L else 333L
-  nC <- n - nT
-  nE <- 2L * n
-  seed <- 52461004L + 100000L * (n == 500L) + b
-  set.seed(seed)
-  xe <- matrix(rnorm(nE * 10L), ncol = 10L)
-  epsE <- rnorm(nE)
-  xt <- matrix(rnorm(nT * 10L), ncol = 10L)
-  xc <- matrix(rnorm(nC * 10L), ncol = 10L)
-  epsT <- rnorm(nT)
-  epsC <- rnorm(nC)
-  X <- rbind(xt, xc, xe)
-  f <- .5 + (.6 / sqrt(5)) * rowSums(X[, 1:5]) + (.25 / sqrt(5)) * rowSums(X[, 1:5]^2)
-  error <- c(epsT, exp(.2 * xc[, 1]) * epsC, exp(-.2 * xe[, 1]) * epsE)
-  data <- setNames(as.data.frame(X), paste0('X', 1:10))
-  data$S <- c(rep(1L, n), rep(0L, nE))
-  data$A <- c(rep(1L, nT), rep(0L, nC + nE))
-  data$Y <- f + error - (1 - data$S) * X[, 1]
-  list(data = data, seed = seed)
-}
 rows <- vector('list', 2L * B)
 validations <- vector('list', 2L * B)
 start <- Sys.time()
 index <- 0L
 for (n in c(250L, 500L)) for (b in seq_len(B)) {
   index <- index + 1L
-  d <- generate(n, b)
-  hash <- digest::digest(d$data, algo = 'sha256')
+  d <- paired_sample(n, b)
   saved <- pairing[N_trial == n & replicate == b]
-  stopifnot(nrow(saved) == 1L, saved$seed == d$seed, hash == saved$full_sample_sha256)
-  qfit <- hct_trial_wald_fit(d$data, quadratic)
-  # Reproduce the archived linear result for every sample as an independent
-  # check of outcome generation, treatment coding, HC2, and interval convention.
-  lfit <- hct_trial_wald_fit(d$data, linear)
-  prev <- old[N_trial == n & replicate == b]
-  esterr <- abs(lfit$estimate - prev$estimate)
-  seerr <- abs(lfit$se - prev$se)
-  stopifnot(nrow(prev) == 1L, esterr < 1e-10, seerr < 1e-10)
+  local <- if (!is.null(local_pairs)) local_pairs[N_trial == n & replicate == b]
+  checked <- check_paired_sample(d$data, d$seed, saved, fingerprints[N_trial == n & replicate == b], local)
+  fits <- check_paired_fits(d$data, saved, archived_fits[N_trial == n & replicate == b])
+  qfit <- fits$quadratic
+  lfit <- fits$linear
   rows[[index]] <- data.table(
     N_trial = n, replicate = b, seed = d$seed, method = 'Quadratic ANCOVA (RCT)',
     estimate = qfit$estimate, se = qfit$se, coverage = as.integer(abs(qfit$estimate) <= qnorm(.975) * qfit$se),
@@ -79,8 +57,11 @@ for (n in c(250L, 500L)) for (b in seq_len(B)) {
     paired_width_difference = 2 * qnorm(.975) * (qfit$se - lfit$se)
   )
   validations[[index]] <- data.table(
-    N_trial = n, replicate = b, seed = d$seed, full_sample_sha256 = hash,
-    linear_estimate_error = esterr, linear_se_error = seerr
+    N_trial = n, replicate = b, seed = d$seed, full_sample_sha256 = checked$raw,
+    archived_raw_hash_match = checked$exact, portable_sha256 = checked$portable,
+    local_baseline_raw_hash_match = if (is.null(local)) NA else TRUE,
+    linear_estimate_error = fits$errors[["linear_estimate"]], linear_se_error = fits$errors[["linear_se"]],
+    quadratic_estimate_error = fits$errors[["quadratic_estimate"]], quadratic_se_error = fits$errors[["quadratic_se"]]
   )
   if (b %% 1000L == 0L) {
     cat('Completed nRCT=', n, ', repetitions=', b, '\n', sep = '')
@@ -115,7 +96,11 @@ protocol <- list(
   method = 'OLS Y on intercept, treatment, X1,...,X10, X1^2,...,X10^2 in trial records only; treatment coefficient, HC2 standard error, normal 95% Wald interval',
   comparison = 'Same outcome basis as the HCT and ECT nuisance regressions; retains original ANOVA and linear ANCOVA. Common quadratic main effects are correct for this DGP; it does not claim complete equality of all estimation/uncertainty procedures.',
   gap = 'RCT outcomes and estimates are invariant across the external-discrepancy grid; true trial causal gap is zero',
-  samples_hashed = nrow(v), all_hashes_match = TRUE, max_linear_estimate_error = max(v$linear_estimate_error),
+  samples_hashed = nrow(v), all_hashes_match = all(v$archived_raw_hash_match),
+  archived_raw_hash_matches = sum(v$archived_raw_hash_match), portable_hash_matches = nrow(v),
+  local_baseline_raw_hash_matches = if (is.null(local_pairs)) 0L else nrow(v),
+  max_quadratic_estimate_error = max(v$quadratic_estimate_error), max_quadratic_se_error = max(v$quadratic_se_error),
+  max_linear_estimate_error = max(v$linear_estimate_error),
   max_linear_se_error = max(v$linear_se_error), source_files = basename(source_files), source_sha256 = as.list(setNames(hashes, basename(source_files))),
   elapsed_seconds = as.numeric(difftime(Sys.time(), start, units = 'secs'))
 )
