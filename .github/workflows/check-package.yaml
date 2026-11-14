@@ -64,7 +64,10 @@ jobs:
           reproduce("tables")
           reproduce("figures")
           stopifnot(length(list.files("results/tables", pattern = "[.]csv$")) == 15L)
-          stopifnot(nrow(read.csv("results/figures/figure-index.csv")) == 20L)
+          figures <- read.csv("results/figures/figure-index.csv")
+          expected <- sprintf("Figure-%s%02d.pdf", rep(c("", "S"), c(11, 12)), c(1:11, 1:12))
+          stopifnot(!anyDuplicated(figures$pdf), setequal(basename(figures$pdf), expected),
+                    all(file.exists(file.path("results/figures", expected))))
           source("docs/examples/model-reductions.R")
       - name: Verify aggregate inputs and finite-law identities
         run: |
