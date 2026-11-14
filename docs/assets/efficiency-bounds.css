@@ -1,0 +1,52 @@
+.bound-skip { position: absolute; top: -6rem; padding: .5rem; background: white; }
+.bound-skip:focus { top: 0; }
+.bound-intro { margin: 2.3rem 0 1.5rem; }
+.bound-intro h1 { max-width: 23ch; }
+.bound-jumps { display: flex; gap: .4rem 1.4rem; flex-wrap: wrap; margin-top: 1rem; font: 600 .86rem/1.6 system-ui, sans-serif; }
+.bound-section { border-top: 1px solid var(--rule); margin-top: 2rem; padding-top: .2rem; }
+.bound-section > p { max-width: 82ch; }
+.bound-projection { display: grid; grid-template-columns: minmax(240px, .95fr) minmax(250px, 1fr); align-items: center; gap: 1.4rem; margin: 1.2rem 0; }
+.bound-projection img { width: 100%; height: auto; display: block; }
+.bound-projection figcaption { font: .94rem/1.5 system-ui, sans-serif; }
+.bound-projection figcaption p { margin: .5em 0; }
+.bound-section math { max-width: 100%; margin: .95rem 0; }
+.bound-source { color: var(--muted); font: .87rem/1.55 system-ui, sans-serif; }
+.bound-inputs { border: 1px solid var(--rule); border-radius: 5px; padding: .55rem 1rem 1rem; margin: .6rem 0 1.1rem; min-width: 0; background: #f2f6f3; }
+.bound-inputs legend { font: 650 1rem/1.5 system-ui, sans-serif; padding: 0 .45rem; }
+.bound-inputs label { font: 600 .88rem/1.4 system-ui, sans-serif; }
+.bound-inputs input, .bound-plan select {
+  display: block; width: 100%; margin-top: .3rem; border: 1px solid #9db2af;
+  background: #fff; color: var(--ink); border-radius: 3px; padding: .45em .55em; font: 1rem/1.4 system-ui, sans-serif;
+}
+.bound-presets { display: flex; flex-wrap: wrap; gap: .5rem; margin: .8rem 0; }
+.bound-presets button { background: white; color: var(--sea); border: 1px solid #81a49b; border-radius: 4px; font: 600 .84rem/1.4 system-ui, sans-serif; padding: .52em .8em; cursor: pointer; }
+.bound-presets button:hover { background: #e5f0e9; }
+.bound-section :is(input, select, button, summary):focus-visible { outline: 3px solid #985a25; outline-offset: 2px; }
+.bound-plan { max-width: 32rem; }
+.bound-plan-note { font: .89rem/1.45 system-ui, sans-serif; color: var(--muted); margin: .55rem 0 1rem; max-width: 80ch; }
+.bound-fields { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .7rem 1rem; }
+.bound-fields p { grid-column: span 2; align-self: end; margin: 0; color: var(--muted); font: .88rem/1.5 system-ui, sans-serif; }
+#bound-line svg { display: block; width: 100%; height: auto; }
+#bound-status { font: .94rem/1.55 system-ui, sans-serif; color: var(--ink); }
+#bound-results { overflow-x: auto; }
+#bound-results table { border-collapse: collapse; font: .88rem/1.4 system-ui, sans-serif; width: 100%; font-variant-numeric: tabular-nums; }
+#bound-results :is(th,td) { text-align: left; padding: .6em .55em; border-bottom: 1px solid var(--rule); }
+#bound-results thead { background: var(--wash); }
+#bound-results caption { text-align: left; font-weight: 650; margin: .65rem 0; }
+.bound-calculation { margin: 1.4rem 0 .75rem; border-block: 1px solid var(--rule); padding: .64rem 0; }
+.bound-calculation summary { width: fit-content; cursor: pointer; font-weight: bold; color: var(--sea); }
+.bound-calculation p { max-width: 82ch; }
+.bound-download { font: 600 .89rem/1.5 system-ui, sans-serif; }
+@media (max-width: 680px) {
+  .bound-projection { grid-template-columns: 1fr; gap: .8rem; }
+  .bound-projection img { max-width: 430px; }
+  .bound-fields { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .bound-fields p { grid-column: 1 / -1; }
+  .bound-jumps { display: grid; }
+}
+@media (max-width: 420px) {
+  .bound-inputs { padding: .5rem .6rem .75rem; }
+  .bound-fields { gap: .6rem; }
+  .bound-projection figcaption math { font-size: .87rem; }
+  .bound-presets { gap: .4rem; }
+}

@@ -61,6 +61,8 @@ h1:not(.title){font-size:25px;}pre{font-size:12px;}}
 
 A trial team has 300 external controls and plans to treat 120 children. How many children should it still randomize to concurrent control? The [trial design lab](design-lab.html) lets you compare enrollment plans before fitting a model. The [EIF lab](eif-lab.html) shows how a change in the control distribution affects the borrowing contrast. For a worked application after data collection, see the [glucose monitoring analysis](#examine-the-glucose-monitoring-analysis).
 
+Explore the [four model spaces and their efficiency bounds](efficiency-bounds.html) to see how a common control mean and the planned enrollment affect precision.
+
 Follow the [interactive trial timeline](trial-workflow.html) from protocol design and scientific advice through enrollment and analysis.
 
 <div class="navlinks"><a href="replication-source.zip" download>Download replication project (.zip)</a><a href="tables.zip" download>Download numerical tables (.zip)</a><a href="index.Rmd" download>Guide source (.Rmd)</a></div>

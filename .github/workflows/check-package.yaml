@@ -20,6 +20,7 @@ jobs:
           R CMD INSTALL --library="$RUNNER_TEMP/r-library" causalgap_*.tar.gz
           R_LIBS_USER="$RUNNER_TEMP/r-library" Rscript --vanilla docs/examples/hybrid-eif.R
           Rscript --vanilla docs/examples/fitted-estimators.R
+          Rscript --vanilla docs/examples/efficiency-bounds.R
       - name: Check the interactive calculations
         run: |
           node analysis/validation/check_interactive_labs.js

@@ -1,0 +1,114 @@
+.ms-anatomy {
+  --ms-sea: #17655e;
+  --ms-ink: #183b3c;
+  --ms-edge: #83a59d;
+  --ms-clay: #825026;
+  margin-block: 2.5rem;
+}
+.ms-anatomy .ms-intro { margin: .4rem 0 1.15rem; max-width: 78ch; }
+.ms-anatomy .ms-hybrid,
+.ms-anatomy .ms-design,
+.ms-anatomy .ms-inner {
+  min-width: 0;
+  border: 1px solid var(--ms-edge);
+  border-radius: 7px;
+  padding: clamp(.9rem, 2.1vw, 1.4rem);
+  background: #fff;
+}
+.ms-anatomy .ms-hybrid { border: 2px solid #6489aa; background: #f0f5fa; }
+.ms-anatomy .ms-hybrid > .ms-region-title .ms-symbol { color: #275d8a; }
+.ms-anatomy .ms-inner {
+  margin: .95rem 0 0 clamp(0rem, 2.6vw, 1.8rem);
+  background: #e2efea;
+  border: 1px solid #729c90;
+  border-left: 4px solid var(--ms-sea);
+}
+.ms-anatomy .ms-region-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .3rem .7rem;
+}
+.ms-anatomy .ms-region-title h3 { margin: 0; font-size: clamp(1.18rem, 2.2vw, 1.55rem); }
+.ms-anatomy .ms-symbol { color: var(--ms-sea); font: 1.02rem/1.3 Georgia, serif; white-space: nowrap; }
+.ms-anatomy .ms-design .ms-symbol { color: var(--ms-clay); }
+.ms-anatomy .ms-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .9rem;
+  padding: 0;
+  margin: .55rem 0;
+  list-style: none;
+  color: var(--ms-ink);
+  font: 650 .77rem/1.3 system-ui,sans-serif;
+}
+.ms-anatomy .ms-groups li { display: flex; align-items: center; gap: .33rem; margin: 0; }
+.ms-anatomy .ms-groups li::before {
+  content: "";
+  width: .42rem;
+  height: .42rem;
+  border-radius: 50%;
+  background: var(--ms-sea);
+}
+.ms-anatomy .ms-groups .trial-control::before { border-radius: 1px; background: #416d9a; }
+.ms-anatomy .ms-groups .external-control::before { border-radius: 1px; transform: rotate(45deg); background: #86639c; }
+.ms-anatomy .ms-hybrid p,
+.ms-anatomy .ms-design p {
+  margin: .55rem 0;
+  max-width: 78ch;
+  line-height: 1.47;
+}
+.ms-anatomy .ms-detail {
+  margin: .55rem 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.ms-anatomy .ms-detail summary {
+  width: fit-content;
+  max-width: 100%;
+  color: var(--ms-sea);
+  cursor: pointer;
+  padding: .32rem .15rem .32rem 0;
+  font: 650 .83rem/1.42 system-ui,sans-serif;
+}
+.ms-anatomy .ms-detail summary:hover { text-decoration: underline; text-underline-offset: .18em; }
+.ms-anatomy .ms-detail summary:focus-visible { outline: 3px solid #a96322; outline-offset: 3px; }
+.ms-anatomy .ms-detail[open] > summary { margin-bottom: .2rem; }
+.ms-anatomy .ms-content { border-top: 1px solid #a9c1b8; padding-top: .25rem; }
+.ms-anatomy .ms-content p { font-size: .95rem; }
+.ms-anatomy .ms-content .ms-math {
+  background: #fff;
+  border-left: 2px solid #8aaba0;
+  padding: .35rem .65rem;
+  margin: .6rem 0;
+  font: 1rem/1.6 Cambria,Georgia,serif;
+  overflow-wrap: anywhere;
+}
+.ms-anatomy .ms-math span { display: block; }
+.ms-anatomy .ms-forks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+.ms-anatomy .ms-fork { min-width: 0; }
+.ms-anatomy .ms-route {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  margin: 0;
+  min-height: 2.85rem;
+  color: var(--ms-clay);
+  font: 650 .83rem/1.35 system-ui,sans-serif;
+}
+.ms-anatomy .ms-route span { font: 1.55rem/1 Georgia,serif; }
+.ms-anatomy .ms-design { border: 1px solid #b2aaa0; border-top: 3px solid #a77a49; }
+.ms-anatomy .ms-fork:first-child .ms-design { border-color: #8d9ea7; border-top-color: #436071; }
+.ms-anatomy .ms-fork:first-child :is(.ms-route,.ms-symbol) { color: #435b6e; }
+@media(max-width: 760px) {
+  .ms-anatomy .ms-forks { grid-template-columns: 1fr; gap: 0; }
+  .ms-anatomy .ms-route { justify-content: start; padding-left: 1rem; }
+  .ms-anatomy .ms-inner { margin-left: 0; }
+}
+@media print {
+  .ms-anatomy .ms-route { min-height: 1.6rem; }
+  .ms-anatomy .ms-region-title { break-after: avoid; }
+}

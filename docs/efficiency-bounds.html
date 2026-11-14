@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Four trial models and their efficiency bounds | causalgap</title>
+  <meta name="description" content="Explore four trial observation laws, the geometry of the common-mean restriction, and how enrollment changes the ordering of efficiency bounds.">
+  <link rel="icon" href="assets/mark.svg">
+  <link rel="stylesheet" href="assets/guide.css">
+  <link rel="stylesheet" href="assets/efficiency-bounds.css">
+  <link rel="stylesheet" href="assets/model-spaces.css">
+  <script defer src="efficiency-bounds.js"></script>
+</head>
+<body>
+<a class="bound-skip" href="#main">Skip to comparison</a>
+<header><nav aria-label="Project"><a class="home" href="index.html">causalgap</a><a href="eif-models.html">Influence functions</a><a aria-current="page" href="efficiency-bounds.html">Efficiency bounds</a><a href="design-lab.html">Design lab</a><a href="index.html">Replication guide</a></nav></header>
+<main id="main">
+  <div class="bound-intro">
+    <h1>Can the four efficiency bounds be ordered?</h1>
+    <p class="lead">For the same trial effect, knowing that internal and external controls have the same conditional mean can improve precision. To compare a hybrid trial with a randomized or externally controlled trial, we also need to know who is enrolled and which contrast each design estimates.</p>
+    <div class="bound-jumps"><a href="#model-spaces">Explore the four model spaces</a><a href="#projection">See the projection</a><a href="#efficiency-bounds">Compare bounds on a number line</a></div>
+  </div>
+  <section id="model-spaces" class="ms-anatomy" aria-labelledby="ms-heading">
+  <h2 id="ms-heading">Four model spaces</h2>
+  <p class="ms-intro">Each region contains probability laws for one observation scheme. Let <i>X</i> denote baseline covariates, <i>S</i> trial membership, <i>A</i> treatment and <i>Y</i> the observed outcome. Inside the hybrid trial, the two control means can be set equal while keeping all three groups. Follow either branch to see what happens when a group is removed.</p>
+  <div class="ms-hybrid">
+    <div class="ms-region-title"><h3>Unrestricted hybrid-randomized controlled trial (HCT)</h3><span class="ms-symbol" aria-hidden="true">ℳ<sub>HCT,U</sub></span></div>
+    <ul class="ms-groups" aria-label="Observed groups"><li class="trial-treated">Treated</li><li class="trial-control">Internal control</li><li class="external-control">External control</li></ul>
+    <p>The three conditional outcome laws can vary independently. Both the randomized trial contrast and the precision-weighted hybrid contrast can be estimated.</p>
+    <details id="law-unrestricted" class="ms-detail"><summary>Hybrid trial likelihood and targets</summary><div class="ms-content">
+      <p>Write <i>g</i> = T, I or E for a treated, internal-control or external-control observation. Each group has conditional outcome density <i>f</i><sub>g</sub>(<i>y</i> | <i>x</i>), with mean <i>m</i><sub>g</sub>(<i>x</i>). Given covariates <i>x</i>, the known randomization probability is <i>e</i>(<i>x</i>) and the trial source probability is <i>p</i>(<i>x</i>).</p>
+      <p class="ms-math" aria-label="Hybrid trial model and group probabilities"><span>ℳ<sub>HCT,U</sub> = {<i>P</i> : <i>f</i><sub>P</sub>(<i>x</i>, <i>g</i>, <i>y</i>) = <i>f</i><sub>X</sub>(<i>x</i>) π<sub>g</sub>(<i>x</i>) <i>f</i><sub>g</sub>(<i>y</i> | <i>x</i>)},</span><span>(π<sub>T</sub>, π<sub>I</sub>, π<sub>E</sub>) = (<i>pe</i>, <i>p</i>(1 − <i>e</i>), 1 − <i>p</i>).</span></p>
+      <p>The covariate density, source probability and three outcome laws vary subject to the support and moment conditions. The T, I and E indices correspond to 1, (1,0) and 0 in the paper. Here 0 &lt; <i>q</i> = Pr(<i>S</i> = 1) &lt; 1, and 0 &lt; <i>e</i>(<i>x</i>) &lt; 1 on trial support. Write E<sub>R</sub> for expectation over the trial covariate density <i>f</i><sub>R</sub> = <i>pf</i><sub>X</sub>/<i>q</i>.</p>
+      <p class="ms-math"><span>θ = E<sub>R</sub>[<i>m</i><sub>T</sub> − <i>m</i><sub>I</sub>],</span><span>θ̃<sub>λ</sub> = E<sub>R</sub>[<i>m</i><sub>T</sub> − λ<i>m</i><sub>I</sub> − (1 − λ)<i>m</i><sub>E</sub>].</span></p>
+      <p>The precision rule sets the internal-control share λ from the law and sets λ = 1 where external controls are absent.</p>
+    </div></details>
+    <div class="ms-inner" role="group" aria-label="Nested model within the unrestricted hybrid trial">
+      <div class="ms-region-title"><h3>Common-mean hybrid trial</h3><span class="ms-symbol" aria-hidden="true">ℳ<sub>HCT,trans</sub> ⊂ ℳ<sub>HCT,U</sub></span></div>
+      <p>The same three groups remain. At each shared covariate profile, the internal and external controls have the same mean. Their variances and higher moments can differ.</p>
+      <details id="law-common" class="ms-detail"><summary>Common-mean restriction and target</summary><div class="ms-content">
+        <p class="ms-math"><span>ℳ<sub>HCT,trans</sub> = {<i>P</i> ∈ ℳ<sub>HCT,U</sub> : <i>m</i><sub>I</sub>(<i>x</i>) = <i>m</i><sub>E</sub>(<i>x</i>)</span><span>for <i>P</i><sub>X</sub>-almost every <i>x</i> with 0 &lt; <i>p</i>(<i>x</i>) &lt; 1}.</span></p>
+        <p>This is the observed control-mean restriction under (A4). The hybrid target equals θ throughout this submodel. Equality of the two targets at one law can also arise when positive and negative discrepancies cancel across strata.</p>
+      </div></details>
+    </div>
+  </div>
+  <div class="ms-forks">
+    <div class="ms-fork"><p class="ms-route"><span aria-hidden="true">↓</span> Remove external controls</p>
+      <div class="ms-design">
+        <div class="ms-region-title"><h3>Randomized controlled trial (RCT)</h3><span class="ms-symbol" aria-hidden="true">ℳ<sub>RCT</sub></span></div>
+        <ul class="ms-groups" aria-label="Observed groups"><li class="trial-treated">Treated</li><li class="trial-control">Internal control</li></ul>
+        <p>Only trial participants remain. Their randomized contrast identifies the trial effect under the trial identification assumptions.</p>
+        <details id="law-rct" class="ms-detail"><summary>RCT likelihood and target</summary><div class="ms-content">
+          <p>Observe (<i>X</i>, <i>A</i>, <i>Y</i>) with <i>S</i> = <i>q</i> = 1. The joint density of the covariates, observed group and outcome has the form</p>
+          <p class="ms-math"><span>ℳ<sub>RCT</sub> = {<i>P</i><sub>R</sub> : <i>f</i><sub>P<sub>R</sub></sub>(<i>x</i>, <i>g</i>, <i>y</i>)</span><span>= <i>f</i><sub>R</sub>(<i>x</i>) π<sub>g</sub>(<i>x</i>) <i>f</i><sub>g</sub>(<i>y</i> | <i>x</i>)},</span><span>(π<sub>T</sub>, π<sub>I</sub>) = (<i>e</i>, 1 − <i>e</i>).</span></p>
+          <p>The trial covariate density and both outcome laws vary with fixed allocation <i>e</i>(<i>x</i>). The target is θ = E<sub>R</sub>[<i>m</i><sub>T</sub> − <i>m</i><sub>I</sub>]. Conditioning the hybrid law on <i>S</i> = 1 gives this experiment with a first-order variance bound of <i>B</i><sub>R</sub>/<i>n</i><sub>RCT</sub> for the retained participants.</p>
+        </div></details>
+      </div>
+    </div>
+    <div class="ms-fork"><p class="ms-route"><span aria-hidden="true">↓</span> Remove internal controls</p>
+      <div class="ms-design">
+        <div class="ms-region-title"><h3>Externally controlled single-arm trial (ECT)</h3><span class="ms-symbol" aria-hidden="true">ℳ<sub>ECT</sub></span></div>
+        <ul class="ms-groups" aria-label="Observed groups"><li class="trial-treated">Treated</li><li class="external-control">External control</li></ul>
+        <p>The treated trial population supplies the covariates for an external comparison. A causal interpretation requires its counterfactual control mean to agree with the external control mean at those covariates.</p>
+        <details id="law-ect" class="ms-detail"><summary>ECT likelihood, target and retained law</summary><div class="ms-content">
+          <p>Observe (<i>X</i>, <i>S</i>, <i>Y</i>) with <i>A</i> = <i>S</i>. Write <i>f</i><sub>g,E</sub> and <i>m</i><sub>g,E</sub> for the conditional outcome density and mean in group <i>g</i> under the ECT law.</p>
+          <p class="ms-math"><span>ℳ<sub>ECT</sub> = {<i>P</i><sub>E</sub> : <i>f</i><sub>P<sub>E</sub></sub>(<i>x</i>, <i>g</i>, <i>y</i>)</span><span>= <i>f</i><sub>X,E</sub>(<i>x</i>) π<sub>g</sub>(<i>x</i>) <i>f</i><sub>g,E</sub>(<i>y</i> | <i>x</i>)},</span><span>(π<sub>T</sub>, π<sub>E</sub>) = (<i>p</i><sub>E</sub>, 1 − <i>p</i><sub>E</sub>).</span></p>
+          <p>The covariate density, source probability and two outcome laws vary, with 0 &lt; <i>q</i><sub>E</sub> &lt; 1 and external support at all trial profiles. In the paper’s notation the observed target is θ̃<sub>E</sub> = E<sub>E</sub>[<i>m</i><sub>1,E</sub>(<i>X</i>) − <i>m</i><sub>0,E</sub>(<i>X</i>) | <i>S</i> = 1]. It compares the treated and external outcome means over the ECT trial covariate distribution.</p>
+          <p>Deleting internal-control records from an HCT changes the source probability, trial fraction and retained-trial covariate density. With ē = E<sub>R</sub>[<i>e</i>(<i>X</i>)], they become</p>
+          <p class="ms-math"><span><i>p</i><sub>E</sub> = <i>pe</i> / (1 − <i>p</i> + <i>pe</i>),</span><span><i>q</i><sub>E</sub> = <i>q</i>ē / (1 − <i>q</i> + <i>q</i>ē),</span><span><i>f</i><sub>R,E</sub> = <i>ef</i><sub>R</sub> / ē.</span></p>
+          <p>Constant randomization preserves the trial covariate mix. With covariate-dependent allocation, profiles more likely to receive treatment receive more weight among the retained trial patients.</p>
+        </div></details>
+      </div>
+    </div>
+  </div>
+</section>
+  <section id="projection" class="bound-section" aria-labelledby="projection-title">
+    <h2 id="projection-title">Why one bound can only decrease</h2>
+    <p>Keep every hybrid-trial record and consider the same trial causal effect, θ, at a law where the two control means agree at each shared covariate value. An unrestricted perturbation can move either mean separately. In the common-mean model, the two means must move together.</p>
+    <figure class="bound-projection">
+      <img src="assets/efficiency-projection.svg" alt="The common-mean efficient influence function is the orthogonal projection of the unrestricted causal-effect influence function. Both start at the same origin.">
+      <figcaption>
+        <strong>The squared length of each arrow is its efficiency bound.</strong>
+        <p>The blue arrow is the trial-only efficient influence function (EIF), evaluated under the full hybrid sampling law. Projecting it onto the directions allowed by the common-mean restriction gives the green arrow. The squared length of the dashed segment is the reduction in the bound.</p>
+        <math display="block" aria-label="B trial minus B common equals the expected squared difference between the two influence functions, which is nonnegative"><msub><mi>B</mi><mtext>trial</mtext></msub><mo>−</mo><msub><mi>B</mi><mtext>common</mtext></msub><mo>=</mo><msub><mi>𝔼</mi><mi>P</mi></msub><mo>[</mo><msup><mrow><mo>(</mo><msub><mi>ϕ</mi><mtext>RCT</mtext></msub><mo>−</mo><msub><mi>ϕ</mi><mtext>common</mtext></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>]</mo><mo>≥</mo><mn>0</mn></math>
+      </figcaption>
+    </figure>
+    <details class="bound-calculation projection-formula">
+      <summary>Read the projection in the paper’s notation</summary>
+      <p>At a common-mean law <i>P</i>, write <i>U</i> for the unrestricted hybrid model and “trans” for its common-mean submodel. Their tangent spaces contain the allowable score directions. The diagram is a schematic view of the plane spanned by the two EIFs.</p>
+      <math display="block" aria-label="The common-mean tangent space is contained in the unrestricted tangent space"><msub><mi>𝒯</mi><mtext>HCT,trans</mtext></msub><mo>(</mo><mi>P</mi><mo>)</mo><mo>⊆</mo><msub><mi>𝒯</mi><mtext>HCT,U</mtext></msub><mo>(</mo><mi>P</mi><mo>)</mo><mtext>,</mtext></math>
+      <math display="block" aria-label="The common-mean efficient influence function equals the orthogonal projection of the unrestricted trial causal-effect influence function"><msubsup><mi>ϕ</mi><mtext>HCT,trans</mtext><mtext>eff</mtext></msubsup><mo>=</mo><msub><mi>Π</mi><mrow><msub><mi>𝒯</mi><mtext>HCT,trans</mtext></msub><mo>(</mo><mi>P</mi><mo>)</mo></mrow></msub><msubsup><mi>ϕ</mi><mtext>RCT</mtext><mtext>eff</mtext></msubsup><mtext>.</mtext></math>
+      <p>For the default cohort below, the same 300 hybrid records give a causal-effect variance bound of 0.030 if the control means can vary independently and 0.015 if their equality is imposed. The assumption halves the variance bound for this example.</p>
+    </details>
+    <p><strong>Why do the two hybrid markers below tie when the means agree?</strong> The unrestricted hybrid marker follows the paper’s precision-weighted contrast. At a common-mean law its EIF equals the green arrow. The unrestricted EIF for the trial causal effect still follows the blue arrow. The two targets agree in value there, but moving the external mean alone changes only the borrowing target.</p>
+    <p class="bound-source">The same-law projection is developed in Supplementary Section S2.5. For efficiency gains from external controls under conditional mean exchangeability, see <a href="https://doi.org/10.1111/biom.13583">Li, Miao, Lu and Zhou, <i>Biometrics</i></a>.</p>
+  </section>
+  <section id="efficiency-bounds" class="bound-section" aria-labelledby="bounds-title">
+    <h2 id="bounds-title">Put the four bounds on one number line</h2>
+    <p>Each marker shows <i>B</i>/<i>N</i>, the first-order variance bound for one study of its displayed size. Moving left means a smaller variance for that row’s target. The example uses a single covariate profile and Gaussian outcomes with unknown group means and variances.</p>
+    <div class="bound-presets" aria-label="Worked examples" role="group">
+      <button type="button" data-bound-example="retain">Original cohorts</button>
+      <button type="button" data-bound-example="equal-total">Same size, noisier external controls</button>
+      <button type="button" data-bound-example="unequal-means">Unequal control means</button>
+    </div>
+    <fieldset class="bound-inputs">
+      <legend>Enrollment and outcomes</legend>
+      <div class="bound-plan"><label for="bound-plan">Comparison plan</label>
+      <select id="bound-plan" name="plan"><option value="retain">Retain each design’s observed groups</option><option value="equal-total">Recruit the same total in each design</option></select></div>
+      <p class="bound-plan-note">Both plans keep the treated count. Retaining groups drops external controls for the RCT and internal controls for the ECT. At equal total enrollment each comparator recruits its entire control group from one source.</p>
+      <div class="bound-fields">
+        <label>Trial treated <i>n</i><sub>T</sub><input type="number" name="nT" min="1" step="1" value="100" required></label>
+        <label>Internal controls <i>n</i><sub>I</sub><input type="number" name="nI" min="1" step="1" value="50" required></label>
+        <label>External controls <i>n</i><sub>E</sub><input type="number" name="nE" min="1" step="1" value="150" required></label>
+        <label>Treated variance <i>v</i><sub>T</sub><input type="number" name="vT" step="any" value="1" required></label>
+        <label>Internal variance <i>v</i><sub>I</sub><input type="number" name="vI" step="any" value="1" required></label>
+        <label>External variance <i>v</i><sub>E</sub><input type="number" name="vE" step="any" value="1" required></label>
+        <label>Control mean difference δ<input type="number" name="delta" step="any" value="0" required></label>
+        <p>δ is the internal minus external control mean. The treated mean is 1 and the internal control mean is 0, so the trial causal effect is 1 throughout.</p>
+      </div>
+    </fieldset>
+    <div id="bound-line"></div>
+    <p id="bound-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    <div id="bound-results"></div>
+    <noscript><p>With 100 treated, 50 internal controls, 150 external controls, unit variances, equal means and retained groups, both hybrid bounds are 0.0150. The ECT bound is 0.0167 and the RCT bound is 0.0300. At equal total enrollment all four are 0.0150. The R example below reproduces both comparisons.</p></noscript>
+    <details class="bound-calculation">
+      <summary>How the markers are calculated</summary>
+      <p>The study sizes correspond to expected group counts under independent sampling from each design’s mixture law. Trial randomization is known. In the hybrid trial the controls supply information <i>J</i><sub>I</sub> = <i>n</i><sub>I</sub>/<i>v</i><sub>I</sub> and <i>J</i><sub>E</sub> = <i>n</i><sub>E</sub>/<i>v</i><sub>E</sub>. The internal precision share is λ = <i>J</i><sub>I</sub>/(<i>J</i><sub>I</sub> + <i>J</i><sub>E</sub>).</p>
+      <p>At equal means, both hybrid bounds are <i>v</i><sub>T</sub>/<i>n</i><sub>T</sub> + 1/(<i>J</i><sub>I</sub> + <i>J</i><sub>E</sub>). Each comparator uses the same treated contribution plus its control variance divided by the number of controls it enrolls. With retained groups, combining the two positive control information terms gives a smaller bound than either alone. With equal total enrollment, recruiting all controls from the less variable source can give the smallest bound.</p>
+      <p>When δ differs from zero, the unrestricted hybrid contrast is 1 + (1 − λ)δ. Write <i>c</i> = δλ(1 − λ). At the Gaussian law the additional variance from estimating the share is</p>
+      <math display="block" aria-label="c squared times the sum of one divided by the sum of n T and n I, one over n E, two over n I, and two over n E"><msup><mi>c</mi><mn>2</mn></msup><mo>(</mo><mfrac><mn>1</mn><mrow><msub><mi>n</mi><mi>T</mi></msub><mo>+</mo><msub><mi>n</mi><mi>I</mi></msub></mrow></mfrac><mo>+</mo><mfrac><mn>1</mn><msub><mi>n</mi><mi>E</mi></msub></mfrac><mo>+</mo><mfrac><mn>2</mn><msub><mi>n</mi><mi>I</mi></msub></mfrac><mo>+</mo><mfrac><mn>2</mn><msub><mi>n</mi><mi>E</mi></msub></mfrac><mo>)</mo><mtext>.</mtext></math>
+      <p>The first two terms come from source membership and the last two from the control variances. The external contrast is 1 + δ. A causal interpretation of the ECT contrast requires the trial’s unobserved mean under control to equal the external mean at the same covariates. An ECT alone cannot check that assumption.</p>
+    </details>
+    <a class="bound-download" href="examples/efficiency-bounds.R" download>Reproduce the number line in base R</a>
+  </section>
+</main>
+<footer><a href="eif-models.html">Return to the model map and influence functions</a></footer>
+</body>
+</html>

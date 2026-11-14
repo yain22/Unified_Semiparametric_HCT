@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 250" role="img" aria-labelledby="title desc">
+  <title id="title">Projection onto the common-mean tangent space</title>
+  <desc id="desc">Two efficient influence functions for the same trial causal effect start at the origin. The unrestricted vector points diagonally upward. Its perpendicular projection is a shorter, horizontal vector in the common-mean tangent space. The dashed segment represents their orthogonal difference.</desc>
+  <defs>
+    <marker id="tip-u" viewBox="0 0 10 10" markerWidth="4" markerHeight="4" refX="9" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#276290"/></marker>
+    <marker id="tip-c" viewBox="0 0 10 10" markerWidth="4" markerHeight="4" refX="9" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#076b60"/></marker>
+  </defs>
+  <rect width="430" height="250" rx="8" fill="#f6f9fa"/>
+  <path d="M22 186H410" stroke="#8bb9ae" stroke-width="2"/>
+  <path d="M298 48V186" fill="none" stroke="#8c6546" stroke-width="2.5" stroke-dasharray="5 5"/>
+  <path d="M286 186V174H298" fill="none" stroke="#8c6546" stroke-width="1.8"/>
+  <path d="M50 186 298 48" fill="none" stroke="#276290" stroke-width="4" marker-end="url(#tip-u)"/>
+  <path d="M50 186H298" fill="none" stroke="#076b60" stroke-width="4" marker-end="url(#tip-c)"/>
+  <circle cx="50" cy="186" r="4.5" fill="#20363b"/>
+  <g font-family="Arial, sans-serif" font-size="14">
+    <text x="298" y="30" text-anchor="middle" fill="#245d89" font-weight="bold">Unrestricted causal EIF</text>
+    <text x="165" y="174" text-anchor="middle" fill="#076b60" font-weight="bold">Common-mean EIF</text>
+    <text x="312" y="111" fill="#684b33">Orthogonal</text>
+    <text x="312" y="130" fill="#684b33">difference</text>
+    <text x="50" y="207" text-anchor="middle" fill="#35474a">0</text>
+    <text x="241" y="226" text-anchor="middle" fill="#385a58">Common-mean tangent space</text>
+  </g>
+</svg>
