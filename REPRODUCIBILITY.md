@@ -23,4 +23,14 @@ Additional checks can be run from the project terminal:
 | `Rscript analysis/clinical/check_results.R` | Check the supplied CGM estimates, intervals and group counts. Add `--local-refits results/cgm` only after completing all three participant bootstrap analyses with authorized data. |
 | `Rscript docs/examples/model-reductions.R` | Compare the target and variance bound under four small finite laws, exactly. |
 
-To repeat the paper's simulation estimation, use `reproduce("refit", workers = 4)`. To recreate its numerical displays from the archived outputs, use `reproduce("tables")` and `reproduce("figures")`. Original vector artwork and typeset equations are retained under `assets/` for comparison. R draws the figures anew; fonts and line breaks may differ by graphics device.
+To repeat the paper's simulation estimation, use `reproduce("refit", workers = 4)`. To recreate its displays from the archived outputs, use `reproduce("tables")` and `reproduce("figures")`. The figure command copies the finished vector PDFs for Figures 1, 5, S1, and S4 so their labels, arrows, and mathematical notation match the manuscript on every platform. It draws the remaining figures in R. The [exhibit map](analysis/paper-map.csv) identifies the source for each display.
+
+To edit the four vector figures, install Arial and run the following commands from the project root. Figures 1 and S1 use XeLaTeX with TikZ. Figures 5 and S4 use Python with Matplotlib and NumPy. The first R command supplies the Gaussian interval endpoints and sample-size multipliers for Figure S4.
+
+```sh
+Rscript analysis/planning/run_planning.R --output-dir results/planning
+xelatex -output-directory=results assets/designs/trial-designs.tex
+xelatex -output-directory=results assets/main/hct_observed_data.tex
+python assets/main/observed_model_relationships.py --output-dir results
+python assets/supplement/v2/figures/scalar_gap_precision_scaling.py results/planning/tables/precision_scaling.csv --output-dir results
+```

@@ -70,13 +70,14 @@ planning_tables <- function() {
   # Older planning archives use "table1" in these two producer filenames.
   a <- get("table1_panel_a.csv")
   b <- get("table1_panel_b.csv")
-  design <- c("ANOVA (RCT)", "ANCOVA (RCT)", "AIPW-U (HCT)", "AIPW (ECT)")
-  shown <- c(design[1:2], "HCT", "ECT")
+  design <- c("AIPW-U (HCT)", "AIPW (ECT)", "ANOVA (RCT)", "ANCOVA (RCT)")
+  shown <- c("HCT", "ECT", "ANOVA (RCT)", "ANCOVA (RCT)")
   a <- a[order(match(a$scenario, c("I", "II", "III")), match(a$method, design)), ]
   a$method <- shown[match(a$method, design)]
   save_table(a[, c("scenario", "sigma", "method", "n_treated", "n_internal",
                    "n_external", "power", "type_I")], "table-3a", 12)
-  b <- subset(b, method %in% design[3:4])
+  b <- subset(b, method %in% design[1:2])
+  b <- b[order(match(b$scenario, c("I", "II", "III")), match(b$method, design)), ]
   b$method <- shown[match(b$method, design)]
   save_table(b, "table-3b", 6)
   endpoints <- get("common_discrepancy_endpoints.csv")
@@ -86,7 +87,7 @@ planning_tables <- function() {
 }
 planning_tables()
 
-# Tables 4 and S10b. Published intervals use the bootstrap SD and a normal
+# Tables S13 and S12b. Published intervals use the bootstrap SD and a normal
 # critical value. The archived SD of the matched gap includes its covariance.
 clinical <- function(cohort) {
   fits <- clinical_table(cohort, "full_results.csv")
@@ -99,14 +100,14 @@ clinical <- function(cohort) {
                 estimates["matching_gap"]) < 1e-10)
   fits[, c("method", "estimate", "lower", "upper")]
 }
-keys <- c("ANOVA (RCT)", "ANCOVA (RCT)", "AIPW-R", "AIPW-U (est)", "AIPW (ECT)",
-          "trial_augmented", "matching_gap")
+keys <- c("AIPW-U (est)", "AIPW-R", "matching_gap", "AIPW (ECT)",
+          "ANOVA (RCT)", "ANCOVA (RCT)", "trial_augmented")
 main_clinical <- clinical("primary")
 main_clinical <- main_clinical[match(keys, main_clinical$method), ]
-main_clinical$method <- c("ANOVA", "ANCOVA", "AIPW-R", "AIPW-U", "AIPW",
-                          "Matched augmented score", "Matched gap score")
-main_clinical$design <- c("RCT", "RCT", "HCT", "HCT", "ECT", "Trial", "HCT")
-save_table(main_clinical[, c("design", "method", "estimate", "lower", "upper")], "table-4", 7)
+main_clinical$method <- c("AIPW-U", "AIPW-R", "Matched gap score", "AIPW",
+                          "ANOVA", "ANCOVA", "Matched augmented score")
+main_clinical$design <- c("HCT", "HCT", "HCT", "ECT", "RCT", "RCT", "Trial")
+save_table(main_clinical[, c("design", "method", "estimate", "lower", "upper")], "table-s13", 7)
 
 # Table S4. Fixed illustrative means, treated 23, internal control 18,
 # external control 16.5. These numbers describe an example, not study records.
@@ -178,11 +179,11 @@ sel <- clinical_table("subsequent", "registry_selection_baseline.csv", shared = 
 diffs <- clinical_table("subsequent", "registry_selection_differences.csv", shared = TRUE)
 sel$standardized_difference <- diffs$standardized_difference[match(sel$variable, diffs$variable)]
 save_table(sel[, c("variable", "group", "n_total", "n_observed", "mean", "sd", "count",
-                   "percentage", "standardized_difference")], "table-s10a", 10)
+                   "percentage", "standardized_difference")], "table-s12a", 10)
 
 variants <- lapply(c("primary", "subsequent", "near-index"), function(branch) {
   fit <- clinical(branch)
-  fit <- fit[match(c("AIPW-U (est)", "AIPW (ECT)", "matching_gap"), fit$method), ]
+  fit <- fit[match(c("AIPW-U (est)", "matching_gap", "AIPW (ECT)"), fit$method), ]
   group_sizes <- clinical_table(branch, "source_probabilities.csv")
   fit$n_external <- group_sizes$n[group_sizes$quantity == "external"]
   fit$cohort <- branch
@@ -190,17 +191,17 @@ variants <- lapply(c("primary", "subsequent", "near-index"), function(branch) {
 })
 t10b <- do.call(rbind, variants)
 save_table(t10b[, c("cohort", "n_external", "method", "estimate", "lower", "upper")],
-           "table-s10b", 9)
+           "table-s12b", 9)
 
 chars <- clinical_table("primary", "baseline_summary.csv", shared = TRUE)
 save_table(chars[, c("variable", "label", "n_total", "n_observed", "mean", "sd",
-                     "count", "percentage")], "table-s11", 15)
+                     "count", "percentage")], "table-s10", 15)
 overlap <- clinical_table("primary", "source_probabilities.csv")
-save_table(overlap, "table-s12a", 5)
+save_table(overlap, "table-s11a", 5)
 weights <- clinical_table("primary", "external_weights.csv")
 weights$largest_pct <- 100 * weights$max_share
 weights$top_tenth_pct <- 100 * weights$top_tenth_share
 save_table(weights[, c("quantity", "median", "p95", "max", "effective", "largest_pct",
-                       "top_tenth_pct")], "table-s12b", 3)
-message("Wrote numerical Tables 2-4 and S4-S12.")
+                       "top_tenth_pct")], "table-s11b", 3)
+message("Wrote numerical Tables 2-3 and S4-S13.")
 

@@ -28,13 +28,13 @@ This recreates 15 CSVs using base R and bundled inputs. Table 3 is calculated fr
 
 | To reproduce | In the same R session | Where to look |
 |:--|:--|:--|
-| Tables 2–4 and S4–S12 | `reproduce("tables")` | `results/tables/` |
+| Tables 2–3 and S4–S13 | `reproduce("tables")` | `results/tables/` |
 | Figures 1–11 and S1–S12 | `reproduce("figures")` | `results/figures/` |
 | A short estimator check on synthetic data | `reproduce("validate")` | `results/validate/` |
 
 Figures require R with Cairo graphics and two packages: `install.packages(c("jsonlite", "digest"))`. The estimator check and simulation refits also need `data.table`.
 
-[Find an individual figure or table](analysis/paper-map.csv). Table 1 displays the EIF; Tables S1–S3 define notation and data structures. Table 4 and Tables S10–S12 describe the CGM analysis.
+[Find an individual figure or table](analysis/paper-map.csv). Table 1 displays the EIF; Tables S1–S3 define notation and data structures. Tables S10–S13 describe the CGM analysis. Table S13 reports the five treatment contrasts, the matched trial score, and the estimated gap in Section 7.2.
 
 ## Use the estimator
 

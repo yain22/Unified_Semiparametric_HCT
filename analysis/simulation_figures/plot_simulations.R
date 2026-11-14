@@ -23,8 +23,6 @@ plot_options <- function(args, defaults) {
 
 methods <- c("U", "AIPW (ECT)", "ANOVA (RCT)", "ANCOVA (RCT)")
 method_labels <- c("AIPW-U (HCT)", "AIPW (ECT)", "ANOVA (RCT)", "Linear ANCOVA (RCT)")
-colors <- c("#2166AC", "#D95F02", "#333333", "#7B4F9D")
-line_types <- c("solid", "dotdash", "dotted", "5232")
 metrics <- c("coverage_theta", "bias_theta", "mse_theta", "width")
 modes <- c("Oracle nuisance", "Estimated nuisance")
 scenarios <- c("fewer_external", "source_shift", "stronger_heteroskedasticity",
@@ -61,34 +59,39 @@ validate_curves <- function(d, row_field, row_values) {
 
 draw_simulation <- function(d, row_field, row_values, file) {
   compare_nuisances <- row_field == "mode"
-  if (compare_nuisances) {
-    grDevices::cairo_pdf(file, width = 7.25, height = 3.00, family = "sans", pointsize = 9)
-  } else {
-    grDevices::cairo_pdf(file, width = 6.75, height = 4.1, family = "sans")
+  width <- 7.25
+  height <- 3
+  if (!compare_nuisances) {
+    # Give each enrollment-by-metric panel a square plotting area in inches.
+    left <- c(.30, .36, .29, .27)
+    right <- .07
+    bottom <- c(.08, .23)
+    top <- .24
+    key_height <- .51
+    side <- (width - sum(left + right)) / length(metrics)
+    row_heights <- bottom + side + top
+    height <- ceiling(72 * (sum(row_heights) + key_height)) / 72
   }
+  grDevices::cairo_pdf(file, width = width, height = height, family = "sans", pointsize = 9)
   on.exit(grDevices::dev.off())
 
+  palette <- c("#176CB0", "#C75A18", "#50575D", "#7952A0")
+  patterns <- rep("solid", 4)
+  shapes <- c(16, 1, 0, 17)
+  curve_width <- 1.25
+  grid_color <- "#E3E7EA"
+  axis_color <- "#647078"
   if (compare_nuisances) {
     # Share the gap title across the four columns and put row labels in the
     # outer margin so every panel has the same plotting area.
     layout(rbind(1:4, 5:8, rep(9, 4)), heights = c(1, 1.12, .32))
     par(oma = c(.05, .96, .1, .22), mgp = c(1.55, .37, 0), tcl = -.18,
         xaxs = "i", yaxs = "i", ps = 9, cex = 1)
-    palette <- c("#176CB0", "#C75A18", "#50575D", "#7952A0")
-    patterns <- c("solid", "52", "13", "5313")
-    shapes <- c(16, 17, 0, 5)
-    curve_width <- 1.25
-    grid_color <- "#E3E7EA"
-    axis_color <- "#647078"
   } else {
-    layout(rbind(1:4, 5:8, rep(9, 4)), heights = c(1, 1.13, .19))
-    par(oma = c(.25, 1.7, .8, .1), mgp = c(1.75, .4, 0), tcl = -.18,
-        xaxs = "i", yaxs = "i", ps = 9, cex = 1)
-    palette <- colors
-    patterns <- line_types
-    curve_width <- 1
-    grid_color <- "#E6E6E6"
-    axis_color <- "black"
+    layout(rbind(1:4, 5:8, rep(9, 4)), widths = left + side + right,
+           heights = c(row_heights, key_height))
+    par(omi = c(0, 0, 0, 0), mgp = c(1.65, .36, 0), tcl = -.18,
+        xaxs = "i", yaxs = "i", ps = 10, cex = 1)
   }
 
   # Each column shares its vertical scale over the two rows.
@@ -110,7 +113,7 @@ draw_simulation <- function(d, row_field, row_values, file) {
       if (compare_nuisances) {
         par(mar = c(if (i == 2L) 1.42 else .32, 2.21, 1.36, .27))
       } else {
-        par(mar = c(if (i == 2L) 2.55 else .85, 2.45, 1.35, .4))
+        par(mai = c(bottom[i], left[j], top, right), pty = "s")
       }
       plot.new()
       plot.window(c(-.31, .31), limit)
@@ -122,13 +125,14 @@ draw_simulation <- function(d, row_field, row_values, file) {
         series <- row[row$method == methods[k], ]
         series <- series[order(series$xi), ]
         lines(series$xi, series[[metric]], col = palette[k], lty = patterns[k], lwd = curve_width)
-        if (compare_nuisances) {
-          # Interleave a few symbols on real grid points so coincident curves
-          # can be identified at their original coordinates.
-          marked <- seq.int(1L + 2L * k, nrow(series), by = 9L)
-          points(series$xi[marked], series[[metric]][marked], pch = shapes[k],
-                 cex = .55, lwd = .8, col = palette[k])
-        }
+      }
+      # Draw symbols on distinct observed grid points after all four lines.
+      for (k in seq_along(methods)) {
+        series <- row[row$method == methods[k], ]
+        series <- series[order(series$xi), ]
+        marked <- seq.int(2L * k, nrow(series), by = 8L)
+        points(series$xi[marked], series[[metric]][marked], pch = shapes[k],
+               cex = .60, lwd = .75, col = palette[k])
       }
       panel <- paste0("(", letters[(i - 1L) * 4L + j], ")")
       if (compare_nuisances) {
@@ -142,31 +146,29 @@ draw_simulation <- function(d, row_field, row_values, file) {
         mtext(paste(panel, title), side = 3, line = .32, adj = 0, cex = 1, font = 2)
         if (j == 1L) mtext(row_values[i], side = 2, line = 2.27, cex = .85)
       } else {
-        axis(1, at = xticks, labels = if (i == 2L) c("-.30", "", "0", "", ".30") else FALSE,
-             cex.axis = .79, lwd = .55)
-        axis(2, at = ticks, las = 1, cex.axis = .72, lwd = .55)
-        box(lwd = .6)
-        heading <- switch(metric, coverage_theta = bquote(bold(.(panel)~"Cov."~"("*theta*")")),
-                          bias_theta = bquote(bold(.(panel)~"Bias"~"("*theta*")")),
-                          mse_theta = bquote(bold(.(panel)~"MSE"~"("*theta*")")),
-                          width = bquote(bold(.(panel)~"Width")))
-        mtext(heading, side = 3, line = .28, adj = 0, cex = .88)
-        if (i == 2L) mtext(expression("Causal gap"~xi[lambda*","*delta]), 1, line = 1.4, cex = .83)
-        if (j == 1L) mtext(bquote(n[RCT] == .(row_values[i])), side = 2, line = 2.45, cex = .79)
+        axis(1, at = xticks, labels = if (i == 2L) c("-0.3", "", "0", "", "0.3") else FALSE,
+             cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
+        axis(2, at = ticks, labels = format(ticks, trim = TRUE, drop0trailing = TRUE),
+             las = 1, cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
+        box(lwd = .7, col = axis_color)
+        title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
+        mtext(paste(panel, title), side = 3, line = .33, adj = 0, cex = .94, font = 2)
       }
     }
   }
-  par(mar = c(0, 0, 0, 0))
+  par(mar = c(0, 0, 0, 0), pty = "m")
   plot.new()
+  plot.window(c(0, 1), c(0, 1))
   if (compare_nuisances) {
-    plot.window(c(0, 1), c(0, 1))
     text(.5, .83, expression("Causal gap"~xi[lambda*","*delta]), cex = .98)
     legend(.5, .24, legend = method_labels, col = palette, lty = patterns, pch = shapes,
            lwd = curve_width, pt.cex = .58, pt.lwd = .75, horiz = TRUE, bty = "n",
            cex = .9, xjust = .5, yjust = .5, x.intersp = .55, seg.len = 2.6)
   } else {
-    legend("center", legend = method_labels, col = colors, lty = line_types, lwd = 1,
-           horiz = TRUE, bty = "n", cex = .77, x.intersp = .45, seg.len = 2.3)
+    text(.5, .79, expression("Causal gap"~xi[lambda*","*delta]), cex = .98)
+    legend(.5, .22, xjust = .5, yjust = .5, legend = method_labels, text.width = NA,
+           col = palette, lty = patterns, lwd = curve_width, pch = shapes, pt.cex = .68,
+           pt.lwd = .75, horiz = TRUE, bty = "n", cex = .90, x.intersp = .65, seg.len = 2.6)
   }
 }
 

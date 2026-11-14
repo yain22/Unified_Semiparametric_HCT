@@ -9,15 +9,19 @@ opt <- clinical_options(commandArgs(TRUE), c("--inputs", "--out"),
 if (is.null(opt[["--out"]])) stop("Supply the output directory with --out.", call. = FALSE)
 inputs <- if (is.null(opt[["--inputs"]])) file.path(here, "inputs") else opt[["--inputs"]]
 out <- simulation_resolve_path(opt[["--out"]])
+figure_font <- Sys.getenv("HCT_FIGURE_FONT", "sans")
 if (simulation_path_within(out, simulation_resolve_path(inputs)))
   stop("Choose an output directory outside the archived inputs.", call. = FALSE)
 
 checks <- check_clinical_results(inputs)
 results <- read.csv(file.path(inputs, "primary", "full_results.csv"), check.names = FALSE)
-fit <- results[match(clinical_methods, results$method), ]
+row_labels <- c("AIPW-U (est)" = "AIPW-U (HCT)", "AIPW-R" = "AIPW-R (HCT)",
+                "AIPW (ECT)" = "AIPW (ECT)", "ANOVA (RCT)" = "ANOVA (RCT)",
+                "ANCOVA (RCT)" = "ANCOVA (RCT)")
+stopifnot(setequal(names(row_labels), clinical_methods))
+fit <- results[match(names(row_labels), results$method), ]
 published <- jsonlite::fromJSON(file.path(inputs, "published_cgm_trials.json"))
 stopifnot(identical(published$study, c("DIAMOND", "GOLD", "CITY")))
-names_shown <- c("ANOVA (RCT)", "ANCOVA (RCT)", "AIPW-R (HCT)", "AIPW-U (HCT)", "AIPW (ECT)")
 
 # Keep the published point and interval coordinates together. The CSV inputs give
 # normal intervals for the study analyses and the limits reported by the three trials.
@@ -26,7 +30,7 @@ figure_values <- function() {
   for (i in seq_len(nrow(fit))) {
     for (which in c("analytic", "bootstrap")) {
       values[[length(values) + 1L]] <- list(
-        method = fit$method[i], display_name = names_shown[i], interval = which,
+        method = fit$method[i], display_name = unname(row_labels[fit$method[i]]), interval = which,
         estimate = fit$estimate[i], lower = fit[[paste0(which, "_lower")]][i],
         upper = fit[[paste0(which, "_upper")]][i])
     }
@@ -41,7 +45,7 @@ figure_values <- function() {
 
 draw_forest <- function(values) {
   par(fig = c(.25, .98, .275, .95), mar = c(0, 0, 0, 0), xaxs = "i", yaxs = "i",
-      family = "sans", las = 1, lend = "butt", xpd = FALSE)
+      family = figure_font, las = 1, lend = "butt", xpd = FALSE)
   xlim <- c(-.86, .22)
   ylim <- c(-.5, 8.1)
   plot.new()
@@ -59,14 +63,14 @@ draw_forest <- function(values) {
   for (value in values) {
     type <- value$interval
     yy <- if (type == "published") trial_y[match(value$method, published$study)] else
-      y[match(value$method, clinical_methods)] + if (type == "analytic") .12 else -.12
+      y[match(value$method, fit$method)] + if (type == "analytic") .12 else -.12
     segments(value$lower, yy, value$upper, yy, col = colors[type], lty = style[type], lwd = 1.4)
     points(value$estimate, yy, pch = symbols[type], col = colors[type], bg = "white", cex = .8)
   }
   trial_labels <- paste(published$study, sub("^.*(\\([[:digit:]]{4}\\))$", "\\1", published$author_year))
   axis(1, at = grid_x, labels = formatC(grid_x, digits = 1, format = "f"), tck = -.015,
        mgp = c(0, .40, 0), col = "#888888", cex.axis = .95)
-  text(xlim[1] - .013, c(y, trial_y), labels = c(names_shown, trial_labels),
+  text(xlim[1] - .013, c(y, trial_y), labels = c(unname(row_labels), trial_labels),
        adj = 1, xpd = NA, cex = .95)
   text(xlim[1] - .31 * diff(xlim), 2.55, "Published randomized trials",
        adj = 0, xpd = NA, font = 2, cex = .94)
@@ -92,8 +96,8 @@ if (!dir.exists(out)) stop("Could not create the output directory.", call. = FAL
 if (!isTRUE(opt[["--validate-only"]])) {
   values <- figure_values()
   stopifnot(length(values) == 13L)
-  pdf(file.path(out, "focused_clinical_comparison.pdf"), width = 7.1, height = 4.2,
-      pointsize = 9, useDingbats = FALSE, title = "Continuous glucose monitoring")
+  grDevices::cairo_pdf(file.path(out, "focused_clinical_comparison.pdf"), width = 7.1, height = 4.2,
+                       pointsize = 9, family = figure_font)
   tryCatch(draw_forest(values), finally = dev.off())
   png(file.path(out, "focused_clinical_comparison.png"), width = 7.1, height = 4.2,
       units = "in", res = 220, pointsize = 9, bg = "white")

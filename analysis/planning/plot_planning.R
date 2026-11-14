@@ -51,7 +51,6 @@ write_report <- function(stem, record) {
   jsonlite::write_json(record, path, pretty = TRUE, auto_unbox = TRUE, digits = NA,
                        dataframe = "rows", na = "null")
 }
-source(file.path(here, "planning_summaries.R"), local = TRUE)
 
 figure <- function(stem, width, height, draw, svg = FALSE, dpi = 220) {
   for (ext in c("pdf", "png", if (svg) "svg")) {
@@ -66,18 +65,24 @@ figure <- function(stem, width, height, draw, svg = FALSE, dpi = 220) {
 }
 styles <- data.frame(key = c("AIPW-U (HCT)", "AIPW (ECT)", "ANOVA (RCT)", "ANCOVA (RCT)"),
                      name = c("HCT reference", "ECT reference", "ANOVA (RCT)", "ANCOVA (RCT)"),
-                     colour = c("#176CB0", "#C75A18", "#50575D", "#7952A0"), line = c(1, 2, 3, 4))
+                     colour = c("#176CB0", "#C75A18", "#50575D", "#7952A0"),
+                     line = 1, pch = c(16L, 1L, 15L, 17L))
 common_styles <- styles[c(1, 2, 4), ]
 common_styles$key <- c("HCT", "ECT", "RCT ANCOVA")
 common_styles$name <- c("HCT: gap 5\u03b4/6", "ECT: gap \u03b4", "RCT ANCOVA: zero gap")
 scalar_styles <- function(data) {
   labels <- unique(data$method)
-  names <- labels
-  names[names == "RCT: zero-gap reference"] <- "RCT (100, 50): zero-gap reference"
-  i <- seq_along(labels)
-  data.frame(key = labels, name = names,
-             colour = c("#333333", "#D55E00", "#0072B2", "#009E73", "#AA4499")[i],
-             line = c(3, 2, 1, 4, 5)[i])
+  if (any(startsWith(labels, "HCT ("))) {
+    order <- c("HCT (100, 50)", "HCT (200, 100)", "HCT (300, 150)",
+               "ECT (100, 0)", "RCT: zero-gap reference")
+    stopifnot(setequal(labels, order))
+    return(data.frame(key = order, name = c(order[1:4], "RCT (100, 50): zero-gap reference"),
+                      colour = c("#176CB0", "#00816B", "#A34478", "#C75A18", "#50575D"),
+                      line = 1, pch = c(16L, 17L, 18L, 1L, 15L)))
+  }
+  data.frame(key = labels, name = labels,
+             colour = c("#333333", "#D55E00", "#0072B2", "#009E73")[seq_along(labels)],
+             line = c(3, 2, 1, 4)[seq_along(labels)])
 }
 # Reserve an actual row for the key so it cannot cross the bottom axes.
 panels <- function(rows, columns, key_height, pointsize = 9, row_heights = rep(1, rows),
@@ -128,7 +133,7 @@ series <- function(data, x, y, style, group = "method", width = 1.2) {
 # These manuscript panels use physical margins so axis labels and strokes
 # retain the same size in the single-row and three-row figures.
 planning_frame <- function(xlim, ylim, xticks, yticks, margins, heading = "", show_x = TRUE) {
-  par(mai = margins)
+  par(mai = margins, pty = "s")
   plot.new()
   plot.window(xlim, ylim)
   abline(v = xticks, h = yticks, col = "#E3E7EA", lwd = .55)
@@ -141,8 +146,20 @@ planning_frame <- function(xlim, ylim, xticks, yticks, margins, heading = "", sh
   if (nzchar(heading)) mtext(heading, 3, line = .35, adj = 0, font = 2, cex = .94)
 }
 
-planning_key <- function(style, xlabel, pch = rep(NA_integer_, nrow(style))) {
-  par(mai = rep(0, 4))
+planning_series <- function(data, x, y, style, group = "method", positions = c(.23, .69)) {
+  series(data, x, y, style, group, width = 1.45)
+  # Place symbols after drawing every line, at distinct observed grid points
+  # so coincident curves can be read without shifting either curve.
+  for (i in seq_len(nrow(style))) {
+    d <- data[data[[group]] == style$key[i], ]
+    at <- 1L + round((nrow(d) - 1L) * (positions + .048 * (i - 1L)))
+    points(d[[x]][at], d[[y]][at], pch = style$pch[i], col = style$colour[i],
+           cex = if (style$pch[i] == 1L) .72 else .56)
+  }
+}
+
+planning_key <- function(style, xlabel) {
+  par(mai = rep(0, 4), pty = "m")
   plot.new()
   inches <- par("pin")
   plot.window(c(0, inches[1]), c(0, inches[2]))
@@ -151,43 +168,58 @@ planning_key <- function(style, xlabel, pch = rep(NA_integer_, nrow(style))) {
   # larger than the small space between a line sample and its own label.
   line_length <- .27
   widths <- line_length + .06 + strwidth(style$name, cex = .86)
-  gap <- .20
+  gap <- min(.20, (inches[1] - .14 - sum(widths)) / (nrow(style) - 1))
   x <- (inches[1] - sum(widths) - (nrow(style) - 1) * gap) / 2
   stopifnot(x > 0)
   for (j in seq_len(nrow(style))) {
     segments(x, .12, x + line_length, .12, col = style$colour[j],
              lty = style$line[j], lwd = 1.45)
-    if (!is.na(pch[j])) points(x + line_length / 2, .12, pch = pch[j],
-                               col = style$colour[j], cex = if (pch[j] == 1) .81 else .54)
+    points(x + line_length / 2, .12, pch = style$pch[j], col = style$colour[j],
+           cex = if (style$pch[j] == 1L) .72 else .56)
     text(x + line_length + .06, .12, style$name[j], adj = .0, cex = .86)
     x <- x + widths[j] + gap
   }
 }
 
+# Work in inches. Reserve space for each row's headings and ticks, then use
+# the available column width as the side of every data panel.
+square_grid <- function(left, right, bottom, top, outer_left = 0) {
+  width <- 7.25
+  key_height <- .52
+  side <- (width - outer_left - sum(left + right)) / length(left)
+  row_heights <- bottom + side + top
+  list(width = width, height = ceiling(72 * (sum(row_heights) + key_height)) / 72,
+       column_widths = left + side + right, row_heights = row_heights, key_height = key_height,
+       left = left, right = right, bottom = bottom, top = top, outer_left = outer_left)
+}
+power_grid <- square_grid(c(.43, .25, .25), .065, .32, .24)
+sensitivity_grid <- square_grid(rep(.37, 3), .06, c(.09, .09, .32), c(.24, .06, .06),
+                                outer_left = .18)
+source(file.path(here, "planning_summaries.R"), local = TRUE)
+
 power_plot <- function() {
-  left <- c(.43, .25, .25)
-  panel_width <- (par("din")[1] - sum(left) - 3 * .065) / 3
-  panels(1, 3, .52, pointsize = 10, row_heights = par("din")[2] - .52,
-         column_widths = panel_width + left + .065)
+  g <- power_grid
+  panels(1, 3, g$key_height, pointsize = 10, row_heights = g$row_heights,
+         column_widths = g$column_widths)
   for (i in seq_along(scenarios$id)) {
     id <- scenarios$id[i]
     s <- baseline[baseline$scenario == id, ]
     points_i <- power_points[power_points$scenario == id, ]
     heading <- paste0("(", letters[i], ") Scenario ", id, "  (\u03c3 = ", scenarios$sigma[i], ")")
     planning_frame(c(-2.15, 4.15), c(-.035, 1.035), c(-2, 0, 2, 4), seq(0, 1, .2),
-                   c(.32, left[i], .24, .065), heading)
+                   c(g$bottom, g$left[i], g$top, g$right), heading)
     if (i == 1L) mtext("Power", 2, line = 1.34, las = 0, cex = .90)
     abline(h = .80, v = 2, lty = "34", col = "#858D91", lwd = .75)
-    series(s, "theta", "power", styles, width = 1.45)
+    planning_series(s, "theta", "power", styles, positions = c(.37, .80))
     for (j in seq_len(nrow(styles))) {
       y <- points_i$power[match(styles$key[j], points_i$method)]
-      points(2, y, col = styles$colour[j], pch = if (j == 2L) 1 else 16,
+      points(2, y, col = styles$colour[j], pch = styles$pch[j],
              cex = if (j == 2L) .81 else .54)
     }
   }
-  planning_key(styles, expression("Treatment effect " * theta), pch = c(16, 1, 16, 16))
+  planning_key(styles, expression("Treatment effect " * theta))
 }
-figure("zero_gap_power", 7.25, 2.38, power_plot, svg = TRUE, dpi = 600)
+figure("zero_gap_power", power_grid$width, power_grid$height, power_plot, svg = TRUE, dpi = 600)
 
 sensitivity <- function(shared_discrepancy) {
   data <- if (shared_discrepancy) common else matched
@@ -203,20 +235,16 @@ sensitivity <- function(shared_discrepancy) {
     list(c(.85, .9, .95), seq(0, .2, .05), seq(.4, 1, .2))
   limits <- if (shared_discrepancy) list(c(.875, .958), c(0, .125), c(.3, 1.015)) else
     list(c(.82, .965), c(0, .2), c(.30, 1.025))
-  # The first row carries the column titles and the last row the x ticks.
-  # Allocate those margins separately to give all nine plotting regions equal height.
-  top <- c(.24, .06, .06)
-  bottom <- c(.09, .09, .32)
-  legend_height <- .52
-  plot_height <- (par("din")[2] - sum(top + bottom) - legend_height) / 3
-  panels(3, 3, legend_height, pointsize = 10, row_heights = plot_height + top + bottom)
-  par(omi = c(0, .18, 0, 0))
+  g <- sensitivity_grid
+  panels(3, 3, g$key_height, pointsize = 10, row_heights = g$row_heights,
+         column_widths = g$column_widths)
+  par(omi = c(0, g$outer_left, 0, 0))
   for (i in seq_along(scenarios$id)) {
     id <- scenarios$id[i]
     s <- data[data$scenario == id, ]
     for (j in seq_along(metrics)) {
       planning_frame(c(-.52, .52), limits[[j]], c(-.5, 0, .5), ticks[[j]],
-                     c(bottom[i], .37, top[i], .06),
+                     c(g$bottom[i], g$left[j], g$top[i], g$right),
                      if (i == 1L) headers[j] else "", show_x = i == 3L)
       if (j == 1L) {
         text(grconvertX(.075, from = "inches", to = "user"), mean(limits[[j]]),
@@ -225,7 +253,7 @@ sensitivity <- function(shared_discrepancy) {
       stopifnot(all(s[[metrics[j]]] >= limits[[j]][1]), all(s[[metrics[j]]] <= limits[[j]][2]))
       guides <- list(.95, c(.025, .10), .80)[[j]]
       if (!shared_discrepancy || j == 3L) abline(h = guides, col = "#858D91", lwd = .75, lty = "34")
-      series(s, x, metrics[j], style, group, width = 1.45)
+      planning_series(s, x, metrics[j], style, group)
       if (!shared_discrepancy && j == 2L) {
         markers <- thresholds[thresholds$scenario == id & thresholds$within_plotted_range, ]
         for (k in seq_len(nrow(markers))) {
@@ -239,24 +267,30 @@ sensitivity <- function(shared_discrepancy) {
   }
   planning_key(style, xlabel)
 }
-figure("study_design_sensitivity", 7.25, 4.64, function() sensitivity(FALSE), svg = TRUE, dpi = 600)
-figure("common_source_discrepancy", 7.25, 4.64, function() sensitivity(TRUE), dpi = 600)
+figure("study_design_sensitivity", sensitivity_grid$width, sensitivity_grid$height,
+       function() sensitivity(FALSE), svg = TRUE, dpi = 600)
+figure("common_source_discrepancy", sensitivity_grid$width, sensitivity_grid$height,
+       function() sensitivity(TRUE), dpi = 600)
 
 causal_gap_label <- expression("Causal gap " * xi[lambda*","*delta])
 scalar_x <- c(-.30, -.15, 0, .15, .30)
+scalar_grid <- square_grid(rep(.37, 3), .065, .32, .24)
 scalar_main <- function() {
-  panels(1, 3, .24, pointsize = 8)
+  g <- scalar_grid
+  panels(1, 3, g$key_height, pointsize = 10, row_heights = g$row_heights,
+         column_widths = g$column_widths)
   style <- scalar_styles(main)
   metrics <- c("coverage_theta", "null_rejection", "power")
   headers <- c("(a) Coverage", "(b) Causal-null rejection", "(c) Efficacy declaration")
   for (j in seq_along(metrics)) {
-    frame(c(-.31, .31), c(0, 1.02), scalar_x, seq(0, 1, .25), headers[j], causal_gap_label)
-    if (j <= 2) abline(h = c(.95, .025)[j], col = "gray60", lty = 3)
-    series(main, "xi_axis", metrics[j], style)
+    planning_frame(c(-.31, .31), c(0, 1.02), scalar_x, seq(0, 1, .25),
+                   c(g$bottom, g$left[j], g$top, g$right), headers[j])
+    if (j <= 2) abline(h = c(.95, .025)[j], col = "#858D91", lty = "34", lwd = .75)
+    planning_series(main, "xi_axis", metrics[j], style)
   }
-  key(style, size = .85)
+  planning_key(style, causal_gap_label)
 }
-figure("scalar_gap_design_sensitivity", 6.75, 2.8, scalar_main)
+figure("scalar_gap_design_sensitivity", scalar_grid$width, scalar_grid$height, scalar_main, dpi = 600)
 
 performance_plot <- function(data, scaled = FALSE) {
   panels(2, 4, .29, pointsize = 8)
@@ -279,10 +313,11 @@ performance_plot <- function(data, scaled = FALSE) {
             if (i == 2L) causal_gap_label else "", row_label, show_x = i == 2L,
             margins = c(if (i == 2L) 2.45 else .60, if (j == 1L) 3.2 else 2.25, 1.55, .45))
       if (j <= 2L) abline(h = c(.95, 0)[j], col = "gray55", lwd = .7, lty = 3)
-      series(d, "xi_axis", metrics[j], style)
+      if (scaled) series(d, "xi_axis", metrics[j], style) else
+        planning_series(d, "xi_axis", metrics[j], style)
     }
   }
-  key(style, size = .85)
+  key(style, size = .85, pch = if (scaled) NA_integer_ else style$pch)
 }
 figure("scalar_gap_reference_signed_lines", 6.75, 3.65, function() performance_plot(signed))
 figure("scalar_gap_reference_scaling_lines", 6.75, 3.65, function() performance_plot(scaling, TRUE))

@@ -1,9 +1,9 @@
 exhibit,label,script_or_source,inputs_or_calculation,figure_output
-Figure 1,fig:trialdesigns,analysis/illustrations/design_schematics.R,Observed groups in the three trial designs,trial-designs.pdf
+Figure 1,fig:trialdesigns,assets/designs/trial-designs.pdf,Observed groups in the three trial designs,trial-designs.pdf
 Figure 2,fig:standardizationpictorial,analysis/illustrations/illustrate_hct_standardization_pictorial.R,Conditional control means and precision shares over a scalar covariate,illustrations/hct_standardization_pictorial.pdf
 Figure 3,main:anchorfigure,analysis/illustrations/illustrate_hct_eif.R,Analytical internal-control sample size comparison,illustrations/external-borrowing-anchor.pdf
 Figure 4,fig:eifhistograms,analysis/planning/illustrate_hct_targets_and_sampling.R,analysis/planning/data/exact_sampling/replicates.csv,planning/figures/hct_targets_and_sampling.pdf
-Figure 5,main:modelrelationships,analysis/model_relationships.R,Observed-data model diagram,observed_model_relationships.pdf
+Figure 5,main:modelrelationships,assets/main/observed_model_relationships.pdf,Observed-data model diagram,observed_model_relationships.pdf
 Figure 6,main:designfigure,analysis/planning/plot_planning.R,Gaussian coverage and rejection curves,planning/figures/scalar_gap_design_sensitivity.pdf
 Figure 7,fig:estimatednuisancesizes,analysis/simulation_figures/plot_simulations.R,analysis/simulation_figures/inputs/heterogeneous/summary.csv,simulations/figures/heterogeneous_gap_design_comparison_lines.pdf
 Figure 8,main:baselinepower,analysis/planning/plot_planning.R,Fixed-weight Gaussian planning,planning/figures/zero_gap_power.pdf
@@ -13,11 +13,10 @@ Figure 11,main:cgmfigure,analysis/clinical/render_clinical.R,Primary CGM aggrega
 Table 1,tab:eif-components,assets/tables/eif-components.tex,Seven-term influence function in manuscript notation,
 Table 2,tab:focusedsimulation,analysis/paper_tables.R,Baseline fitted simulation and paired quadratic trial ANCOVA,
 Table 3,main:studytable,analysis/paper_tables.R,Gaussian reference calculated by analysis/planning/run_planning.R,
-Table 4,main:cgmresults,analysis/paper_tables.R,Primary CGM mean estimates and paired bootstrap standard errors,
-Figure S1,main:hctdata,analysis/illustrations/design_schematics.R,Illustrative records invented to explain the observed data,hct_observed_data.pdf
+Figure S1,main:hctdata,assets/main/hct_observed_data.pdf,Illustrative records invented to explain the observed data,hct_observed_data.pdf
 Figure S2,fig:tceweighting,analysis/illustrations/illustrate_hct_eif.R,Population precision-share calculation,illustrations/tce_weighting.pdf
 Figure S3,fig:discrepancy,analysis/illustrations/illustrate_hct_eif.R,Population source discrepancy calculations,illustrations/eif_source_discrepancy.pdf
-Figure S4,fig:tceprecision,analysis/planning/plot_planning.R,Gaussian fixed and local gap scaling,planning/figures/scalar_gap_precision_scaling.pdf
+Figure S4,fig:tceprecision,assets/supplement/v2/figures/scalar_gap_precision_scaling.pdf,Gaussian fixed and local gap scaling,planning/figures/scalar_gap_precision_scaling.pdf
 Figure S5,main:oc,analysis/simulation_figures/plot_simulations.R,analysis/simulation_figures/inputs/oracle/summary.csv,simulations/figures/oracle_estimated_nuisance_comparison.pdf
 Figure S6,fig:scenariovariance,analysis/simulation_figures/plot_simulations.R,Extended scenario stronger variance heterogeneity,simulations/figures/supp_scenario_stronger_heteroskedasticity.pdf
 Figure S7,fig:scenariofewerexternal,analysis/simulation_figures/plot_simulations.R,Extended scenario fewer external controls,simulations/figures/supp_scenario_fewer_external.pdf
@@ -35,6 +34,7 @@ Table S6,tab:fitted-one-sided,analysis/paper_tables.R,One-sided simulation count
 Table S7,tab:extendedscenarios,analysis/paper_tables.R,Standard normal integrals using four scenario specifications,
 Table S8,tab:extendedzerogap,analysis/paper_tables.R,Estimated and oracle simulation results at zero causal gap,
 Table S9,tab:commondiscrepancy,analysis/paper_tables.R,Gaussian calculations for a common source discrepancy,
-Table S10,tab:cgmselection,analysis/paper_tables.R,Registry selection and CGM estimates in three cohorts,
-Table S11,tab:cgmbaseline,analysis/paper_tables.R,Observed baseline characteristics from group summaries,
-Table S12,tab:cgmoverlap,analysis/paper_tables.R,Primary CGM source probability and external-weight summaries,
+Table S10,tab:cgmbaseline,analysis/paper_tables.R,Observed baseline characteristics from group summaries,
+Table S11,tab:cgmoverlap,analysis/paper_tables.R,Primary CGM source probability and external-weight summaries,
+Table S12,tab:cgmselection,analysis/paper_tables.R,Registry selection and CGM estimates in three cohorts,
+Table S13,tab:cgmcontrasts,analysis/paper_tables.R,Primary CGM mean estimates and paired bootstrap standard errors,

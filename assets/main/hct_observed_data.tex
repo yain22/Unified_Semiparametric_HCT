@@ -1,3 +1,11 @@
+% Editable standalone Figure S1. Compile with XeLaTeX.
+\documentclass[tikz,border={10.5pt 0pt 0pt 0pt}]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds}
+\usepackage{mathptmx}
+\usepackage[no-math]{fontspec}
+\setsansfont{Arial}
+\begin{document}
 % Hypothetical HCT records in a single-column spreadsheet-style panel.
 % The row colors match the treatment/internal/external palette used elsewhere.
 \begingroup
@@ -43,8 +51,6 @@
   \node[anchor=west,text=#1!80!black,font=\fontsize{10}{11}\selectfont]
     at (7.52,{.5*(\grouptop+\groupbottom)}) {$#4$};
 }
-\centering
-\resizebox{\columnwidth}{!}{%
 \begin{tikzpicture}[x=1cm,y=1cm,every node/.style={font=\sffamily\fontsize{9}{10}\selectfont,inner sep=1pt}]
   \hctdatasheetframe
   \hctdatasheetrow{1}{sheettreated}{P01}{1}{1}{0.20}{0}{8.4}
@@ -60,6 +66,7 @@
     \fill[fill=\groupcolor!12,draw=\groupcolor,line width=.6pt] (\x,-4.51) rectangle ({\x+.26},-4.25);
     \node[anchor=west,font=\sffamily\fontsize{8}{9}\selectfont] at ({\x+.36},-4.38) {\groupname};
   }
-\end{tikzpicture}%
-}
+\end{tikzpicture}
 \endgroup
+
+\end{document}

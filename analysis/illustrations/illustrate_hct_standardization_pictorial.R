@@ -74,8 +74,8 @@ draw <- function() {
 
   panel(c(9.6, 16.35), c(10, 12, 14, 16), c("10", "12", "14", "16"),
         "Mean control outcome", "(a) Conditional control means")
-  lines(x, internal_mean, lty = "dashed", lwd = 1.35, col = ink)
-  lines(x, external_mean, lty = "dotdash", lwd = 1.35, col = grey)
+  lines(x, internal_mean, lwd = 1.35, col = ink)
+  lines(x, external_mean, lwd = 1.35, col = grey)
   lines(x, hybrid_mean, lwd = 2.05, col = teal)
   end_label(internal_mean, "Internal", ink)
   end_label(external_mean, "External", grey)
@@ -86,7 +86,7 @@ draw <- function() {
 
   panel(c(0, 1), c(0, 0.25, 0.5, 0.75, 1), c("0", "0.25", "0.5", "0.75", "1"),
         "Internal share", "(b) Internal precision share")
-  lines(x, alternative, lty = "dashed", lwd = 1.35, col = grey)
+  lines(x, alternative, lwd = 1.35, col = grey)
   lines(x, share, lwd = 2.05, col = teal)
   end_label(alternative, expression(italic(r) == 0.5), grey)
   end_label(share, expression(italic(r) == 1), teal)
@@ -94,7 +94,7 @@ draw <- function() {
   mark(share, "1/3", teal, 19)
 }
 
-font <- Sys.getenv("HCT_FIGURE_FONT", "Times New Roman")
+font <- Sys.getenv("HCT_FIGURE_FONT", "sans")
 width <- 6.55
 height <- 2.93
 cairo_pdf(paste0(stem, ".pdf"), width = width, height = height, pointsize = 10.5,

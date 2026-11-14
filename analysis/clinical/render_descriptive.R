@@ -9,6 +9,7 @@ opt <- clinical_options(commandArgs(TRUE), c("--out", "--inputs"), usage)
 if (is.null(opt[["--out"]])) stop(usage, call. = FALSE)
 inputs <- if (is.null(opt[["--inputs"]])) file.path(here, "inputs", "descriptive") else opt[["--inputs"]]
 out <- simulation_resolve_path(opt[["--out"]])
+figure_font <- Sys.getenv("HCT_FIGURE_FONT", "sans")
 if (simulation_path_within(out, simulation_resolve_path(inputs))) {
   stop("Choose an output directory outside the archived inputs.", call. = FALSE)
 }
@@ -47,8 +48,8 @@ stopifnot(all(means$group %in% groups), !anyDuplicated(means[c("group", "visit")
 panel_title <- function(label) title(main = label, adj = 0, line = .85, cex.main = 1.0)
 make_pdf <- function(filename, width, height, draw) {
   dir.create(out, showWarnings = FALSE, recursive = TRUE)
-  grDevices::pdf(file.path(out, filename), width = width, height = height, family = "Helvetica",
-                 pointsize = 10, useDingbats = FALSE, title = "")
+  grDevices::cairo_pdf(file.path(out, filename), width = width, height = height,
+                       pointsize = 10, family = figure_font)
   on.exit(grDevices::dev.off())
   par(fg = ink, col = ink, col.axis = ink, col.lab = ink, col.main = ink,
       mgp = c(2.0, .48, 0), tcl = -.25, las = 1, bty = "n", lend = "butt")

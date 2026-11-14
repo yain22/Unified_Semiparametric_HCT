@@ -50,11 +50,12 @@ for (s in list(main, signed, scaling)) {
 }
 write_report("baseline_power", list(success = TRUE, scenarios = scenarios$id,
              points = transform(power_points[c("scenario", "sigma", "method", "standard_error", "power")], theta = 2),
-             figure_inches = c(6.75, 2.95), legend_rows = 1L))
+             figure_inches = c(power_grid$width, power_grid$height), legend_rows = 1L))
 markers <- thresholds[thresholds$within_plotted_range, ]
 stopifnot(nrow(markers) == 4L, all(markers$scenario != "II"))
 write_report("matched_gap", list(success = TRUE, rows = scenarios$id, gap_range = c(-.5, .5),
-             points_per_curve = 2001L, threshold_markers = markers, figure_inches = c(6.75, 6.80)))
+             points_per_curve = 2001L, threshold_markers = markers,
+             figure_inches = c(sensitivity_grid$width, sensitivity_grid$height)))
 write_report("common_discrepancy", list(reference = "Known-input fixed-weight Gaussian planning calculation",
              alpha = .025, theta_star = 2, r_squared = .25, discrepancy_range = c(-.5, .5),
              scenarios = scenarios, gap_multiplier = c(HCT = 5 / 6, ECT = 1, RCT = 0),

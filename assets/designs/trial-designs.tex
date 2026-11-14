@@ -1,8 +1,8 @@
-% Standalone vector artwork. Build with pdflatex trial-designs.tex.
+% Standalone vector artwork. Build with xelatex trial-designs.tex.
 % EPS conversion: pdftops -eps -level3 trial-designs.pdf trial-designs.eps
 \documentclass[tikz,border=2.5pt]{standalone}
-\usepackage[T1]{fontenc}
-\usepackage[scaled=.94]{helvet}
+\usepackage[no-math]{fontspec}
+\setsansfont[Scale=.94]{Arial}
 \usetikzlibrary{arrows.meta}
 \definecolor{ink}{HTML}{27323B}
 \definecolor{stroke}{HTML}{586470}
