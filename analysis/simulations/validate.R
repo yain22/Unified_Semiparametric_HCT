@@ -27,6 +27,7 @@ bg$seed_base <- 52461004L
 bg$designs <- data.frame(N_trial = c(250L, 500L), NT = c(167L, 333L), NC = c(83L, 167L), N0 = c(500L, 1000L))
 eg <- functions_only(file.path(here, 'run_extended.R'))
 eg$seed_base <- 74461005L
+eg$seed_offset <- 0L  # The four extended validation samples use trial enrollment 250.
 ed <- data.table(id = 1:4, scenario = c('fewer_external', 'source_shift', 'stronger_heteroskedasticity', 'quadratic_discrepancy'), nT = 167L, nC = 83L, nE = c(250L, 500L, 500L, 500L), source_shift = c(0, .5, 0, 0), variance_slope = c(.4, .4, .7, .4), quadratic_discrepancy = c(0, 0, 0, .5))
 ed[, nR := nT + nC]
 samples <- list(baseline250 = bg$generate(250, 1)$data, baseline500 = bg$generate(500, 1)$data)
