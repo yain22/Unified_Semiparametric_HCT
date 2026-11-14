@@ -78,10 +78,14 @@ et <- sum(it * ht * (y - initT)) / sum(it * ht^2)
 e0u <- sum(cc * h0 * (y - init0)) / sum(cc * h0^2)
 stopifnot(abs(sum(it * ht * (y - initT - et * ht))) < 1e-12)
 stopifnot(abs(sum(cc * h0 * (y - init0 - e0u * h0))) < 1e-12)
-open_fig <- function(name) {
-  cairo_pdf(figure_output(name), width = 10.4, height = 4.9, family = figure_font, pointsize = 11)
+open_fig <- function(name, square = FALSE) {
+  # The discrepancy panels have in-panel legends, so their axes can use the
+  # bottom strip that the other figures reserve for a common legend.
+  cairo_pdf(figure_output(name), width = 10.4, height = if (square) 5.53 else 4.9,
+            family = figure_font, pointsize = 11)
   par(
-    mfrow = c(1, 2), mar = c(4.3, 4.6, 2.3, .8), oma = c(2.6, .1, .1, .1),
+    mfrow = c(1, 2), mar = c(4.3, 4.6, 2.3, .8),
+    oma = c(if (square) .25 else 2.6, .1, .1, .1), pty = if (square) "s" else "m",
     las = 1, tcl = -.25, mgp = c(2.6, .7, 0), xaxs = "i", yaxs = "i"
   )
 }
@@ -114,7 +118,7 @@ legend("bottom",
   col = c(cols, "#444444"), lty = c(types, 4), lwd = 2, bty = "n", horiz = TRUE, cex = .95, inset = .012
 )
 dev.off()
-open_fig("eif_source_discrepancy.pdf")
+open_fig("eif_source_discrepancy.pdf", square = TRUE)
 gap <- seq(-.5, .5, length.out = 401)
 panel(
   c(-.5, .5), c(-.5, .5), expression(delta == m["1,0"] - m[0]), expression("Causal gap " * xi[rho]),

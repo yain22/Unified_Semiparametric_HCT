@@ -58,20 +58,17 @@ validate_curves <- function(d, row_field, row_values) {
 }
 
 draw_simulation <- function(d, row_field, row_values, file) {
-  compare_nuisances <- row_field == "mode"
   width <- 7.25
-  height <- 3
-  if (!compare_nuisances) {
-    # Give each enrollment-by-metric panel a square plotting area in inches.
-    left <- c(.30, .36, .29, .27)
-    right <- .07
-    bottom <- c(.08, .23)
-    top <- .24
-    key_height <- .51
-    side <- (width - sum(left + right)) / length(metrics)
-    row_heights <- bottom + side + top
-    height <- ceiling(72 * (sum(row_heights) + key_height)) / 72
-  }
+  # All six grids use the same physical panel size.
+  left <- c(.30, .36, .29, .27)
+  right <- .07
+  bottom <- c(.08, .23)
+  top <- .24
+  row_key_height <- if (row_field == "mode") .24 else 0
+  key_height <- .51 + row_key_height
+  side <- (width - sum(left + right)) / length(metrics)
+  row_heights <- bottom + side + top
+  height <- ceiling(72 * (sum(row_heights) + key_height)) / 72
   grDevices::cairo_pdf(file, width = width, height = height, family = "sans", pointsize = 9)
   on.exit(grDevices::dev.off())
 
@@ -81,18 +78,10 @@ draw_simulation <- function(d, row_field, row_values, file) {
   curve_width <- 1.25
   grid_color <- "#E3E7EA"
   axis_color <- "#647078"
-  if (compare_nuisances) {
-    # Share the gap title across the four columns and put row labels in the
-    # outer margin so every panel has the same plotting area.
-    layout(rbind(1:4, 5:8, rep(9, 4)), heights = c(1, 1.12, .32))
-    par(oma = c(.05, .96, .1, .22), mgp = c(1.55, .37, 0), tcl = -.18,
-        xaxs = "i", yaxs = "i", ps = 9, cex = 1)
-  } else {
-    layout(rbind(1:4, 5:8, rep(9, 4)), widths = left + side + right,
-           heights = c(row_heights, key_height))
-    par(omi = c(0, 0, 0, 0), mgp = c(1.65, .36, 0), tcl = -.18,
-        xaxs = "i", yaxs = "i", ps = 10, cex = 1)
-  }
+  layout(rbind(1:4, 5:8, rep(9, 4)), widths = left + side + right,
+         heights = c(row_heights, key_height))
+  par(omi = c(0, 0, 0, 0), mgp = c(1.65, .36, 0), tcl = -.18,
+      xaxs = "i", yaxs = "i", ps = 10, cex = 1)
 
   # Each column shares its vertical scale over the two rows.
   for (i in seq_along(row_values)) {
@@ -110,11 +99,7 @@ draw_simulation <- function(d, row_field, row_values, file) {
                       bias_theta = c(-.3, -.15, 0, .15, .3), pretty(limit, n = 4))
       ticks <- ticks[ticks >= limit[1] & ticks <= limit[2]]
       xticks <- seq(-.3, .3, .15)
-      if (compare_nuisances) {
-        par(mar = c(if (i == 2L) 1.42 else .32, 2.21, 1.36, .27))
-      } else {
-        par(mai = c(bottom[i], left[j], top, right), pty = "s")
-      }
+      par(mai = c(bottom[i], left[j], top, right), pty = "s")
       plot.new()
       plot.window(c(-.31, .31), limit)
       abline(v = xticks, h = ticks, col = grid_color, lwd = .6)
@@ -135,40 +120,27 @@ draw_simulation <- function(d, row_field, row_values, file) {
                cex = .60, lwd = .75, col = palette[k])
       }
       panel <- paste0("(", letters[(i - 1L) * 4L + j], ")")
-      if (compare_nuisances) {
-        axis(1, at = xticks, labels = if (i == 2L) c("-.30", "", "0", "", ".30") else FALSE,
-             cex.axis = .86, lwd = .65, col = axis_color)
-        labels <- sub("^(-?)0\\.", "\\1.", format(ticks, trim = TRUE))
-        labels[ticks == 0 | ticks == 1] <- as.character(ticks[ticks == 0 | ticks == 1])
-        axis(2, at = ticks, labels = labels, las = 1, cex.axis = .86, lwd = .65, col = axis_color)
-        box(lwd = .65, col = axis_color)
-        title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
-        mtext(paste(panel, title), side = 3, line = .32, adj = 0, cex = 1, font = 2)
-        if (j == 1L) mtext(row_values[i], side = 2, line = 2.27, cex = .85)
-      } else {
-        axis(1, at = xticks, labels = if (i == 2L) c("-0.3", "", "0", "", "0.3") else FALSE,
-             cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
-        axis(2, at = ticks, labels = format(ticks, trim = TRUE, drop0trailing = TRUE),
-             las = 1, cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
-        box(lwd = .7, col = axis_color)
-        title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
-        mtext(paste(panel, title), side = 3, line = .33, adj = 0, cex = .94, font = 2)
-      }
+      axis(1, at = xticks, labels = if (i == 2L) c("-0.3", "", "0", "", "0.3") else FALSE,
+           cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
+      axis(2, at = ticks, labels = format(ticks, trim = TRUE, drop0trailing = TRUE),
+           las = 1, cex.axis = .85, lwd = 0, lwd.ticks = .7, col.ticks = axis_color)
+      box(lwd = .7, col = axis_color)
+      title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
+      mtext(paste(panel, title), side = 3, line = .33, adj = 0, cex = .94, font = 2)
     }
   }
   par(mar = c(0, 0, 0, 0), pty = "m")
   plot.new()
   plot.window(c(0, 1), c(0, 1))
-  if (compare_nuisances) {
-    text(.5, .83, expression("Causal gap"~xi[lambda*","*delta]), cex = .98)
-    legend(.5, .24, legend = method_labels, col = palette, lty = patterns, pch = shapes,
-           lwd = curve_width, pt.cex = .58, pt.lwd = .75, horiz = TRUE, bty = "n",
-           cex = .9, xjust = .5, yjust = .5, x.intersp = .55, seg.len = 2.6)
-  } else {
-    text(.5, .79, expression("Causal gap"~xi[lambda*","*delta]), cex = .98)
-    legend(.5, .22, xjust = .5, yjust = .5, legend = method_labels, text.width = NA,
-           col = palette, lty = patterns, lwd = curve_width, pch = shapes, pt.cex = .68,
-           pt.lwd = .75, horiz = TRUE, bty = "n", cex = .90, x.intersp = .65, seg.len = 2.6)
+  key_y <- function(y) (row_key_height + y * .51) / key_height
+  text(.5, key_y(.79), expression("Causal gap"~xi[lambda*","*delta]), cex = .98)
+  legend(.5, key_y(.22), xjust = .5, yjust = .5, legend = method_labels, text.width = NA,
+         col = palette, lty = patterns, lwd = curve_width, pch = shapes, pt.cex = .68,
+         pt.lwd = .75, horiz = TRUE, bty = "n", cex = .90, x.intersp = .65, seg.len = 2.6)
+  if (row_field == "mode") {
+    text(.5, row_key_height * .45 / key_height,
+         "Top panels: Oracle nuisance functions     Bottom panels: Estimated nuisance functions",
+         cex = .90)
   }
 }
 
