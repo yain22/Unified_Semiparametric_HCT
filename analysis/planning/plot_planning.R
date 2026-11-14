@@ -66,7 +66,7 @@ figure <- function(stem, width, height, draw, svg = FALSE, dpi = 220) {
 }
 styles <- data.frame(key = c("AIPW-U (HCT)", "AIPW (ECT)", "ANOVA (RCT)", "ANCOVA (RCT)"),
                      name = c("HCT reference", "ECT reference", "ANOVA (RCT)", "ANCOVA (RCT)"),
-                     colour = c("#176CB0", "#D56713", "#525252", "#8250A5"), line = c(1, 2, 3, 4))
+                     colour = c("#176CB0", "#C75A18", "#50575D", "#7952A0"), line = c(1, 2, 3, 4))
 common_styles <- styles[c(1, 2, 4), ]
 common_styles$key <- c("HCT", "ECT", "RCT ANCOVA")
 common_styles$name <- c("HCT: gap 5\u03b4/6", "ECT: gap \u03b4", "RCT ANCOVA: zero gap")
@@ -80,10 +80,11 @@ scalar_styles <- function(data) {
              line = c(3, 2, 1, 4, 5)[i])
 }
 # Reserve an actual row for the key so it cannot cross the bottom axes.
-panels <- function(rows, columns, key_height, pointsize = 9) {
+panels <- function(rows, columns, key_height, pointsize = 9, row_heights = rep(1, rows),
+                   column_widths = rep(1, columns)) {
   cells <- matrix(seq_len(rows * columns), nrow = rows, byrow = TRUE)
   layout(rbind(cells, rep(rows * columns + 1L, columns)),
-         heights = c(rep(1, rows), key_height))
+         heights = c(row_heights, key_height), widths = column_widths)
   par(family = font, ps = pointsize, cex = 1, las = 1, mgp = c(1.7, .36, 0),
       tcl = -.18, xaxs = "i", yaxs = "i")
 }
@@ -117,33 +118,76 @@ key <- function(style, size = .90, pch = NA_integer_, xlabel = NULL) {
   measured <- linekey(size, TRUE)
   stopifnot(measured$rect$left >= 0, measured$rect$left + measured$rect$w <= 1)
 }
-series <- function(data, x, y, style, group = "method") {
+series <- function(data, x, y, style, group = "method", width = 1.2) {
   for (i in seq_len(nrow(style))) {
     d <- data[data[[group]] == style$key[i], ]
     stopifnot(nrow(d) > 0L, all(is.finite(d[[y]])))
-    lines(d[[x]], d[[y]], col = style$colour[i], lty = style$line[i], lwd = 1.2)
+    lines(d[[x]], d[[y]], col = style$colour[i], lty = style$line[i], lwd = width)
   }
 }
+# These manuscript panels use physical margins so axis labels and strokes
+# retain the same size in the single-row and three-row figures.
+planning_frame <- function(xlim, ylim, xticks, yticks, margins, heading = "", show_x = TRUE) {
+  par(mai = margins)
+  plot.new()
+  plot.window(xlim, ylim)
+  abline(v = xticks, h = yticks, col = "#E3E7EA", lwd = .55)
+  box(col = "#647078", lwd = .70)
+  tick_labels <- function(values) format(values, trim = TRUE, drop0trailing = TRUE)
+  axis(1, at = xticks, labels = if (show_x) tick_labels(xticks) else FALSE,
+       lwd = 0, lwd.ticks = .70, col.ticks = "#647078", cex.axis = .85)
+  axis(2, at = yticks, labels = tick_labels(yticks), gap.axis = 0,
+       lwd = 0, lwd.ticks = .70, col.ticks = "#647078", cex.axis = .85)
+  if (nzchar(heading)) mtext(heading, 3, line = .35, adj = 0, font = 2, cex = .94)
+}
+
+planning_key <- function(style, xlabel, pch = rep(NA_integer_, nrow(style))) {
+  par(mai = rep(0, 4))
+  plot.new()
+  inches <- par("pin")
+  plot.window(c(0, inches[1]), c(0, inches[2]))
+  text(inches[1] / 2, inches[2] - .115, xlabel, cex = .90)
+  # Measure text on the output device; the space between entries is visibly
+  # larger than the small space between a line sample and its own label.
+  line_length <- .27
+  widths <- line_length + .06 + strwidth(style$name, cex = .86)
+  gap <- .20
+  x <- (inches[1] - sum(widths) - (nrow(style) - 1) * gap) / 2
+  stopifnot(x > 0)
+  for (j in seq_len(nrow(style))) {
+    segments(x, .12, x + line_length, .12, col = style$colour[j],
+             lty = style$line[j], lwd = 1.45)
+    if (!is.na(pch[j])) points(x + line_length / 2, .12, pch = pch[j],
+                               col = style$colour[j], cex = if (pch[j] == 1) .81 else .54)
+    text(x + line_length + .06, .12, style$name[j], adj = .0, cex = .86)
+    x <- x + widths[j] + gap
+  }
+}
+
 power_plot <- function() {
-  panels(1, 3, .19)
+  left <- c(.43, .25, .25)
+  panel_width <- (par("din")[1] - sum(left) - 3 * .065) / 3
+  panels(1, 3, .52, pointsize = 10, row_heights = par("din")[2] - .52,
+         column_widths = panel_width + left + .065)
   for (i in seq_along(scenarios$id)) {
     id <- scenarios$id[i]
     s <- baseline[baseline$scenario == id, ]
     points_i <- power_points[power_points$scenario == id, ]
     heading <- paste0("(", letters[i], ") Scenario ", id, "  (\u03c3 = ", scenarios$sigma[i], ")")
-    frame(c(-2.15, 4.15), c(-.04, 1.04), c(-2, 0, 2, 4), seq(0, 1, .2), heading,
-          expression(theta~"(treatment effect)"), if (i == 1L) "Power" else "")
-    abline(h = .80, v = 2, lty = 3, col = "gray45", lwd = .9)
-    series(s, "theta", "power", styles)
+    planning_frame(c(-2.15, 4.15), c(-.035, 1.035), c(-2, 0, 2, 4), seq(0, 1, .2),
+                   c(.32, left[i], .24, .065), heading)
+    if (i == 1L) mtext("Power", 2, line = 1.34, las = 0, cex = .90)
+    abline(h = .80, v = 2, lty = "34", col = "#858D91", lwd = .75)
+    series(s, "theta", "power", styles, width = 1.45)
     for (j in seq_len(nrow(styles))) {
       y <- points_i$power[match(styles$key[j], points_i$method)]
       points(2, y, col = styles$colour[j], pch = if (j == 2L) 1 else 16,
-             cex = if (j == 2L) .95 else .58)
+             cex = if (j == 2L) .81 else .54)
     }
   }
-  key(styles, pch = c(16, 1, 16, 16))
+  planning_key(styles, expression("Treatment effect " * theta), pch = c(16, 1, 16, 16))
 }
-figure("zero_gap_power", 6.75, 2.95, power_plot, svg = TRUE, dpi = 360)
+figure("zero_gap_power", 7.25, 2.38, power_plot, svg = TRUE, dpi = 600)
 
 sensitivity <- function(shared_discrepancy) {
   data <- if (shared_discrepancy) common else matched
@@ -159,33 +203,44 @@ sensitivity <- function(shared_discrepancy) {
     list(c(.85, .9, .95), seq(0, .2, .05), seq(.4, 1, .2))
   limits <- if (shared_discrepancy) list(c(.875, .958), c(0, .125), c(.3, 1.015)) else
     list(c(.82, .965), c(0, .2), c(.30, 1.025))
-  panels(3, 3, .37)
+  # The first row carries the column titles and the last row the x ticks.
+  # Allocate those margins separately to give all nine plotting regions equal height.
+  top <- c(.24, .06, .06)
+  bottom <- c(.09, .09, .32)
+  legend_height <- .52
+  plot_height <- (par("din")[2] - sum(top + bottom) - legend_height) / 3
+  panels(3, 3, legend_height, pointsize = 10, row_heights = plot_height + top + bottom)
+  par(omi = c(0, .18, 0, 0))
   for (i in seq_along(scenarios$id)) {
     id <- scenarios$id[i]
     s <- data[data$scenario == id, ]
     for (j in seq_along(metrics)) {
-      frame(c(-.52, .52), limits[[j]], c(-.5, 0, .5), ticks[[j]],
-        if (i == 1) headers[j] else "", ylabel = if (j == 1) paste("Scenario", id) else "",
-        show_x = i == 3, margins = c(if (i == 3) 1.6 else .6, 3.6, if (i == 1) 1.7 else .65, .45))
+      planning_frame(c(-.52, .52), limits[[j]], c(-.5, 0, .5), ticks[[j]],
+                     c(bottom[i], .37, top[i], .06),
+                     if (i == 1L) headers[j] else "", show_x = i == 3L)
+      if (j == 1L) {
+        text(grconvertX(.075, from = "inches", to = "user"), mean(limits[[j]]),
+             id, xpd = NA, cex = .91, font = 2)
+      }
       stopifnot(all(s[[metrics[j]]] >= limits[[j]][1]), all(s[[metrics[j]]] <= limits[[j]][2]))
       guides <- list(.95, c(.025, .10), .80)[[j]]
-      if (!shared_discrepancy || j == 3L) abline(h = guides, col = "gray55", lwd = .7, lty = 3)
-      series(s, x, metrics[j], style, group)
+      if (!shared_discrepancy || j == 3L) abline(h = guides, col = "#858D91", lwd = .75, lty = "34")
+      series(s, x, metrics[j], style, group, width = 1.45)
       if (!shared_discrepancy && j == 2L) {
         markers <- thresholds[thresholds$scenario == id & thresholds$within_plotted_range, ]
         for (k in seq_len(nrow(markers))) {
           idx <- match(markers$method[k], style$key)
-          segments(markers$xi_tol[k], 0, markers$xi_tol[k], .10, col = style$colour[idx], lty = 3)
+          segments(markers$xi_tol[k], 0, markers$xi_tol[k], .10, col = style$colour[idx], lty = 3, lwd = .85)
           points(markers$xi_tol[k], .10, pch = if (idx == 2) 1 else 16,
-                 col = style$colour[idx], cex = if (idx == 2) 1.0 else .6)
+                 col = style$colour[idx], cex = if (idx == 2) .84 else .55)
         }
       }
     }
   }
-  key(style, xlabel = xlabel)
+  planning_key(style, xlabel)
 }
-figure("study_design_sensitivity", 6.75, 6.80, function() sensitivity(FALSE), svg = TRUE, dpi = 300)
-figure("common_source_discrepancy", 6.75, 6.15, function() sensitivity(TRUE))
+figure("study_design_sensitivity", 7.25, 4.64, function() sensitivity(FALSE), svg = TRUE, dpi = 600)
+figure("common_source_discrepancy", 7.25, 4.64, function() sensitivity(TRUE), dpi = 600)
 
 causal_gap_label <- expression("Causal gap " * xi[lambda*","*delta])
 scalar_x <- c(-.30, -.15, 0, .15, .30)

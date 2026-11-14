@@ -60,12 +60,38 @@ validate_curves <- function(d, row_field, row_values) {
 }
 
 draw_simulation <- function(d, row_field, row_values, file) {
-  # Each column shares its vertical scale over the two rows.
-  grDevices::cairo_pdf(file, width = 6.75, height = 4.1, family = "sans")
+  compare_nuisances <- row_field == "mode"
+  if (compare_nuisances) {
+    grDevices::cairo_pdf(file, width = 7.25, height = 3.00, family = "sans", pointsize = 9)
+  } else {
+    grDevices::cairo_pdf(file, width = 6.75, height = 4.1, family = "sans")
+  }
   on.exit(grDevices::dev.off())
-  layout(rbind(1:4, 5:8, rep(9, 4)), heights = c(1, 1.13, .19))
-  par(oma = c(.25, 1.7, .8, .1), mgp = c(1.75, .4, 0), tcl = -.18,
-      xaxs = "i", yaxs = "i", ps = 9, cex = 1)
+
+  if (compare_nuisances) {
+    # Share the gap title across the four columns and put row labels in the
+    # outer margin so every panel has the same plotting area.
+    layout(rbind(1:4, 5:8, rep(9, 4)), heights = c(1, 1.12, .32))
+    par(oma = c(.05, .96, .1, .22), mgp = c(1.55, .37, 0), tcl = -.18,
+        xaxs = "i", yaxs = "i", ps = 9, cex = 1)
+    palette <- c("#176CB0", "#C75A18", "#50575D", "#7952A0")
+    patterns <- c("solid", "52", "13", "5313")
+    shapes <- c(16, 17, 0, 5)
+    curve_width <- 1.25
+    grid_color <- "#E3E7EA"
+    axis_color <- "#647078"
+  } else {
+    layout(rbind(1:4, 5:8, rep(9, 4)), heights = c(1, 1.13, .19))
+    par(oma = c(.25, 1.7, .8, .1), mgp = c(1.75, .4, 0), tcl = -.18,
+        xaxs = "i", yaxs = "i", ps = 9, cex = 1)
+    palette <- colors
+    patterns <- line_types
+    curve_width <- 1
+    grid_color <- "#E6E6E6"
+    axis_color <- "black"
+  }
+
+  # Each column shares its vertical scale over the two rows.
   for (i in seq_along(row_values)) {
     row <- d[d[[row_field]] == row_values[i], ]
     for (j in seq_along(metrics)) {
@@ -81,39 +107,67 @@ draw_simulation <- function(d, row_field, row_values, file) {
                       bias_theta = c(-.3, -.15, 0, .15, .3), pretty(limit, n = 4))
       ticks <- ticks[ticks >= limit[1] & ticks <= limit[2]]
       xticks <- seq(-.3, .3, .15)
-      par(mar = c(if (i == 2L) 2.55 else .85, 2.45, 1.35, .4))
+      if (compare_nuisances) {
+        par(mar = c(if (i == 2L) 1.42 else .32, 2.21, 1.36, .27))
+      } else {
+        par(mar = c(if (i == 2L) 2.55 else .85, 2.45, 1.35, .4))
+      }
       plot.new()
       plot.window(c(-.31, .31), limit)
-      abline(v = xticks, h = ticks, col = "#E6E6E6", lwd = .6)
+      abline(v = xticks, h = ticks, col = grid_color, lwd = .6)
       if (metric %in% c("coverage_theta", "bias_theta")) {
         abline(h = if (j == 1L) .95 else 0, col = "grey50", lty = "dashed", lwd = .6)
       }
       for (k in seq_along(methods)) {
         series <- row[row$method == methods[k], ]
         series <- series[order(series$xi), ]
-        lines(series$xi, series[[metric]], col = colors[k], lty = line_types[k], lwd = 1)
+        lines(series$xi, series[[metric]], col = palette[k], lty = patterns[k], lwd = curve_width)
+        if (compare_nuisances) {
+          # Interleave a few symbols on real grid points so coincident curves
+          # can be identified at their original coordinates.
+          marked <- seq.int(1L + 2L * k, nrow(series), by = 9L)
+          points(series$xi[marked], series[[metric]][marked], pch = shapes[k],
+                 cex = .55, lwd = .8, col = palette[k])
+        }
       }
-      axis(1, at = xticks, labels = if (i == 2L) c("-.30", "", "0", "", ".30") else FALSE,
-           cex.axis = .79, lwd = .55)
-      axis(2, at = ticks, las = 1, cex.axis = .72, lwd = .55)
-      box(lwd = .6)
       panel <- paste0("(", letters[(i - 1L) * 4L + j], ")")
-      heading <- switch(metric, coverage_theta = bquote(bold(.(panel)~"Cov."~"("*theta*")")),
-                        bias_theta = bquote(bold(.(panel)~"Bias"~"("*theta*")")),
-                        mse_theta = bquote(bold(.(panel)~"MSE"~"("*theta*")")),
-                        width = bquote(bold(.(panel)~"Width")))
-      mtext(heading, side = 3, line = .28, adj = 0, cex = .88)
-      if (i == 2L) mtext(expression("Causal gap"~xi[lambda*","*delta]), 1, line = 1.4, cex = .83)
-      if (j == 1L) {
-        label <- if (row_field == "mode") row_values[i] else bquote(n[RCT] == .(row_values[i]))
-        mtext(label, side = 2, line = 2.45, cex = .79)
+      if (compare_nuisances) {
+        axis(1, at = xticks, labels = if (i == 2L) c("-.30", "", "0", "", ".30") else FALSE,
+             cex.axis = .86, lwd = .65, col = axis_color)
+        labels <- sub("^(-?)0\\.", "\\1.", format(ticks, trim = TRUE))
+        labels[ticks == 0 | ticks == 1] <- as.character(ticks[ticks == 0 | ticks == 1])
+        axis(2, at = ticks, labels = labels, las = 1, cex.axis = .86, lwd = .65, col = axis_color)
+        box(lwd = .65, col = axis_color)
+        title <- c("Causal coverage", "Causal bias", "MSE", "Interval width")[j]
+        mtext(paste(panel, title), side = 3, line = .32, adj = 0, cex = 1, font = 2)
+        if (j == 1L) mtext(row_values[i], side = 2, line = 2.27, cex = .85)
+      } else {
+        axis(1, at = xticks, labels = if (i == 2L) c("-.30", "", "0", "", ".30") else FALSE,
+             cex.axis = .79, lwd = .55)
+        axis(2, at = ticks, las = 1, cex.axis = .72, lwd = .55)
+        box(lwd = .6)
+        heading <- switch(metric, coverage_theta = bquote(bold(.(panel)~"Cov."~"("*theta*")")),
+                          bias_theta = bquote(bold(.(panel)~"Bias"~"("*theta*")")),
+                          mse_theta = bquote(bold(.(panel)~"MSE"~"("*theta*")")),
+                          width = bquote(bold(.(panel)~"Width")))
+        mtext(heading, side = 3, line = .28, adj = 0, cex = .88)
+        if (i == 2L) mtext(expression("Causal gap"~xi[lambda*","*delta]), 1, line = 1.4, cex = .83)
+        if (j == 1L) mtext(bquote(n[RCT] == .(row_values[i])), side = 2, line = 2.45, cex = .79)
       }
     }
   }
   par(mar = c(0, 0, 0, 0))
   plot.new()
-  legend("center", legend = method_labels, col = colors, lty = line_types, lwd = 1,
-         horiz = TRUE, bty = "n", cex = .77, x.intersp = .45, seg.len = 2.3)
+  if (compare_nuisances) {
+    plot.window(c(0, 1), c(0, 1))
+    text(.5, .83, expression("Causal gap"~xi[lambda*","*delta]), cex = .98)
+    legend(.5, .24, legend = method_labels, col = palette, lty = patterns, pch = shapes,
+           lwd = curve_width, pt.cex = .58, pt.lwd = .75, horiz = TRUE, bty = "n",
+           cex = .9, xjust = .5, yjust = .5, x.intersp = .55, seg.len = 2.6)
+  } else {
+    legend("center", legend = method_labels, col = colors, lty = line_types, lwd = 1,
+           horiz = TRUE, bty = "n", cex = .77, x.intersp = .45, seg.len = 2.3)
+  }
 }
 
 render_simulations <- function(inputs, figures, audit, check_archive = FALSE) {
