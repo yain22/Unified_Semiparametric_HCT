@@ -16,9 +16,9 @@ hct_eif_nuisance <- function(data, outcome_terms, source_terms = outcome_terms,
   if (length(clip) != 1L || !is.finite(clip) || clip <= 0 || clip >= .5)
     stop('clip must be strictly between zero and one half.')
   yf <- hct_eif_formula(outcome_terms, 'Y')
-  sf <- hct_eif_formula(source_terms, 'S')
+  sf <- hct_eif_formula(source_terms, 'R')
   # Avoid accidentally regressing on the response, treatment, or source.
-  if (any(c('Y', 'S', 'A') %in% c(all.vars(outcome_terms), all.vars(source_terms))))
+  if (any(c('Y', 'R', 'A') %in% c(all.vars(outcome_terms), all.vars(source_terms))))
     stop('Nuisance terms must contain only baseline covariates.')
   if (is.null(fold_id)) {
     fold <- rep(1L, nrow(data))
@@ -37,7 +37,7 @@ hct_eif_nuisance <- function(data, outcome_terms, source_terms = outcome_terms,
   for (k in sort(unique(fold))) {
     valid <- which(fold == k)
     train <- if (crossfit) which(fold != k) else seq_len(nrow(data))
-    Ttrain <- train[data$S[train] == 1 & data$A[train] == 1]
+    Ttrain <- train[data$R[train] == 1 & data$A[train] == 1]
     Ctrain <- train[data$A[train] == 0]
     fit1 <- lm(yf, data = data[Ttrain, , drop = FALSE])
     fit0 <- lm(yf, data = data[Ctrain, , drop = FALSE])
@@ -94,7 +94,7 @@ hct_eif_from_predictions <- function(data, m1, m0, p, e = NULL,
   if (any(lengths(list(m1, m0, p)) != N) || any(!is.finite(c(m1, m0, p))) ||
     any(p <= 0 | p >= 1) || length(alpha) != 1L || !is.finite(alpha) ||
     alpha <= 0 || alpha >= 1) stop('Invalid nuisance predictions or alpha.')
-  trial <- data$S == 1
+  trial <- data$R == 1
   treated <- trial & data$A == 1
   control <- data$A == 0
   h <- p / (1 - e * p)
@@ -103,7 +103,7 @@ hct_eif_from_predictions <- function(data, m1, m0, p, e = NULL,
   one_step <- plugin + mean(residual_term)
   if (is.null(estimate)) estimate <- one_step
   if (length(estimate) != 1L || !is.finite(estimate)) stop('Invalid estimate.')
-  phi <- data$S / q * (m1 - m0 - estimate) + residual_term
+  phi <- data$R / q * (m1 - m0 - estimate) + residual_term
   components <- do.call(rbind, lapply(levels(design$group), function(g) {
     values <- phi[design$group == g]
     data.frame(

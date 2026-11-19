@@ -41,8 +41,8 @@ if (is.null(cohort)) {
 } else {
   z <- readRDS(cohort)
 }
-trial <- z$trial
-external <- z$external_primary
+trial <- clinical_source_column(z$trial)
+external <- clinical_source_column(z$external_primary)
 stopifnot(nrow(trial) == 442L, nrow(external) == 273L, sum(trial$A) == 229L,
           !anyDuplicated(trial$id), !anyDuplicated(external$id))
 shared <- function(d) d$age >= 8 & d$duration >= 1 & d$hba1c0 < 10
@@ -58,7 +58,7 @@ if (analysis == "primary") {
   if (!is.null(z$trial_flow)) write_result(z$trial_flow, "trial_flow")
   if (!is.null(z$baseline_summary)) write_result(z$baseline_summary, "baseline_summary")
 }
-fields <- c("S", "A", "Y", cgm6m_baseline)
+fields <- c("R", "A", "Y", cgm6m_baseline)
 all_data <- rbind(trial[fields], external[fields])
 fold <- h$cgm_folds(all_data, seed = 9302026L)
 groups <- list(trial_CGM = trial[trial$A == 1, ], internal = trial[trial$A == 0, ],
@@ -66,7 +66,7 @@ groups <- list(trial_CGM = trial[trial$A == 1, ], internal = trial[trial$A == 0,
 source_check <- function(g, label) {
   # Trial source records measure days relative to randomization. Registry dates
   # are months relative to a common origin within participant.
-  elapsed <- if (all(g$S == 1L)) {
+  elapsed <- if (all(g$R == 1L)) {
     (g$followup6_days - g$baseline_sample_days) / (365.25/12)
   } else {
     g$followup_month - g$baseline_month
@@ -125,10 +125,10 @@ normal_interval <- function(estimate, se) estimate + c(-1,1)*qnorm(.975)*se
 working_se <- function(psi, g) h$hct_unrestricted_group_variance(psi, g)$se
 fit <- function(d, full = FALSE) {
   u <- shared(d)
-  S <- d$S; T <- S*d$A; C <- S*(1-d$A); E <- 1-S
-  R <- as.logical(S); take <- function(x) as.logical(x)
-  N <- nrow(d); nR <- sum(R); group <- h$cgm_group(d)
-  stopifnot(all(u[!R]), all(d$A[!R] == 0))
+  R <- d$R; T <- R*d$A; C <- R*(1-d$A); E <- 1-R
+  is_trial <- as.logical(R); take <- function(x) as.logical(x)
+  N <- nrow(d); nR <- sum(is_trial); group <- h$cgm_group(d)
+  stopifnot(all(u[!is_trial]), all(d$A[!is_trial] == 0))
   design <- model.matrix(cgm6m_basis,d)
   means <- lapply(list(T, C, E), function(g) {
     rows <- take(g); h$hct_unrestricted_ols(design[rows,,drop=FALSE],d$Y[rows])
@@ -143,14 +143,14 @@ fit <- function(d, full = FALSE) {
   vC <- vE <- numeric(N)
   vC[u] <- exp(drop(design[u,,drop=FALSE]%*%variances[[1]]))
   vE[u] <- exp(drop(design[u,,drop=FALSE]%*%variances[[2]]))
-  source_fit <- h$hct_unrestricted_logit(design[u,,drop=FALSE],S[u])
+  source_fit <- h$hct_unrestricted_logit(design[u,,drop=FALSE],R[u])
   p <- lambda <- rep(1,N);odds <- numeric(N)
   eta <- drop(design[u,,drop=FALSE]%*%source_fit$eta)
   p[u] <- plogis(eta);odds[u] <- exp(eta)
   lambda[u] <- (.5*odds[u])/(.5*odds[u]+vC[u]/vE[u])
   stopifnot(all(is.finite(odds[u])),all(p[u] > 0 & p[u] < 1),
             all(lambda[u] > 0 & lambda[u] < 1))
-  trial_score <- S*(mT-mC)+2*T*(d$Y-mT)-2*C*(d$Y-mC)
+  trial_score <- R*(mT-mC)+2*T*(d$Y-mT)-2*C*(d$Y-mC)
   # The uncentered HCT and internal-only numerators coincide outside shared
   # eligibility. Form the gap score only where an external control can occur.
   a <- which(u)
@@ -158,14 +158,14 @@ fit <- function(d, full = FALSE) {
   l <- lambda[a]; pp <- p[a]; od <- odds[a]
   rc <- d$Y[a]-mC[a]; re <- d$Y[a]-mE[a]
   gap <- numeric(N)
-  gap[a] <- S[a]*(1-l)*diff_mean + 2*C[a]*(1-l)*rc - E[a]*(1-l)*od*re +
-    diff_mean*l*(1-l)*(-(S[a]-pp)/(1-pp) + 2*C[a]*(rc^2/vC[a]-1) -
+  gap[a] <- R[a]*(1-l)*diff_mean + 2*C[a]*(1-l)*rc - E[a]*(1-l)*od*re +
+    diff_mean*l*(1-l)*(-(R[a]-pp)/(1-pp) + 2*C[a]*(rc^2/vC[a]-1) -
                        E[a]*od*(re^2/vE[a]-1))
   # Independent verification against the original unrestricted score on shared
   # profiles, reweighted by the overall trial denominator.
   score_shared <- h$cgm_est_score(d[a, ],
     data.frame(mT=mT[a],mC=mC[a],mE=mE[a],p=pp,odds=od,vC=vC[a],vE=vE[a]))
-  hct <- (sum(S[a])*score_shared$estimate + sum(trial_score[!u]))/nR
+  hct <- (sum(R[a])*score_shared$estimate + sum(trial_score[!u]))/nR
   xi <- sum(gap)/nR; augmented <- sum(trial_score)/nR
   stopifnot(abs(hct-xi-augmented)<1e-10)
   # Common-control comparator on shared support, internal-control regression
@@ -176,12 +176,12 @@ fit <- function(d, full = FALSE) {
     h$hct_unrestricted_ols(design[pooled,,drop=FALSE],d$Y[pooled])$beta)
   pr <- p
   pr[u] <- pmin(1-1e-6,pmax(1e-6,p[u]))
-  rs <- S*(mT-mP)+2*T*(d$Y-mT)-(1-d$A)*pr/(1-.5*pr)*(d$Y-mP)
+  rs <- R*(mT-mP)+2*T*(d$Y-mT)-(1-d$A)*pr/(1-.5*pr)*(d$Y-mP)
   restricted <- sum(rs)/nR
   # Under the ECT observation law restrict the treated standardization
   # population before fitting the source model and evaluating the contrast.
   eobs <- u & take(T+E); nde <- sum(eobs); nte <- sum(T[eobs])
-  se <- S[eobs]; ze <- design[eobs,,drop=FALSE]
+  se <- R[eobs]; ze <- design[eobs,,drop=FALSE]
   logit_ect <- h$hct_unrestricted_logit(ze,se)
   ep <- plogis(drop(ze%*%logit_ect$eta)); eg <- pmin(.99,pmax(.01,ep))
   eo <- eg/(1-eg); observed_resid <- d$Y[eobs]-mE[eobs]
@@ -191,15 +191,15 @@ fit <- function(d, full = FALSE) {
   est <- c("ANOVA (RCT)"=it[["ANOVA (RCT)"]]$estimate,"ANCOVA (RCT)"=it[["ANCOVA (RCT)"]]$estimate,
            "AIPW-R"=restricted,"AIPW-U (est)"=hct,"AIPW (ECT)"=ect,
            matching_gap=xi,trial_augmented=augmented,
-           control_difference=mean(diff_mean[S[a]==1]),plugin_gap=sum(S[a]*(1-l)*diff_mean)/nR)
+           control_difference=mean(diff_mean[R[a]==1]),plugin_gap=sum(R[a]*(1-l)*diff_mean)/nR)
   diagnostics <- c(hct_ps_min=min(p[u]),hct_ps_max=max(p[u]),ect_ps_min=min(ep),
     ect_ps_max=max(ep),ect_lower_hits=sum(ep<.01),ect_upper_hits=sum(ep>.99),
-    ect_external_hits=sum(!se & ep!=eg),lambda_min=min(lambda[R]),lambda_max=max(lambda[R]),
-    lambda_mean=mean(lambda[R]))
+    ect_external_hits=sum(!se & ep!=eg),lambda_min=min(lambda[is_trial]),lambda_max=max(lambda[is_trial]),
+    lambda_mean=mean(lambda[is_trial]))
   if (!full) return(c(est, diagnostics))
   se_method <- c(it[["ANOVA (RCT)"]]$se,it[["ANCOVA (RCT)"]]$se,
-    working_se((rs-S*restricted)/mean(S),group),
-    working_se((trial_score+gap-S*hct)/mean(S),group),
+    working_se((rs-R*restricted)/mean(R),group),
+    working_se((trial_score+gap-R*hct)/mean(R),group),
     sqrt(mean(((eraw-se*ect)/mean(se))^2)/nde))
   probabilities <- list(trial_treated=p[take(T)&u],internal=p[take(C)&u],external=p[take(E)],
                         ect_treated=ep[take(se)],ect_external=ep[!take(se)])
@@ -230,7 +230,7 @@ if (B) {
   draws <- lapply(seq_len(B),function(b) {
     set.seed(19302026L + 37L*b)
     ids <- unlist(lapply(strata,function(ii)sample(ii,length(ii),replace=TRUE)),use.names=FALSE)
-    ids <- c(ids[d$S[ids]==1L],ids[d$S[ids]==0L])
+    ids <- c(ids[d$R[ids]==1L],ids[d$R[ids]==0L])
     value <- fit(d[ids,,drop=FALSE])
     if(b %% 250L==0L)message("Completed ",b," of ",B," paired refits.")
     value

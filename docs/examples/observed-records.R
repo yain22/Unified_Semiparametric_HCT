@@ -9,10 +9,10 @@ if (sys.nframe() == 0L) {
 }
 records <- read.csv(file.path(script_dir, "observed-records.csv"))
 
-# S = 1 denotes trial membership; A = 1 denotes treatment.
-records$I1 <- with(records, S * A)
-records$I10 <- with(records, S * (1L - A))
-records$I0 <- 1L - records$S
+# R = 1 denotes trial membership; A = 1 denotes treatment.
+records$I1 <- with(records, R * A)
+records$I10 <- with(records, R * (1L - A))
+records$I0 <- 1L - records$R
 stopifnot(all(rowSums(records[c("I1", "I10", "I0")]) == 1L))
 
 # A common-mean restriction changes the hybrid model, not the rows observed.
@@ -20,7 +20,7 @@ stopifnot(all(rowSums(records[c("I1", "I10", "I0")]) == 1L))
 designs <- list(
   "Unrestricted HCT" = records,
   "Common-mean HCT" = records,
-  "RCT" = subset(records, S == 1L),
+  "RCT" = subset(records, R == 1L),
   "ECT" = subset(records, I1 == 1L | I0 == 1L)
 )
 for (design in names(designs)) {

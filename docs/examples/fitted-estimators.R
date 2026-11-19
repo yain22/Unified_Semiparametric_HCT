@@ -3,19 +3,19 @@
 # observed external-control outcomes. X is the first baseline covariate.
 records <- data.frame(
   id = sprintf("P%02d", 1:6),
-  S = c(1, 1, 1, 1, 0, 0),
+  R = c(1, 1, 1, 1, 0, 0),
   A = c(1, 1, 0, 0, 0, 0),
   X = c(0.20, 0.70, 0.30, 0.80, 0.25, 0.65),
   Y = c(8.4, 10.1, 7.2, 8.5, 6.9, 8.0)
 )
 
 worked_estimates <- function(external_shift = 0, data = records) {
-  data$Y[data$S == 0] <- data$Y[data$S == 0] + external_shift
+  data$Y[data$R == 0] <- data$Y[data$R == 0] + external_shift
   with(data, {
-    it <- S * A
-    ic <- S * (1 - A)
-    ec <- 1 - S
-    n_trial <- sum(S)
+    it <- R * A
+    ic <- R * (1 - A)
+    ec <- 1 - R
+    n_trial <- sum(R)
     # Fixed illustrative predictions for the unrestricted and ECT scores.
     e <- 0.5
     p <- 0.55 + 0.15 * X
@@ -31,11 +31,11 @@ worked_estimates <- function(external_shift = 0, data = records) {
     delta <- m10 - m0
     correction <- delta * lambda * (1 - lambda)
     hct_u <- cbind(
-      standardize = S * (m1 - lambda * m10 - (1 - lambda) * m0),
+      standardize = R * (m1 - lambda * m10 - (1 - lambda) * m0),
       treated = it / e * (Y - m1),
       internal = -ic * lambda / (1 - e) * (Y - m10),
       external = -ec * odds * (1 - lambda) * (Y - m0),
-      source = -correction * (S - p) / (1 - p),
+      source = -correction * (R - p) / (1 - p),
       internal_var = correction * ic / (1 - e) * ((Y - m10)^2 / v10 - 1),
       external_var = -correction * ec * odds * ((Y - m0)^2 / v0 - 1)
     )
@@ -44,7 +44,7 @@ worked_estimates <- function(external_shift = 0, data = records) {
     pooled <- lm(Y ~ X, data = data, subset = A == 0)
     mp <- predict(pooled, newdata = data)
     hct_r <- cbind(
-      standardize = S * (m1 - mp),
+      standardize = R * (m1 - mp),
       treated = it / e * (Y - m1),
       pooled = -p * (ic + ec * rho) / d * (Y - mp)
     )
@@ -52,10 +52,10 @@ worked_estimates <- function(external_shift = 0, data = records) {
     # The ECT observes the treated trial subset and the external controls.
     # Its source odds are e times the HCT source odds under this restriction.
     keep <- it == 1 | ec == 1
-    ect <- cbind(treated = S * (Y - m0), external = -ec * e * odds * (Y - m0))[keep, ]
+    ect <- cbind(treated = R * (Y - m0), external = -ec * e * odds * (Y - m0))[keep, ]
 
     # The A row of the least-squares operator gives each participant's weight.
-    trial <- subset(data, S == 1)
+    trial <- subset(data, R == 1)
     trial_contributions <- function(formula) {
       fit <- lm(formula, data = trial)
       D <- model.matrix(fit)

@@ -3,7 +3,7 @@
 \title{Evaluate the unrestricted hybrid-trial estimator and its influence function}
 \usage{aipw_u(data, nuisance)}
 \arguments{
-  \item{data}{Data frame containing the numeric columns \code{S} (1 for trial,
+  \item{data}{Data frame containing the numeric columns \code{R} (1 for trial,
   0 for external), \code{A} (1 for treated, 0 for control), and \code{Y}
   (observed outcome). External records must have \code{A = 0}.}
   \item{nuisance}{Data frame of predictions at each participant's baseline
@@ -53,7 +53,7 @@ value), and \code{lambda} (internal share at each profile).
 }
 \examples{
 # Toy hybrid trial with a common covariate profile, two participants per group.
-d <- data.frame(S = c(1, 1, 1, 1, 0, 0), A = c(1, 1, 0, 0, 0, 0),
+d <- data.frame(R = c(1, 1, 1, 1, 0, 0), A = c(1, 1, 0, 0, 0, 0),
                 Y = c(3, 5, 2, 4, 1, 3))
 f <- data.frame(p = rep(2/3, 6), e = .5,
                 m_treated = 4, m_internal = 3, m_external = 2,

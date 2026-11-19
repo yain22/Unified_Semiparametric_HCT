@@ -97,13 +97,13 @@ generate <- function(n, b) {
   f <- .5 + (.6 / sqrt(5)) * rowSums(X[, 1:5]) + (.25 / sqrt(5)) * rowSums(X[, 1:5]^2)
   error <- c(epsT, exp(.2 * xc[, 1]) * epsC, exp(-.2 * xe[, 1]) * epsE)
   data <- setNames(as.data.frame(X), paste0('X', 1:10))
-  data$S <- c(rep(1L, d$NT + d$NC), rep(0L, d$N0))
+  data$R <- c(rep(1L, d$NT + d$NC), rep(0L, d$N0))
   data$A <- c(rep(1L, d$NT), rep(0L, d$NC + d$N0))
-  data$Y <- f + error - (1 - data$S) * X[, 1]
+  data$Y <- f + error - (1 - data$R) * X[, 1]
   list(data = data, h = rep(1, nrow(data)), seed = seed, design = d)
 }
 shift <- function(data, h, k) {
-  data$Y <- data$Y - (1 - data$S) * k * h
+  data$Y <- data$Y - (1 - data$R) * k * h
   data
 }
 ect_path <- function(a, b) {
@@ -169,7 +169,7 @@ one_dataset <- function(job) {
       diagnostics[[m]] <- data.frame(
         N_trial = job$N_trial, method = m, replicate = job$replicate, seed = gen$seed,
         estimate0 = path$intercept, amplitude_slope = path$slope, xi_slope = path$slope / K,
-        lambda_trial_mean = mean(a$lambda[data$S == 1]), lambda_min = min(a$lambda), lambda_max = max(a$lambda),
+        lambda_trial_mean = mean(a$lambda[data$R == 1]), lambda_min = min(a$lambda), lambda_max = max(a$lambda),
         share_shift_error = max(abs(a$lambda - b$lambda)), max_leverage = max(a$max_leverage, b$max_leverage),
         min_variance_ratio = min(a$variance_ratio_range), max_variance_ratio = max(a$variance_ratio_range),
         nuisance_equation_max = max(a$nuisance_equation_max, b$nuisance_equation_max)
@@ -198,7 +198,7 @@ one_dataset <- function(job) {
   if (nrow(direct) && max(direct$estimate_error, direct$SE_error, direct$IF_error) > 1e-7) stop('Direct-refit path check failed.')
   # A separate transportability reference: restore external means to f.
   reference_data <- data
-  reference_data$Y <- data$Y + (1 - data$S) * data$X1
+  reference_data$Y <- data$Y + (1 - data$R) * data$X1
   reference_fits <- fg_fit(reference_data, helpers, mean_basis = 'quadratic', variance_basis = 'x1')
   reference_fits[['AIPW (ECT)']] <- scalar_ect_fit(reference_data, ect_helpers$sim)
   reference_fits <- c(reference_fits, trial)
@@ -217,7 +217,7 @@ one_dataset <- function(job) {
     success = TRUE, rows = rbindlist(rows), reference = reference, diagnostics = rbindlist(diagnostics), direct = direct,
     pairing = data.frame(
       N_trial = job$N_trial, replicate = job$replicate, seed = gen$seed,
-      full_sample_sha256 = digest::digest(data, algo = 'sha256'), ECT_sample_sha256 = digest::digest(data[data$A == 1 | data$S == 0, ], algo = 'sha256'),
+      full_sample_sha256 = digest::digest(data, algo = 'sha256'), ECT_sample_sha256 = digest::digest(data[data$A == 1 | data$R == 0, ], algo = 'sha256'),
       ect_clipped = ect0$external_clipped + ect0$treated_clipped
     ),
     warnings = unique(c(unlist(lapply(f0, function(x) x$warnings)), unlist(lapply(f1, function(x) x$warnings)), ect0$warnings, ect1$warnings))

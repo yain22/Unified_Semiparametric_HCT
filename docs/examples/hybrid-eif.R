@@ -13,7 +13,7 @@ hybrid_example <- function(delta = 0.2, external_variance = 1) {
                      v_internal = 1, v_external = external_variance)
   y <- ifelse(a == 1, m + 1, ifelse(s == 1, m, m - delta)) +
     ifelse(s == 1, 1, sqrt(external_variance)) * rep(z, 12)
-  aipw_u(data.frame(S = s, A = a, Y = y), fits)
+  aipw_u(data.frame(R = s, A = a, Y = y), fits)
 }
 
 fit <- hybrid_example()

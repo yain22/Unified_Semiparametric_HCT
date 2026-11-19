@@ -7,36 +7,36 @@
       "source": "historical/v2/code/cgm_estimated_share.R",
       "source_sha256": "a59332bd437f32e2c7da72b6a2f9ea11d9b81165307b051a75e30188191e5a8d",
       "packaged": "src/estimated_share.R",
-      "packaged_sha256": "d95a03a1a88410cc3b301630a52a07e1f6d79a8d8e148074a3c08ba0cff11fa4",
-      "transformation": "Exact top-level function extracts: cgm_est_variance, cgm_est_nuisance, cgm_est_score"
+      "packaged_sha256": "84ec5506bef8aeb6f855e26ec52b16bf3f1fa278e7c58125da921adc673f10a5",
+      "transformation": "Exact top-level function extracts: cgm_est_variance, cgm_est_nuisance, cgm_est_score Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/r/hct_unrestricted_comparators.R",
       "source_sha256": "519df0a7a3dcc6e988aacb8f67f78a953fd9189cc69fb57051625fb7351116c8",
       "packaged": "src/unrestricted_primitives.R",
-      "packaged_sha256": "61b79677722dacfc727afd351dc0457ce62954a732d7c70cf79966e10d2e0039",
-      "transformation": "Exact top-level function extracts: hct_unrestricted_ols, hct_unrestricted_logit, hct_unrestricted_group_variance Removed orphan comments for unbundled functions; estimator bodies unchanged."
+      "packaged_sha256": "ad6786252d05e54a7def310a37ac43d9a3fbb3e410e82a07caeaa1e491d0e62e",
+      "transformation": "Exact top-level function extracts: hct_unrestricted_ols, hct_unrestricted_logit, hct_unrestricted_group_variance Removed orphan comments for unbundled functions; estimator bodies unchanged. Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/r/cgm_case/hct_eif_comparators.R",
       "source_sha256": "daecdfebb5607b3678810b970e57f71520c5c5561dbdb48b79f2ed038c99d35f",
       "packaged": "src/restricted.R",
-      "packaged_sha256": "03f98a11715d33e779cefcf00730157ac6fccc6306fd7ff97ab199eef3dce19a",
-      "transformation": "Exact top-level function extracts: hct_eif_formula, hct_eif_nuisance, hct_eif_from_predictions Removed orphan comments for unbundled functions; estimator bodies unchanged."
+      "packaged_sha256": "e7d9dc79aafba73a91e1d8f23a5c5678f34f2e6ad6162b4e51f9d0d0e9fd8d53",
+      "transformation": "Exact top-level function extracts: hct_eif_formula, hct_eif_nuisance, hct_eif_from_predictions Removed orphan comments for unbundled functions; estimator bodies unchanged. Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/r/cgm_case/hct_trial_wald.R",
       "source_sha256": "6b45de939d29b948430cadee4fc8ad60103de8bda8e11cf1cceb07435555b655",
       "packaged": "src/trial_wald.R",
-      "packaged_sha256": "67b6d88a0c0aa5aaace4010c86df4025419318784a0b41d4e8000b0a4ff1d81e",
-      "transformation": "Exact top-level function extracts: hct_trial_wald_fit, hct_trial_wald_comparators"
+      "packaged_sha256": "4073d0c44133d58b409a82acb565014279c4e67f7825fc879946743d787647fd",
+      "transformation": "Exact top-level function extracts: hct_trial_wald_fit, hct_trial_wald_comparators Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/r/cgm_case/cgm_inference.R",
       "source_sha256": "1357bcd414a3da8f3eb8e16e983e085d6b1350a4b81352ff377e9929bf4fdb3f",
       "packaged": "src/folds.R",
-      "packaged_sha256": "a80695abce7c7d72f85f000ad0de7ad6219657ded79b4f2eca2d68a60fa7d6c9",
-      "transformation": "Exact top-level function extracts: cgm_group, cgm_folds"
+      "packaged_sha256": "68c04e6b76c3d35519ad44bebec0fa7f3a9c5f97922ea20045bc17a2fc65fa46",
+      "transformation": "Exact top-level function extracts: cgm_group, cgm_folds Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/r/cgm_case/cohort_trial_adapter.R",
@@ -56,8 +56,8 @@
       "source": "historical/case_study/code/six_months/cohort_6m.R",
       "source_sha256": "29d8087c8d4240afe83c809f2fdf2b48e8226fdfde9f9d6de8f7377cdbedd93e",
       "packaged": "cohort/cohort_6m.R",
-      "packaged_sha256": "fa77de1b0dc845d64f5c2d86b66267e1802b7fd300880c6318f62c3a28fa12c2",
-      "transformation": "Cohort construction unchanged; explicit archive paths; memory-only interface; removed unused legacy cache comparison and output writers."
+      "packaged_sha256": "6ac34fce6587b8be98a3307377508e9457749652cf715b90e2cd5285a969e453",
+      "transformation": "Cohort construction unchanged; explicit archive paths; memory-only interface; removed unused legacy cache comparison and output writers. Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/case_study/results/six_months/published_cgm_trials.json",
@@ -105,22 +105,22 @@
       "source": "historical/case_study/code/six_months/cgm6m_inference.R",
       "source_sha256": "19e3192abe0b1c6c1af5fc62d7cc1bb9244d40aff11fa94bfaf5c1dc7b5efeda",
       "packaged": "run_clinical.R",
-      "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
-      "transformation": "Nominal .5 validation; current displayed R/RCT comparator orchestration; no legacy fixed-share fitting dependency. Public runner defaults to replication/results/cgm and records input hashes by logical role."
+      "packaged_sha256": "3f4da81b51488720a7aa4a2ae1dbc21ab4ac923badd14b47f387734a387c4798",
+      "transformation": "Nominal .5 validation; current displayed R/RCT comparator orchestration; no legacy fixed-share fitting dependency. Public runner defaults to replication/results/cgm and records input hashes by logical role. Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/v2/code/cgm_ect.R",
       "source_sha256": "a2fbe812c34dbfe0b37c3370071bbe0cd7bb6971407b81d66171f3f59b479206",
       "packaged": "run_clinical.R",
-      "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
-      "transformation": "Direct lm/glm equation already validated independently in original source; explicit paths and aggregate-only outputs. Public runner defaults to replication/results/cgm and records input hashes by logical role."
+      "packaged_sha256": "3f4da81b51488720a7aa4a2ae1dbc21ab4ac923badd14b47f387734a387c4798",
+      "transformation": "Direct lm/glm equation already validated independently in original source; explicit paths and aggregate-only outputs. Public runner defaults to replication/results/cgm and records input hashes by logical role. Renamed the data source indicator from S to R; numerical operations are unchanged."
     },
     {
       "source": "historical/selection/cgm_selection_sensitivity.R",
       "source_sha256": "46c0cd3bde6ed4d31e703223af6836e08363af3ae7000d98ba009def10331a26",
       "packaged": "run_clinical.R",
-      "packaged_sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32",
-      "transformation": "Selection/status and historical character-group sampling order retained; explicit input paths, optional bootstrap. Public runner defaults to replication/results/cgm and records input hashes by logical role."
+      "packaged_sha256": "3f4da81b51488720a7aa4a2ae1dbc21ab4ac923badd14b47f387734a387c4798",
+      "transformation": "Selection/status and historical character-group sampling order retained; explicit input paths, optional bootstrap. Public runner defaults to replication/results/cgm and records input hashes by logical role. Renamed the data source indicator from S to R; numerical operations are unchanged."
     }
   ],
   "generated_files": [
@@ -134,7 +134,7 @@
     },
     {
       "path": "cohort/cohort_6m.R",
-      "sha256": "fa77de1b0dc845d64f5c2d86b66267e1802b7fd300880c6318f62c3a28fa12c2"
+      "sha256": "6ac34fce6587b8be98a3307377508e9457749652cf715b90e2cd5285a969e453"
     },
     {
       "path": "cohort/cohort_registry_adapter.R",
@@ -286,51 +286,51 @@
     },
     {
       "path": "README.md",
-      "sha256": "bae2c5dfa0147854062ceca37d3e977e8534126639ab2668fdb73bf00d6b52b1"
+      "sha256": "461bd404518314253df0aabf307ee6df9050a87e3bdf402eb7be4be9a5c0535a"
     },
     {
       "path": "render_clinical.R",
-      "sha256": "5d40a0e8b52388175511bf874122c5156c31541bc20d522294685bfd11250503"
+      "sha256": "3e1840cffdb59dd3b855804f958fde88cbd3c8982776e93f77fb630005af3334"
     },
     {
       "path": "render_descriptive.R",
-      "sha256": "268ab3d72f80fae6a91b5439d410460c1f4d6efa9848e3538295ada91581c381"
+      "sha256": "a7d28c52b1de4445304090e097935af2805c22754842c4b7766f98e1707afee0"
     },
     {
       "path": "run_clinical.R",
-      "sha256": "d9e4942051def6e9a566a54b3f5273d68b8b8f3494ee90ff658b9e75f9b10c32"
+      "sha256": "3f4da81b51488720a7aa4a2ae1dbc21ab4ac923badd14b47f387734a387c4798"
     },
     {
       "path": "src/estimated_share.R",
-      "sha256": "d95a03a1a88410cc3b301630a52a07e1f6d79a8d8e148074a3c08ba0cff11fa4"
+      "sha256": "84ec5506bef8aeb6f855e26ec52b16bf3f1fa278e7c58125da921adc673f10a5"
     },
     {
       "path": "src/folds.R",
-      "sha256": "a80695abce7c7d72f85f000ad0de7ad6219657ded79b4f2eca2d68a60fa7d6c9"
+      "sha256": "68c04e6b76c3d35519ad44bebec0fa7f3a9c5f97922ea20045bc17a2fc65fa46"
     },
     {
       "path": "src/restricted.R",
-      "sha256": "03f98a11715d33e779cefcf00730157ac6fccc6306fd7ff97ab199eef3dce19a"
+      "sha256": "e7d9dc79aafba73a91e1d8f23a5c5678f34f2e6ad6162b4e51f9d0d0e9fd8d53"
     },
     {
       "path": "src/trial_wald.R",
-      "sha256": "67b6d88a0c0aa5aaace4010c86df4025419318784a0b41d4e8000b0a4ff1d81e"
+      "sha256": "4073d0c44133d58b409a82acb565014279c4e67f7825fc879946743d787647fd"
     },
     {
       "path": "src/unrestricted_primitives.R",
-      "sha256": "61b79677722dacfc727afd351dc0457ce62954a732d7c70cf79966e10d2e0039"
+      "sha256": "ad6786252d05e54a7def310a37ac43d9a3fbb3e410e82a07caeaa1e491d0e62e"
     },
     {
       "path": "summarize_descriptive.R",
-      "sha256": "3a0e1818ab0f0992252d18a9568c81772aec41982dc2f8b0aac676d6c8d80983"
+      "sha256": "1a8605c36fc65cd386827445b77df7435ef647bd205f5b11bc5f7e8a99e55a55"
     },
     {
       "path": "support_gap.R",
-      "sha256": "f56b2d3090648b6a195b003abf58625ae5e0e2338f5b2af5de7be945f89d37c5"
+      "sha256": "127f7d63a2c500b3c011e9b28d9e2f73f6c08a0d374e9e8626de274ec54cd77c"
     },
     {
       "path": "validate_synthetic.R",
-      "sha256": "c301bf854092c253c8cdefe7ce05bf0b83e7e1df63f7ea0e4206841eb0b0d8ee"
+      "sha256": "82dedb4bc21f45e9398a6cf0da1ee663237ed8f392d11f73e022353187c0b5c6"
     }
   ],
   "historical_file_hashes": [

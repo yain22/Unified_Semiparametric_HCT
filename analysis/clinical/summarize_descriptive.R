@@ -23,8 +23,8 @@ if (!is.null(opt[["--cohort"]])) {
 # The older cache retains all randomized patients in trial; the portable
 # cohort builder keeps them in trial_all and the complete cases in trial.
 randomized <- if (is.null(cohort$trial_all)) cohort$trial else cohort$trial_all
-trial <- randomized[randomized$model_complete, ]
-external <- cohort$external_primary
+trial <- clinical_source_column(randomized[randomized$model_complete, ])
+external <- clinical_source_column(cohort$external_primary)
 registry <- cohort$registry_indexed
 stopifnot(nrow(randomized) == 451L, nrow(trial) == 442L, nrow(external) == 273L,
           nrow(registry) == 18579L, all(external$model_complete),
@@ -70,12 +70,12 @@ changes <- do.call(rbind, lapply(names(groups), function(g) {
 eligible <- function(data) data$age >= 8 & data$duration >= 1 & data$hba1c0 < 10
 shared_trial <- trial[eligible(trial), ]
 stopifnot(nrow(shared_trial) == 440L, all(eligible(external)))
-keep <- c("S", "A", cgm6m_baseline)
+keep <- c("R", "A", cgm6m_baseline)
 shared <- rbind(shared_trial[keep], external[keep])
 design <- model.matrix(cgm6m_basis, shared)
-fit <- hct_unrestricted_logit(design, shared$S)
+fit <- hct_unrestricted_logit(design, shared$R)
 linear_predictor <- drop(design %*% fit$eta)
-external_odds <- exp(linear_predictor[shared$S == 0])
+external_odds <- exp(linear_predictor[shared$R == 0])
 weights <- external_odds / sum(external_odds)
 stopifnot(all(is.finite(weights)), all(weights > 0))
 labels <- c(hba1c0 = "Baseline HbA1c", age = "Age", duration = "Diabetes duration",
@@ -87,7 +87,7 @@ balance <- do.call(rbind, lapply(names(labels), function(v) {
   data.frame(variable = unname(labels[v]), unweighted = abs(mean(x) - mean(y)) / scale,
              weighted = abs(mean(x) - sum(weights * y)) / scale)
 }))
-source_group <- ifelse(shared$S == 0, "External controls",
+source_group <- ifelse(shared$R == 0, "External controls",
                        ifelse(shared$A == 1, "Trial CGM", "Internal controls"))
 scores <- do.call(rbind, lapply(names(groups), function(g) {
   p <- plogis(linear_predictor[source_group == g])

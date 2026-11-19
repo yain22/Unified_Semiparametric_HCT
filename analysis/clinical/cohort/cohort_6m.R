@@ -27,7 +27,7 @@ cgm_6m_extract <- function(archive, pattern, destination) {
 }
 
 cgm_6m_format <- function(d, source, assignment_probability) {
-  d$S <- as.integer(source == "Trial")
+  d$R <- as.integer(source == "Trial")
   d$A <- if (source == "Trial") as.integer(d$arm == "CGM") else 0L
   d$source_id <- as.character(d$id)
   d$id <- paste0(if (source == "Trial") "JDRF:" else "T1DX:", d$source_id)

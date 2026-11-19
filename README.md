@@ -38,7 +38,7 @@ Figures require R with Cairo graphics and two packages: `install.packages(c("jso
 
 ## Use the estimator
 
-Download the [R source package](https://yain22.github.io/Unified_Semiparametric_HCT/downloads/causalgap_0.1.0.tar.gz), then select that file in R:
+Download the [R source package](https://yain22.github.io/Unified_Semiparametric_HCT/downloads/causalgap_0.1.1.tar.gz), then select that file in R:
 
 ```r
 install.packages(file.choose(), repos = NULL, type = "source")

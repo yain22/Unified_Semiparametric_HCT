@@ -121,20 +121,20 @@ generate <- function(d, b) {
   T <- c(rep(1, d$nT), rep(0, d$nC + d$nE))
   C <- c(rep(0, d$nT), rep(1, d$nC), rep(0, d$nE))
   E <- 1 - T - C
-  S <- T + C
+  R <- T + C
   residual <- c(epsT, exp(d$variance_slope * xc[, 1] / 2) * epsC, exp(-d$variance_slope * xe[, 1] / 2) * epsE)
   data <- setNames(as.data.frame(X), paste0('X', 1:10))
-  data$S <- S
+  data$R <- R
   data$A <- T
   h <- discrepancy_shape(x, d)
   data$Y <- f + residual - E * h
   list(
-    data = data, x = x, f = f, h = h, residual = residual, vC = vC, vE = vE, T = T, C = C, E = E, S = S,
+    data = data, x = x, f = f, h = h, residual = residual, vC = vC, vE = vE, T = T, C = C, E = E, R = R,
     group = factor(ifelse(E == 1, 'E', ifelse(T == 1, 'T', 'C')), levels = c('T', 'C', 'E')), seed = seed
   )
 }
 shift <- function(data, a) {
-  data$Y <- data$Y - (1 - data$S) * a
+  data$Y <- data$Y - (1 - data$R) * a
   data
 }
 gcov <- function(x, y, group, denominator) sum(vapply(levels(group), function(k) {
@@ -149,8 +149,8 @@ oracle_U_raw <- function(g, d, a) {
   delta <- a + g$h
   e <- d$nT / d$nR
   ac <- 1 - e
-  g$S * (1 - L) * delta + g$T / e * g$residual - g$C * L / ac * g$residual - g$E * (1 - L) * omega * g$residual -
-    delta * H * (g$S - p) / (1 - p) + delta * H * g$C / ac * (g$residual^2 / g$vC - 1) -
+  g$R * (1 - L) * delta + g$T / e * g$residual - g$C * L / ac * g$residual - g$E * (1 - L) * omega * g$residual -
+    delta * H * (g$R - p) / (1 - p) + delta * H * g$C / ac * (g$residual^2 / g$vC - 1) -
     delta * H * g$E * omega * (g$residual^2 / g$vE - 1)
 }
 oracle_paths <- function(g, d) {
@@ -240,15 +240,15 @@ one_dataset <- function(job) {
     success = TRUE, coefficients = coefficients, direct = rbindlist(list(direct), fill = TRUE),
     pairing = data.table(
       scenario = d$scenario, replicate = b, seed = g$seed,
-      full_sample_sha256 = digest::digest(data, algo = 'sha256'), ECT_sample_sha256 = digest::digest(data[data$A == 1 | data$S == 0, ], algo = 'sha256')
+      full_sample_sha256 = digest::digest(data, algo = 'sha256'), ECT_sample_sha256 = digest::digest(data[data$A == 1 | data$R == 0, ], algo = 'sha256')
     ),
     diagnostics = data.table(
       scenario = d$scenario, replicate = b, share_shift_error = max(abs(f0$lambda - f1$lambda)),
       nuisance_equation_max = max(f0$nuisance_equation_max, f1$nuisance_equation_max),
-      lambda_trial_mean = mean(f0$lambda[data$S == 1]), lambda_min = min(f0$lambda), lambda_max = max(f0$lambda),
+      lambda_trial_mean = mean(f0$lambda[data$R == 1]), lambda_min = min(f0$lambda), lambda_max = max(f0$lambda),
       p_min = f0$source_probability_range[1], p_max = f0$source_probability_range[2],
       ECT_clipped = ect$external_clipped + ect$treated_clipped, ECT_ESS = ect$external_ess,
-      external_x1_mean = mean(g$x[g$E == 1]), trial_x1_mean = mean(g$x[g$S == 1])
+      external_x1_mean = mean(g$x[g$E == 1]), trial_x1_mean = mean(g$x[g$R == 1])
     ),
     warnings = unique(c(f0$warnings, f1$warnings, ect$warnings))
   )

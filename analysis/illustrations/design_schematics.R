@@ -47,7 +47,7 @@ for (design in c("RCT","HCT","ECT")) {
 invisible(dev.off())
 
 # Hypothetical records. The symbols on the right denote observed outcomes in each group.
-dat <- data.frame(ID=sprintf("P%02d",1:6), S=c(1,1,1,1,0,0), A=c(1,1,0,0,0,0),
+dat <- data.frame(ID=sprintf("P%02d",1:6), R=c(1,1,1,1,0,0), A=c(1,1,0,0,0,0),
                   X1=c(".20",".70",".30",".80",".25",".65"), X2=c(0,1,1,0,0,1),
                   Y=c("8.4","10.1","7.2","8.5","6.9","8.0"))
 grDevices::cairo_pdf(file.path(out,"hct_observed_data.pdf"),width=7.3,height=3.05)
@@ -56,7 +56,7 @@ for (i in 0:6) {
   y <- 6.55-i
   type <- if (i==0) "trial" else rep(c("treated","internal","external"),each=2)[i]
   rect(.05,y-.46,6.25,y+.47,col=fills[type],border="white")
-  for (j in 1:6) text(j-.35,y,if (i==0) c("ID","S","A","X1","X2","Y")[j] else as.character(dat[i,j]),
+  for (j in 1:6) text(j-.35,y,if (i==0) c("ID","R","A","X1","X2","Y")[j] else as.character(dat[i,j]),
                         font=if (i==0 || j==1) 2 else 1, cex=.95,col=ink)
 }
 for (k in 1:3) {

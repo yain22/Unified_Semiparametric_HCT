@@ -18,7 +18,7 @@ function atoms(model, settings) {
     for (const group of groups) {
       for (const z of [-1, 0, 1]) {
         const a = evaluate(model, settings, { x, group, z });
-        result.push({ ...a, x, fx, group, z, S: Number(group !== "external") });
+        result.push({ ...a, x, fx, group, z, R: Number(group !== "external") });
       }
     }
   }
@@ -30,7 +30,7 @@ function atoms(model, settings) {
 // control means move by exactly the same amount, even at unequal variances.
 function scoreFor(a, settings, path) {
   if (path === "case mix") return a.x - (a.x ? a.fx : 1 - a.fx);
-  if (path === "membership") return (1 + 0.2 * a.x) * (a.S - a.p);
+  if (path === "membership") return (1 + 0.2 * a.x) * (a.R - a.p);
   const variance = a.group === "external" ? settings.v0 : 1;
   if (path === "control mean" && a.group !== "treated") return a.residual / variance;
   if (path === a.group + " mean") return a.residual / variance;
@@ -89,8 +89,8 @@ for (const overlap of ["balanced", "uneven"]) {
             assert.equal(a.gap, null);
             assert.equal(a.gapBound, null);
             const m0 = 0.4 * a.x - (pattern === "concentrated" ? 2 * settings.delta * a.x : settings.delta);
-            close(a.phi, (a.S * (a.y - m0 - a.target) -
-              (1 - a.S) * a.p / (1 - a.p) * (a.y - m0)) / a.q);
+            close(a.phi, (a.R * (a.y - m0 - a.target) -
+              (1 - a.R) * a.p / (1 - a.p) * (a.y - m0)) / a.q);
           }
         }
         const directions = ["case mix", "membership", "control mean", "treated mean",
@@ -107,7 +107,7 @@ for (const overlap of ["balanced", "uneven"]) {
           if (path === "internal mean" || path === "external mean") {
             const share = path === "internal mean" ? a => a.lambda : a => 1 - a.lambda;
             // Both outcome tilts preserve variances to first order by symmetry.
-            const meanShare = all.reduce((s, a) => s + a.probability * a.S * share(a) / a.q, 0);
+            const meanShare = all.reduce((s, a) => s + a.probability * a.R * share(a) / a.q, 0);
             close(product, -meanShare);
           }
           paths++;

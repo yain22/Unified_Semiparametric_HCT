@@ -1,16 +1,16 @@
 # Exact function extracts; see source_manifest.json. Sourcing performs no I/O.
 
 hct_trial_wald_fit <- function(data, adjustment_terms = ~1, alpha = .05) {
-  if (!is.data.frame(data) || !all(c('Y', 'S', 'A') %in% names(data)) ||
+  if (!is.data.frame(data) || !all(c('Y', 'R', 'A') %in% names(data)) ||
     !is.numeric(data$Y) || any(!is.finite(data$Y)) ||
-    anyNA(data) || !all(data$S %in% c(0, 1)) || !all(data$A %in% c(0, 1)))
-    stop('data must contain finite numeric Y and binary S and A, without missing values.')
+    anyNA(data) || !all(data$R %in% c(0, 1)) || !all(data$A %in% c(0, 1)))
+    stop('data must contain finite numeric Y and binary R and A, without missing values.')
   if (!inherits(adjustment_terms, 'formula') || length(adjustment_terms) != 2L ||
-    any(c('Y', 'S', 'A') %in% all.vars(adjustment_terms)))
+    any(c('Y', 'R', 'A') %in% all.vars(adjustment_terms)))
     stop('adjustment_terms must be a one-sided formula containing only baseline covariates.')
   if (length(alpha) != 1L || !is.finite(alpha) || alpha <= 0 || alpha >= 1)
     stop('alpha must be strictly between zero and one.')
-  trial <- data[data$S == 1, , drop = FALSE]
+  trial <- data[data$R == 1, , drop = FALSE]
   if (any(tabulate(trial$A + 1L, nbins = 2L) < 2L))
     stop('At least two observations are required in each randomized trial arm.')
   rhs <- call('+', as.name('A'), adjustment_terms[[2L]])

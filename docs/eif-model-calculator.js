@@ -64,12 +64,12 @@ const EifModels = (() => {
 
     function contribution(stratum, arm, atom) {
       const { p, lambda, means, t } = stratum;
-      const S = Number(arm !== "external");
+      const R = Number(arm !== "external");
       const variance = arm === "external" ? v0 : 1;
       const residual = Math.sqrt(3 * variance) * atom;
       const y = means[arm] + residual;
       const parts = {
-        standardization: S * (t - target) / q,
+        standardization: R * (t - target) / q,
         treated: arm === "treated" ? residual / (q * e) : 0,
         internal: arm === "internal" ? -lambda * residual / (q * (1 - e)) : 0,
         external: arm === "external" ? -(1 - lambda) * p * residual / (q * (1 - p)) : 0,
@@ -77,7 +77,7 @@ const EifModels = (() => {
       };
       if (isUnrestricted) {
         const coefficient = (means.internal - means.external) * lambda * (1 - lambda) / q;
-        parts.source = -coefficient * (S - p) / (1 - p);
+        parts.source = -coefficient * (R - p) / (1 - p);
         const squared = residual * residual / variance - 1;
         if (arm === "internal") parts.internalVariance = coefficient * squared / (1 - e);
         if (arm === "external") parts.externalVariance = -coefficient * p * squared / (1 - p);
@@ -85,7 +85,7 @@ const EifModels = (() => {
       const phi = Object.values(parts).reduce((a, b) => a + b, 0);
       let gapPhi = isEct ? null : 0;
       if (isUnrestricted) {
-        let phiTrial = S * (means.treated - means.internal - trial) / q;
+        let phiTrial = R * (means.treated - means.internal - trial) / q;
         if (arm === "treated") phiTrial += residual / (q * e);
         if (arm === "internal") phiTrial -= residual / (q * (1 - e));
         gapPhi = phi - phiTrial;

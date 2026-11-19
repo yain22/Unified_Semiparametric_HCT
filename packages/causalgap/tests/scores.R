@@ -12,7 +12,7 @@ s <- rep(c(1, 1, 1, 0, 0, 0), each = 6)
 a <- rep(c(1, 1, 0, 0, 0, 0), each = 6)
 n <- length(s)
 group_mean <- ifelse(a == 1, 1, ifelse(s == 1, .2, 0))
-d <- data.frame(S = s, A = a, Y = group_mean + u)
+d <- data.frame(R = s, A = a, Y = group_mean + u)
 f <- data.frame(p = rep(.5,n), e = 2/3, m_treated = 1,
                 m_internal = .2, m_external = 0, v_internal = 1, v_external = 1)
 ans <- aipw_u(d, f)

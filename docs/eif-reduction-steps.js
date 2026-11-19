@@ -4,7 +4,7 @@
   "use strict";
   const h = window.EifMath, panels = window.EifFormulaPanels;
   const { id, op, roman, sub, sup, frac, wrap, braces, I, m, res, mark,
-    S, A, Y, zero, one, q, theta, eq, plus, minus, diff, complement,
+    R, A, Y, zero, one, q, theta, eq, plus, minus, diff, complement,
     p, e, r, d, l, delta, k, t, pooled, expected, trial, common,
     trialResidual, pE, qE, mE, thetaE, Eres, fR, fRE } = h;
 
@@ -59,7 +59,7 @@
         [m("10"), eq + m(0) + eq + pooled, emph],
         [t, eq + tP, emph],
         [delta, eq + zero + op(",") + k + eq + zero, gone],
-        [common, eq + frac(S, q) + prediction(m(1), pooled, theta) + plus + trialResidual, keep],
+        [common, eq + frac(R, q) + prediction(m(1), pooled, theta) + plus + trialResidual, keep],
         ["", minus + frac(I("10") + l, q + braces(complement(e))) + epsP, emph],
         ["", minus + frac(I(0) + p + braces(complement(l)), q + braces(complement(p))) + epsP, emph]
       ])
@@ -84,21 +84,21 @@
       [emph, emph, emph, keep, keep, keep, keep]),
     {
       title: "Use the trial-only contrast in the hybrid sample",
-      explanation: "First choose a fixed internal share of one. The target becomes the trial effect. The external residual has coefficient zero, and a fixed share has no derivative. The factor S/q still standardizes over trial participants within the hybrid mixture.",
+      explanation: "First choose a fixed internal share of one. The target becomes the trial effect. The external residual has coefficient zero, and a fixed share has no derivative. The factor R/q still standardizes over trial participants within the hybrid mixture.",
       html: display("Trial-only target in a hybrid mixture", [
         [l, op("≡") + one + op(",") + t + eq + tTrial, emph],
         [braces(complement(l)), eq + zero, gone],
-        [trial, eq + frac(S, q) + prediction(m(1), m("10"), theta), keep],
+        [trial, eq + frac(R, q) + prediction(m(1), m("10"), theta), keep],
         ["", plus + trialResidual + minus + meanGroupTerm(I("10"), q + braces(complement(e)), res("10")), emph]
       ])
     },
     {
       title: "Condition the observation law on trial membership",
-      explanation: "Retain only trial records. Every record now has S = 1, the trial fraction is one, and the two arm indicators reduce to A and 1 − A. The trial’s randomization probability at X is unchanged.",
+      explanation: "Retain only trial records. Every record now has R = 1, the trial fraction is one, and the two arm indicators reduce to A and 1 − A. The trial’s randomization probability at X is unchanged.",
       html: display("From mixture normalization to trial randomization weights", [
-        [conditionalTrial, eq + roman("P") + wrap(op("·") + h.given(S + eq + one)), emph],
-        [S, eq + q + eq + one, emph],
-        [frac(S,q), eq + one, keep],
+        [conditionalTrial, eq + roman("P") + wrap(op("·") + h.given(R + eq + one)), emph],
+        [R, eq + q + eq + one, emph],
+        [frac(R,q), eq + one, keep],
         [frac(I(1),q + e), eq + frac(A,e), emph],
         [frac(I("10"),q + braces(complement(e))), eq + frac(complement(A),complement(e)), emph]
       ])
@@ -116,7 +116,7 @@
       explanation: "First choose a fixed internal share of zero. The trial-standardized contrast compares the treated mean with the external control mean. Fixed-share derivative terms and the internal residual vanish. At this stage p(X), q, and the randomization probability still refer to the hybrid law.",
       html: display("External comparison while all hybrid records are sampled", [
         [l, op("≡") + zero + op(",") + thetaH0 + eq + expected + braces(t0), emph],
-        [phiH0, eq + frac(S,q) + prediction(m(1),m(0),thetaH0), keep],
+        [phiH0, eq + frac(R,q) + prediction(m(1),m(0),thetaH0), keep],
         ["", plus + trialResidual, emph],
         ["", minus + meanGroupTerm(I(0) + p, q + braces(complement(p)), res(0)), emph]
       ])
@@ -129,8 +129,8 @@
         [qE, eq + frac(q + expected + braces(e), complement(q) + plus + q + expected + braces(e)), emph],
         [fRE, eq + frac(e + fR, expected + braces(e)), emph]
       ]) + display("Combining the two trial contributions and reweighting the external residual", [
-        [frac(S,qE) + braces(tE + minus + thetaE + plus + wrap(diff(Y,mE(1)))), eq + frac(S,qE) + braces(Y + minus + mE(0) + minus + thetaE), emph],
-        ["", minus + frac(wrap(complement(S)) + pE, qE + braces(complement(pE))) + Eres, emph]
+        [frac(R,qE) + braces(tE + minus + thetaE + plus + wrap(diff(Y,mE(1)))), eq + frac(R,qE) + braces(Y + minus + mE(0) + minus + thetaE), emph],
+        ["", minus + frac(wrap(complement(R)) + pE, qE + braces(complement(pE))) + Eres, emph]
       ])
     },
     last("ect", "EIF in the externally controlled trial",

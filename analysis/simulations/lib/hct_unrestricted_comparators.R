@@ -12,9 +12,9 @@ hct_unrestricted_ols <- function(z, y, weights = rep(1, length(y))) {
   list(beta = fit$coefficients, leverage = h, rank = fit$rank, df = nrow(z) - fit$rank)
 }
 
-hct_unrestricted_logit <- function(g, S, weights = rep(1, length(S))) {
+hct_unrestricted_logit <- function(g, R, weights = rep(1, length(R))) {
   captured <- character()
-  fit <- withCallingHandlers(glm.fit(g, S,
+  fit <- withCallingHandlers(glm.fit(g, R,
     weights = weights, family = binomial(),
     control = glm.control(epsilon = 1e-10, maxit = 100L)
   ), warning = function(w) {

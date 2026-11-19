@@ -126,16 +126,16 @@ for (n in c(250L, 500L)) for (b in c(1L, 2500L, 5000L)) {
       hct_data <- gen$data
       ect_data <- gen$data
       if (case=='matched_gap') {
-        hct_data$Y <- hct_data$Y-(1-hct_data$S)*(gap-cal$K1)/cal$K0
-        ect_data$Y <- ect_data$Y-(1-ect_data$S)*gap
+        hct_data$Y <- hct_data$Y-(1-hct_data$R)*(gap-cal$K1)/cal$K0
+        ect_data$Y <- ect_data$Y-(1-ect_data$R)*gap
       } else {
-        hct_data$Y <- hct_data$Y+(1-hct_data$S)*hct_data$X1
+        hct_data$Y <- hct_data$Y+(1-hct_data$R)*hct_data$X1
         ect_data <- hct_data
       }
       null <- fit_methods(hct_data)
       null[['AIPW (ECT)']] <- scalar_ect_fit(ect_data, ect_helpers$sim)
-      hct_data$Y <- hct_data$Y+theta_star*hct_data$S*hct_data$A
-      ect_data$Y <- ect_data$Y+theta_star*ect_data$S*ect_data$A
+      hct_data$Y <- hct_data$Y+theta_star*hct_data$R*hct_data$A
+      ect_data$Y <- ect_data$Y+theta_star*ect_data$R*ect_data$A
       alternative <- fit_methods(hct_data)
       alternative[['AIPW (ECT)']] <- scalar_ect_fit(ect_data, ect_helpers$sim)
       for (method_name in methods) {

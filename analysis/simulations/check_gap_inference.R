@@ -48,7 +48,7 @@ estimate_gap <- function(data) {
                 methods = "U", keep = TRUE)[["U"]]
   d <- fit$prepared
   state <- fit$state
-  trial_raw <- d$S * (state$mT - state$mC) +
+  trial_raw <- d$R * (state$mT - state$mC) +
     d$T / d$e * (data$Y - state$mT) -
     d$C / (1 - d$e) * (data$Y - state$mC)
   trial <- sum(trial_raw) / d$nR
@@ -59,10 +59,10 @@ estimate_gap <- function(data) {
   # SAME nuisance vector as the HCT equation before taking their difference.
   nuisance <- setdiff(seq_along(fit$parameters), d$ix$theta)
   derivative <- numeric(length(fit$parameters))
-  derivative[d$ix$bT] <- colMeans(d$z * (d$S - d$T / d$e))
-  derivative[d$ix$bC] <- colMeans(d$z * (-d$S + d$C / (1 - d$e)))
+  derivative[d$ix$bT] <- colMeans(d$z * (d$R - d$T / d$e))
+  derivative[d$ix$bC] <- colMeans(d$z * (-d$R + d$C / (1 - d$e)))
   adjustment <- solve(t(state$jacobian[nuisance, nuisance]), derivative[nuisance])
-  trial_if <- drop((trial_raw - d$S * trial -
+  trial_if <- drop((trial_raw - d$R * trial -
                       state$equations[, nuisance, drop = FALSE] %*% adjustment) / d$q)
   gap_if <- fit$influence - trial_if
   se <- helpers$u$hct_unrestricted_group_variance(gap_if, d$group)$se
@@ -87,7 +87,7 @@ for (b in seq_len(reps)) {
   check_paired_fits(original$data, record, trial_fits[trial_fits$replicate == b, ])
   for (j in seq_along(gaps)) {
     data <- original$data
-    data$Y <- data$Y - (1 - data$S) * amplitudes[j]
+    data$Y <- data$Y - (1 - data$R) * amplitudes[j]
     result <- estimate_gap(data)
     estimates[b, j] <- result["estimate"]
     standard_errors[b, j] <- result["se"]

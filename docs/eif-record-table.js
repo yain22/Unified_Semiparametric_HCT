@@ -23,7 +23,7 @@
     const table = document.createElement("table");
     table.createCaption().textContent = captions[model];
     const head = table.createTHead().insertRow();
-    for (const title of ["ID", "S", "A", "X₁", "X₂", "Y", "Observed group"]) {
+    for (const title of ["ID", "R", "A", "X₁", "X₂", "Y", "Observed group"]) {
       const th = document.createElement("th");
       th.scope = "col";
       th.textContent = title;
@@ -51,7 +51,7 @@
     const note = document.createElement("p");
     note.textContent = interpretation[model];
     const key = document.createElement("p");
-    key.textContent = "S identifies trial membership and A identifies treatment. The observed group indicators are I₁ = SA (trial treated), I₁,₀ = S(1 − A) (internal control), and I₀ = 1 − S (external control). Each record has one observed outcome Y. The subscripts on Y name its group.";
+    key.textContent = "R identifies trial membership and A identifies treatment. The observed group indicators are I₁ = RA (trial treated), I₁,₀ = R(1 − A) (internal control), and I₀ = 1 − R (external control). Each record has one observed outcome Y. The subscripts on Y name its group.";
     mount.replaceChildren(viewport, note, key);
   }
   function getRecords() {

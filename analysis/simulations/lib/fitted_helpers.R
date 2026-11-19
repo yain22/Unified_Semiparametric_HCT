@@ -14,13 +14,13 @@ fg_prepare <- function(data, helpers, mean_basis = 'linear', variance_basis = 'c
   if (mean_basis == 'quadratic') z <- cbind(z, X^2)
   g <- cbind('(Intercept)' = 1, X)
   v <- if (variance_basis == 'constant') matrix(1, nrow(data), 1, dimnames = list(NULL, '(Intercept)')) else if (variance_basis == 'x1') g[, 1:2, drop = FALSE] else g
-  S <- data$S
-  T <- S * data$A
-  C <- S * (1 - data$A)
-  E <- 1 - S
+  R <- data$R
+  T <- R * data$A
+  C <- R * (1 - data$A)
+  E <- 1 - R
   P <- C + E
   group <- factor(ifelse(E == 1, 'E', ifelse(T == 1, 'T', 'C')), levels = c('T', 'C', 'E'))
-  stopifnot(all(S %in% 0:1), all(data$A %in% 0:1), all(data$A[E == 1] == 0), all(table(group) > 1), all(is.finite(data$Y)))
+  stopifnot(all(R %in% 0:1), all(data$A %in% 0:1), all(data$A[E == 1] == 0), all(table(group) > 1), all(is.finite(data$Y)))
   dims <- c(bT = ncol(z), bC = ncol(z), bE = ncol(z), eta = ncol(g), gC = ncol(v), gE = ncol(v), bP = ncol(z), theta = 1L)
   ends <- cumsum(dims)
   starts <- ends - dims + 1L
@@ -42,7 +42,7 @@ fg_prepare <- function(data, helpers, mean_basis = 'linear', variance_basis = 'c
     fits[[n]] <- fit
     if (n != 'P') leverage[ii] <- fit$leverage
   }
-  source_fit <- helpers$u$hct_unrestricted_logit(g, S)
+  source_fit <- helpers$u$hct_unrestricted_logit(g, R)
   parameters[ix$eta] <- source_fit$eta
   variance_fits <- list()
   for (n in c('C', 'E')) {
@@ -54,7 +54,7 @@ fg_prepare <- function(data, helpers, mean_basis = 'linear', variance_basis = 'c
   }
   list(
     data = data, z = z, g = g, v = v, ix = ix, parameters = parameters, leverage = leverage,
-    S = S, T = T, C = C, E = E, P = P, group = group, e = sum(T) / sum(S), q = mean(S), N = nrow(data), nR = sum(S),
+    R = R, T = T, C = C, E = E, P = P, group = group, e = sum(T) / sum(R), q = mean(R), N = nrow(data), nR = sum(R),
     mean_basis = mean_basis, variance_basis = variance_basis, source_warnings = source_fit$warnings,
     variance_fits = variance_fits
   )
@@ -66,7 +66,7 @@ fg_system <- function(d, parameters, method = 'U', jacobian = TRUE) {
   g <- d$g
   v <- d$v
   Y <- d$data$Y
-  S <- d$S
+  R <- d$R
   T <- d$T
   C <- d$C
   E <- d$E
@@ -93,13 +93,13 @@ fg_system <- function(d, parameters, method = 'U', jacobian = TRUE) {
   RC <- rC^2 / vC
   RE <- rE^2 / vE
   if (method == 'U') {
-    B <- -S + C / a * (RC - 1) + E * w * (2 - RE)
-    raw <- S * (mT - L * mC - (1 - L) * mE) + T / e * rT - C * L / a * rC - E * (1 - L) * w * rE + D * H * B
+    B <- -R + C / a * (RC - 1) + E * w * (2 - RE)
+    raw <- R * (mT - L * mC - (1 - L) * mE) + T / e * rT - C * L / a * rC - E * (1 - L) * w * rE + D * H * B
   } else {
     aC <- w / (w * a + r)
     bE <- w * r / (w * a + r)
     K <- C * aC + E * bE
-    raw <- S * (mT - mP) + T / e * rT - K * rP
+    raw <- R * (mT - mP) + T / e * rT - K * rP
   }
   psi <- matrix(0, N, length(parameters))
   for (n in c('T', 'C', 'E', 'P')) {
@@ -111,10 +111,10 @@ fg_system <- function(d, parameters, method = 'U', jacobian = TRUE) {
     )
     psi[, ix[[paste0('b', n)]]] <- z * (d[[n]] * residual)
   }
-  psi[, ix$eta] <- g * (S - p)
+  psi[, ix$eta] <- g * (R - p)
   psi[, ix$gC] <- v * (C * (RC / (1 - d$leverage) - 1))
   psi[, ix$gE] <- v * (E * (RE / (1 - d$leverage) - 1))
-  psi[, ix$theta] <- raw - S * parameters[ix$theta]
+  psi[, ix$theta] <- raw - R * parameters[ix$theta]
   if (any(!is.finite(c(psi, L, vC, vE))) || any(L <= 0 | L >= 1)) stop('Invalid fitted score or nuisance prediction.')
   out <- list(
     equations = psi, mean = colMeans(psi), raw = raw, L = L, p = p, w = w, vC = vC, vE = vE,
@@ -131,16 +131,16 @@ fg_system <- function(d, parameters, method = 'U', jacobian = TRUE) {
     J[ix$gE, ix$gE] <- -crossprod(v, v * (E * RE / (1 - d$leverage))) / N
     J[ix$gC, ix$bC] <- -2 * crossprod(v, z * (C * rC / ((1 - d$leverage) * vC))) / N
     J[ix$gE, ix$bE] <- -2 * crossprod(v, z * (E * rE / ((1 - d$leverage) * vE))) / N
-    derivative <- list(bT = S - T / e, bC = rep(0, N), bE = rep(0, N), bP = rep(0, N), eta = rep(0, N), gC = rep(0, N), gE = rep(0, N))
+    derivative <- list(bT = R - T / e, bC = rep(0, N), bE = rep(0, N), bP = rep(0, N), eta = rep(0, N), gC = rep(0, N), gE = rep(0, N))
     if (method == 'U') {
-      FL <- -S * D - C / a * rC + E * w * rE
-      derivative$bC <- L * (-S + C / a) + H * B - 2 * D * H * C / a * rC / vC
-      derivative$bE <- (1 - L) * (-S + E * w) - H * B + 2 * D * H * E * w * rE / vE
+      FL <- -R * D - C / a * rC + E * w * rE
+      derivative$bC <- L * (-R + C / a) + H * B - 2 * D * H * C / a * rC / vC
+      derivative$bE <- (1 - L) * (-R + E * w) - H * B + 2 * D * H * E * w * rE / vE
       derivative$eta <- H * FL - E * (1 - L) * w * rE + D * H * ((1 - 2 * L) * B + E * w * (2 - RE))
       derivative$gC <- -H * FL + D * H * (-(1 - 2 * L) * B - C / a * RC)
       derivative$gE <- H * FL + D * H * ((1 - 2 * L) * B + E * w * RE)
     } else {
-      derivative$bP <- -S + K
+      derivative$bP <- -R + K
       derivative$eta <- -K * (1 - L) * rP
       if (method == 'R-matched') {
         derivative$gC <- (C * aC * (1 - L) - E * bE * L) * rP

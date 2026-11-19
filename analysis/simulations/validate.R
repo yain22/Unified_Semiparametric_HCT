@@ -50,7 +50,7 @@ for (nm in names(samples)) {
   D <- s$mC - s$mE
   Y <- dat$Y
   a <- 1 - d$e
-  direct <- d$S * (s$mT - L * s$mC - (1 - L) * s$mE) + d$T / d$e * (Y - s$mT) - d$C * L / a * (Y - s$mC) - d$E * (1 - L) * s$w * (Y - s$mE) - D * H * (d$S - s$p) / (1 - s$p) + D * H * d$C / a * ((Y - s$mC)^2 / s$vC - 1) - D * H * d$E * s$w * ((Y - s$mE)^2 / s$vE - 1)
+  direct <- d$R * (s$mT - L * s$mC - (1 - L) * s$mE) + d$T / d$e * (Y - s$mT) - d$C * L / a * (Y - s$mC) - d$E * (1 - L) * s$w * (Y - s$mE) - D * H * (d$R - s$p) / (1 - s$p) + D * H * d$C / a * ((Y - s$mC)^2 / s$vC - 1) - D * H * d$E * s$w * ((Y - s$mE)^2 / s$vE - 1)
   add(paste(nm, 'seven_term_score'), max(abs(direct - s$raw)), 1e-11)
   # All Jacobian columns at a perturbed (nonroot) parameter value.
   pert <- par + .017 * sin(seq_along(par))
@@ -77,7 +77,7 @@ for (nm in names(samples)) {
   V <- bread %*% meat %*% t(bread) / d$N^2
   add(paste(nm, 'group_centered_sandwich'), abs(sqrt(V[d$ix$theta, d$ix$theta]) - fit$se), 1e-11)
   # Independent HC2 matrix sandwich in the trial-only design.
-  td <- dat[dat$S == 1, ]
+  td <- dat[dat$R == 1, ]
   X <- model.matrix(~ A + ., td[, c('A', paste0('X', 1:10))])
   b <- solve(crossprod(X))
   r <- td$Y - X %*% (b %*% crossprod(X, td$Y))
@@ -87,7 +87,7 @@ for (nm in names(samples)) {
   add(paste(nm, 'trial_HC2'), abs(sqrt(Vt['A', 'A']) - tf$se), 1e-11)
   ect <- scalar_ect_fit(dat, eh$sim)
   tamper <- dat
-  ii <- dat$S == 1 & dat$A == 0
+  ii <- dat$R == 1 & dat$A == 0
   tamper$Y[ii] <- tamper$Y[ii] + 1000
   tamper$X1[ii] <- tamper$X1[ii] - 100
   unaffected <- scalar_ect_fit(tamper, eh$sim)

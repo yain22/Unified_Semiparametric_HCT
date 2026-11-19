@@ -13,19 +13,19 @@ model_example <- function(model = c("unrestricted","transportable","rct","ect"),
   lambda <- switch(model,rct=1,ect=0,q*(1-e)/(q*(1-e)+(1-q)/external_variance))
   obs <- expand.grid(x=0:1, group=groups, atom=-1:1,stringsAsFactors=FALSE)
   with(obs,{
-    S <- group!="external"; A <- group=="treated"; I <- group=="internal"
+    R <- group!="external"; A <- group=="treated"; I <- group=="internal"
     weight <- .5 * ifelse(A,q*e,ifelse(I,q*(1-e),1-q)) * ifelse(atom==0,2/3,1/6)
-    residual <- atom*sqrt(3*ifelse(S,1,external_variance))
+    residual <- atom*sqrt(3*ifelse(R,1,external_variance))
     # The trial covariate contrast is constant at these settings, so its centered
     # standardization contribution is zero for all records.
     score <- numeric(length(x))
     score[A] <- residual[A]/(q*e)
     if (any(I)) score[I] <- -lambda*residual[I]/(q*(1-e))
-    if (any(!S)) score[!S] <- -(1-lambda)*residual[!S]/(1-q)
+    if (any(!R)) score[!R] <- -(1-lambda)*residual[!R]/(1-q)
     if (model=="unrestricted") {
-      correction <- -(S-q)/(1-q)
+      correction <- -(R-q)/(1-q)
       correction[I] <- correction[I]+(residual[I]^2-1)/(1-e)
-      correction[!S] <- correction[!S]-q/(1-q)*(residual[!S]^2/external_variance-1)
+      correction[!R] <- correction[!R]-q/(1-q)*(residual[!R]^2/external_variance-1)
       score <- score+delta*lambda*(1-lambda)*correction/q
     }
     # For the ECT this directly compares the observed treatment and external

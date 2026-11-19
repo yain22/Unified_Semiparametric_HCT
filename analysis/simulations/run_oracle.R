@@ -66,14 +66,14 @@ generate <- function(b) {
   f <- .5 + (.6 / sqrt(5)) * rowSums(X[, 1:5]) + (.25 / sqrt(5)) * rowSums(X[, 1:5]^2)
   error <- c(epsT, exp(.2 * xc[, 1]) * epsC, exp(-.2 * xe[, 1]) * epsE)
   data <- setNames(as.data.frame(X), paste0('X', 1:10))
-  data$S <- c(rep(1L, nR), rep(0L, nE))
+  data$R <- c(rep(1L, nR), rep(0L, nE))
   data$A <- c(rep(1L, nT), rep(0L, nC + nE))
-  data$Y <- f + error - (1 - data$S) * X[, 1]
-  T <- data$S * data$A
-  C <- data$S * (1 - data$A)
-  E <- 1 - data$S
+  data$Y <- f + error - (1 - data$R) * X[, 1]
+  T <- data$R * data$A
+  C <- data$R * (1 - data$A)
+  E <- 1 - data$R
   list(
-    data = data, x = X[, 1], f = f, error = error, T = T, C = C, E = E, S = data$S,
+    data = data, x = X[, 1], f = f, error = error, T = T, C = C, E = E, R = data$R,
     z = c(epsT, epsC, epsE), seed = seed, group = c(rep('T', nT), rep('C', nC), rep('E', nE))
   )
 }
@@ -87,8 +87,8 @@ direct_U <- function(d, delta) {
   Y <- d$data$Y - d$E * (delta - d$x)
   mT <- mC <- d$f
   mE <- d$f - delta
-  d$S * (mT - L * mC - (1 - L) * mE) + d$T / e * (Y - mT) - d$C * L / aa * (Y - mC) -
-    d$E * (1 - L) * w * (Y - mE) - delta * H * (d$S - p) / (1 - p) +
+  d$R * (mT - L * mC - (1 - L) * mE) + d$T / e * (Y - mT) - d$C * L / aa * (Y - mC) -
+    d$E * (1 - L) * w * (Y - mE) - delta * H * (d$R - p) / (1 - p) +
     delta * H * d$C / aa * ((Y - mC)^2 / exp(.4 * d$x) - 1) -
     delta * H * d$E * w * ((Y - mE)^2 / exp(-.4 * d$x) - 1)
 }
@@ -99,16 +99,22 @@ for (b in seq_len(B)) {
   d <- generate(b)
   saved <- pairing[replicate == b]
   full_hash <- digest::digest(d$data, algo = 'sha256')
-  ect_hash <- digest::digest(d$data[d$data$A == 1 | d$data$S == 0, ], algo = 'sha256')
+  # Historical baseline hashes serialized the source column under its old name.
+  archived_data <- d$data
+  names(archived_data)[names(archived_data) == 'R'] <- 'S'
+  archived_full_hash <- digest::digest(archived_data, algo = 'sha256')
+  archived_ect_hash <- digest::digest(archived_data[d$data$A == 1 | d$data$R == 0, ], algo = 'sha256')
+  ect_hash <- digest::digest(d$data[d$data$A == 1 | d$data$R == 0, ], algo = 'sha256')
   stopifnot(
     nrow(saved) == 1L, saved$seed == d$seed,
-    saved$full_sample_sha256 == full_hash, saved$ECT_sample_sha256 == ect_hash
+    saved$full_sample_sha256 %in% c(full_hash, archived_full_hash),
+    saved$ECT_sample_sha256 %in% c(ect_hash, archived_ect_hash)
   )
   L <- plogis(log(nC / nE) - .8 * d$x)
   H <- L * (1 - L)
   # Affine complete U score in the discrepancy intercept.
   noise <- d$T / e * d$error - d$C * L / aa * d$error - d$E * (1 - L) * w * d$error
-  effect <- d$S * (1 - L) - H * (d$S - p) / (1 - p) + H * d$C / aa * (d$z^2 - 1) - H * d$E * w * (d$z^2 - 1)
+  effect <- d$R * (1 - L) - H * (d$R - p) / (1 - p) + H * d$C / aa * (d$z^2 - 1) - H * d$E * w * (d$z^2 - 1)
   raw0 <- noise + effect * (d$x - K['K1'] / K['K0'])
   raw1 <- effect / K['K0']
   coeff[[2 * b - 1L]] <- data.table(
@@ -127,8 +133,8 @@ for (b in seq_len(B)) {
     intercept = est0, slope = 1, v0 = plugin, v1 = 0, v2 = 0, fixed_group_v0 = fixed
   )
   moments[[b]] <- data.table(
-    replicate = b, source_mean = mean(d$S), lambda_trial_mean = mean(L[d$S == 1]),
-    x1_trial_mean = mean(d$x[d$S == 1]), control_error2 = mean(d$error[d$C == 1]^2),
+    replicate = b, source_mean = mean(d$R), lambda_trial_mean = mean(L[d$R == 1]),
+    x1_trial_mean = mean(d$x[d$R == 1]), control_error2 = mean(d$error[d$C == 1]^2),
     external_error2 = mean(rE^2), paired_full_hash = full_hash, paired_ect_hash = ect_hash
   )
   if (b <= 10L) for (xi in c(-.3, 0, .15, .3)) {

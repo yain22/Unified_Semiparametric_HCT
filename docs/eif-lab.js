@@ -69,29 +69,29 @@ function inspect(settings) {
     bound: 0, augmented: 0, centered: 0, orthogonal: 0, trialBound: 0, gapBound: 0, tceBound: 0 };
   for (const { x, fx, p, laws, lambda, delta, tTrial, tBorrow } of strata) {
     for (const group of groups) {
-      const S = Number(group !== "external"), A = Number(group === "treated");
-      const IC = Number(group === "internal"), EC = 1 - S;
+      const R = Number(group !== "external"), A = Number(group === "treated");
+      const IC = Number(group === "internal"), EC = 1 - R;
       const groupMass = A * p * allocation + IC * p * (1 - allocation) + EC * (1 - p);
       const law = laws[group];
       for (const atom of law.atoms) {
         const w = fx * groupMass * atom.mass;
         const resid = atom.y - law.mean;
-        const score = atom.score + (path === "source" ? S - p : 0) +
+        const score = atom.score + (path === "source" ? R - p : 0) +
           (path === "case-mix" ? x - 0.5 : 0);
-        const trialIF = (S * (tTrial - trial) + A * resid / allocation -
+        const trialIF = (R * (tTrial - trial) + A * resid / allocation -
           IC * resid / (1 - allocation)) / q;
-        const fixedIF = (S * (tBorrow - tce) + A * resid / allocation -
+        const fixedIF = (R * (tBorrow - tce) + A * resid / allocation -
           IC * lambda * resid / (1 - allocation) -
           EC * p / (1 - p) * (1 - lambda) * resid) / q;
         const b = delta * lambda * (1 - lambda) / q;
-        const sourceIF = -b * (S - p) / (1 - p);
+        const sourceIF = -b * (R - p) / (1 - p);
         const squared = resid * resid / law.variance - 1;
         const internalIF = b * IC * squared / (1 - allocation);
         const externalIF = -b * EC * p / (1 - p) * squared;
         const tceIF = fixedIF + sourceIF + internalIF + externalIF;
         const gapIF = tceIF - trialIF;
         const phi = target === "trial" ? trialIF : target === "gap" ? gapIF : tceIF;
-        const assignment = S * (A - allocation);
+        const assignment = R * (A - allocation);
         const fixedTarget = target === "trial" ? trialIF : target === "gap" ? fixedIF - trialIF : fixedIF;
         totals.fixed += w * fixedTarget * score;
         if (target !== "trial") {
@@ -127,7 +127,7 @@ const directions = {
   "external-variance": "I₀ (Z² − 1) / 2",
   "external-mean": "I₀ Z / √v₀",
   "internal-variance": "I₁,₀ (Z² − 1) / 2",
-  source: "S − p(X)",
+  source: "R − p(X)",
   "case-mix": "X − ½"
 };
 const targetNames = { tce: "Borrowing target", trial: "Trial effect", gap: "Causal-gap" };

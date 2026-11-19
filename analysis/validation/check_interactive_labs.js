@@ -49,7 +49,7 @@ for (const path of paths) {
             close(totals.centered, 0, 1e-12, 'EIF mean ' + label);
             close(totals.orthogonal, 0, 1e-12, 'randomization term times score ' + label);
             const derivativeError = close(totals.derivative, finiteDifference, 1e-7, 'derivative ' + label);
-            // With q=1/2, e=2/3 and c=1, adding c*S*(A-e) adds q*e*(1-e)=1/9 to the variance.
+            // With q=1/2, e=2/3 and c=1, adding c*R*(A-e) adds q*e*(1-e)=1/9 to the variance.
             const varianceError = close(totals.augmented - totals.bound, 1 / 9, 1e-10, 'variance ' + label);
             largestDerivativeError = Math.max(largestDerivativeError, derivativeError);
             largestVarianceError = Math.max(largestVarianceError, varianceError);

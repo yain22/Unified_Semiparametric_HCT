@@ -3,6 +3,13 @@
 cgm6m_baseline <- c('hba1c0', 'age', 'duration', 'male', 'pump')
 cgm6m_basis <- ~ hba1c0 + age + duration + male + pump
 
+# Read older cohort caches without modifying their stored column names.
+clinical_source_column <- function(data) {
+  if (!"R" %in% names(data) && "S" %in% names(data))
+    names(data)[names(data) == "S"] <- "R"
+  data
+}
+
 clinical_guard_output <- function(out, package_dir) {
   canonical <- function(path) {
     # Resolve from the deepest existing ancestor so nonexistent output paths
@@ -45,16 +52,16 @@ clinical_load <- function(package_dir) {
   # Exact validation contract used by cgm6m_load; nominal e=.5 is a working
   # choice after selection, not a claim that retained counts are balanced.
   h$hct_eif_validate <- function(data, e = NULL) {
-    if (!is.data.frame(data) || !all(c('Y', 'S', 'A') %in% names(data)) ||
+    if (!is.data.frame(data) || !all(c('Y', 'R', 'A') %in% names(data)) ||
       !is.numeric(data$Y) || any(!is.finite(data$Y)) || anyNA(data) ||
-      !all(data$S %in% 0:1) || !all(data$A %in% 0:1) || any(data$A[data$S == 0] != 0))
+      !all(data$R %in% 0:1) || !all(data$A %in% 0:1) || any(data$A[data$R == 0] != 0))
       stop('Invalid complete six-month analysis data.')
-    group <- factor(ifelse(data$S == 0, 'E', ifelse(data$A == 1, 'T', 'C')), levels = c('T', 'C', 'E'))
+    group <- factor(ifelse(data$R == 0, 'E', ifelse(data$A == 1, 'T', 'C')), levels = c('T', 'C', 'E'))
     counts <- table(group)
     if (any(counts < 2L)) stop('All groups need at least two records.')
     if (is.null(e)) e <- .5
     if (length(e) != 1L || !is.finite(e) || abs(e - .5) > 1e-12) stop('Original nominal assignment probability must be .5.')
-    list(group = group, counts = counts, e = e, q = mean(data$S), N = nrow(data))
+    list(group = group, counts = counts, e = e, q = mean(data$R), N = nrow(data))
   }
   h
 }

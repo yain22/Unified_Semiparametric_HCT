@@ -1,7 +1,7 @@
 Package: causalgap
 Type: Package
 Title: Precision-Weighted Borrowing in Hybrid Trials
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Se Yoon", "Lee", email = "seyoonlee.stat.math@gmail.com",
     role = c("aut", "cre"))
 Description: Evaluate the unrestricted augmented inverse probability weighting

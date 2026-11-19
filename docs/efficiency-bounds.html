@@ -22,7 +22,7 @@
   </div>
   <section id="model-spaces" class="ms-anatomy" aria-labelledby="ms-heading">
   <h2 id="ms-heading">Four model spaces</h2>
-  <p class="ms-intro">Each region contains probability laws for one observation scheme. Let <i>X</i> denote baseline covariates, <i>S</i> trial membership, <i>A</i> treatment and <i>Y</i> the observed outcome. Inside the hybrid trial, the two control means can be set equal while keeping all three groups. Follow either branch to see what happens when a group is removed.</p>
+  <p class="ms-intro">Each region contains probability laws for one observation scheme. Let <i>X</i> denote baseline covariates, <i>R</i> trial membership, <i>A</i> treatment and <i>Y</i> the observed outcome. Inside the hybrid trial, the two control means can be set equal while keeping all three groups. Follow either branch to see what happens when a group is removed.</p>
   <div class="ms-hybrid">
     <div class="ms-region-title"><h3>Unrestricted hybrid-randomized controlled trial (HCT)</h3><span class="ms-symbol" aria-hidden="true">ℳ<sub>HCT,U</sub></span></div>
     <ul class="ms-groups" aria-label="Observed groups"><li class="trial-treated">Treated</li><li class="trial-control">Internal control</li><li class="external-control">External control</li></ul>
@@ -30,7 +30,7 @@
     <details id="law-unrestricted" class="ms-detail"><summary>Hybrid trial likelihood and targets</summary><div class="ms-content">
       <p>Write <i>g</i> = T, I or E for a treated, internal-control or external-control observation. Each group has conditional outcome density <i>f</i><sub>g</sub>(<i>y</i> | <i>x</i>), with mean <i>m</i><sub>g</sub>(<i>x</i>). Given covariates <i>x</i>, the known randomization probability is <i>e</i>(<i>x</i>) and the trial source probability is <i>p</i>(<i>x</i>).</p>
       <p class="ms-math" aria-label="Hybrid trial model and group probabilities"><span>ℳ<sub>HCT,U</sub> = {<i>P</i> : <i>f</i><sub>P</sub>(<i>x</i>, <i>g</i>, <i>y</i>) = <i>f</i><sub>X</sub>(<i>x</i>) π<sub>g</sub>(<i>x</i>) <i>f</i><sub>g</sub>(<i>y</i> | <i>x</i>)},</span><span>(π<sub>T</sub>, π<sub>I</sub>, π<sub>E</sub>) = (<i>pe</i>, <i>p</i>(1 − <i>e</i>), 1 − <i>p</i>).</span></p>
-      <p>The covariate density, source probability and three outcome laws vary subject to the support and moment conditions. The T, I and E indices correspond to 1, (1,0) and 0 in the paper. Here 0 &lt; <i>q</i> = Pr(<i>S</i> = 1) &lt; 1, and 0 &lt; <i>e</i>(<i>x</i>) &lt; 1 on trial support. Write E<sub>R</sub> for expectation over the trial covariate density <i>f</i><sub>R</sub> = <i>pf</i><sub>X</sub>/<i>q</i>.</p>
+      <p>The covariate density, source probability and three outcome laws vary subject to the support and moment conditions. The T, I and E indices correspond to 1, (1,0) and 0 in the paper. Here 0 &lt; <i>q</i> = Pr(<i>R</i> = 1) &lt; 1, and 0 &lt; <i>e</i>(<i>x</i>) &lt; 1 on trial support. Write E<sub>R</sub> for expectation over the trial covariate density <i>f</i><sub>R</sub> = <i>pf</i><sub>X</sub>/<i>q</i>.</p>
       <p class="ms-math"><span>θ = E<sub>R</sub>[<i>m</i><sub>T</sub> − <i>m</i><sub>I</sub>],</span><span>θ̃<sub>λ</sub> = E<sub>R</sub>[<i>m</i><sub>T</sub> − λ<i>m</i><sub>I</sub> − (1 − λ)<i>m</i><sub>E</sub>].</span></p>
       <p>The precision rule sets the internal-control share λ from the law and sets λ = 1 where external controls are absent.</p>
     </div></details>
@@ -50,9 +50,9 @@
         <ul class="ms-groups" aria-label="Observed groups"><li class="trial-treated">Treated</li><li class="trial-control">Internal control</li></ul>
         <p>Only trial participants remain. Their randomized contrast identifies the trial effect under the trial identification assumptions.</p>
         <details id="law-rct" class="ms-detail"><summary>RCT likelihood and target</summary><div class="ms-content">
-          <p>Observe (<i>X</i>, <i>A</i>, <i>Y</i>) with <i>S</i> = <i>q</i> = 1. The joint density of the covariates, observed group and outcome has the form</p>
+          <p>Observe (<i>X</i>, <i>A</i>, <i>Y</i>) with <i>R</i> = <i>q</i> = 1. The joint density of the covariates, observed group and outcome has the form</p>
           <p class="ms-math"><span>ℳ<sub>RCT</sub> = {<i>P</i><sub>R</sub> : <i>f</i><sub>P<sub>R</sub></sub>(<i>x</i>, <i>g</i>, <i>y</i>)</span><span>= <i>f</i><sub>R</sub>(<i>x</i>) π<sub>g</sub>(<i>x</i>) <i>f</i><sub>g</sub>(<i>y</i> | <i>x</i>)},</span><span>(π<sub>T</sub>, π<sub>I</sub>) = (<i>e</i>, 1 − <i>e</i>).</span></p>
-          <p>The trial covariate density and both outcome laws vary with fixed allocation <i>e</i>(<i>x</i>). The target is θ = E<sub>R</sub>[<i>m</i><sub>T</sub> − <i>m</i><sub>I</sub>]. Conditioning the hybrid law on <i>S</i> = 1 gives this experiment with a first-order variance bound of <i>B</i><sub>R</sub>/<i>n</i><sub>RCT</sub> for the retained participants.</p>
+          <p>The trial covariate density and both outcome laws vary with fixed allocation <i>e</i>(<i>x</i>). The target is θ = E<sub>R</sub>[<i>m</i><sub>T</sub> − <i>m</i><sub>I</sub>]. Conditioning the hybrid law on <i>R</i> = 1 gives this experiment with a first-order variance bound of <i>B</i><sub>R</sub>/<i>n</i><sub>RCT</sub> for the retained participants.</p>
         </div></details>
       </div>
     </div>
@@ -62,9 +62,9 @@
         <ul class="ms-groups" aria-label="Observed groups"><li class="trial-treated">Treated</li><li class="external-control">External control</li></ul>
         <p>The treated trial population supplies the covariates for an external comparison. A causal interpretation requires its counterfactual control mean to agree with the external control mean at those covariates.</p>
         <details id="law-ect" class="ms-detail"><summary>ECT likelihood, target and retained law</summary><div class="ms-content">
-          <p>Observe (<i>X</i>, <i>S</i>, <i>Y</i>) with <i>A</i> = <i>S</i>. Write <i>f</i><sub>g,E</sub> and <i>m</i><sub>g,E</sub> for the conditional outcome density and mean in group <i>g</i> under the ECT law.</p>
+          <p>Observe (<i>X</i>, <i>R</i>, <i>Y</i>) with <i>A</i> = <i>R</i>. Write <i>f</i><sub>g,E</sub> and <i>m</i><sub>g,E</sub> for the conditional outcome density and mean in group <i>g</i> under the ECT law.</p>
           <p class="ms-math"><span>ℳ<sub>ECT</sub> = {<i>P</i><sub>E</sub> : <i>f</i><sub>P<sub>E</sub></sub>(<i>x</i>, <i>g</i>, <i>y</i>)</span><span>= <i>f</i><sub>X,E</sub>(<i>x</i>) π<sub>g</sub>(<i>x</i>) <i>f</i><sub>g,E</sub>(<i>y</i> | <i>x</i>)},</span><span>(π<sub>T</sub>, π<sub>E</sub>) = (<i>p</i><sub>E</sub>, 1 − <i>p</i><sub>E</sub>).</span></p>
-          <p>The covariate density, source probability and two outcome laws vary, with 0 &lt; <i>q</i><sub>E</sub> &lt; 1 and external support at all trial profiles. In the paper’s notation the observed target is θ̃<sub>E</sub> = E<sub>E</sub>[<i>m</i><sub>1,E</sub>(<i>X</i>) − <i>m</i><sub>0,E</sub>(<i>X</i>) | <i>S</i> = 1]. It compares the treated and external outcome means over the ECT trial covariate distribution.</p>
+          <p>The covariate density, source probability and two outcome laws vary, with 0 &lt; <i>q</i><sub>E</sub> &lt; 1 and external support at all trial profiles. In the paper’s notation the observed target is θ̃<sub>E</sub> = E<sub>E</sub>[<i>m</i><sub>1,E</sub>(<i>X</i>) − <i>m</i><sub>0,E</sub>(<i>X</i>) | <i>R</i> = 1]. It compares the treated and external outcome means over the ECT trial covariate distribution.</p>
           <p>Deleting internal-control records from an HCT changes the source probability, trial fraction and retained-trial covariate density. With ē = E<sub>R</sub>[<i>e</i>(<i>X</i>)], they become</p>
           <p class="ms-math"><span><i>p</i><sub>E</sub> = <i>pe</i> / (1 − <i>p</i> + <i>pe</i>),</span><span><i>q</i><sub>E</sub> = <i>q</i>ē / (1 − <i>q</i> + <i>q</i>ē),</span><span><i>f</i><sub>R,E</sub> = <i>ef</i><sub>R</sub> / ē.</span></p>
           <p>Constant randomization preserves the trial covariate mix. With covariate-dependent allocation, profiles more likely to receive treatment receive more weight among the retained trial patients.</p>

@@ -42,6 +42,16 @@
   <label><input type="radio" name="equation-view" value="eif" checked>Population EIF</label>
   <label><input type="radio" name="equation-view" value="estimator">Fitted estimator</label>
 </fieldset>
+<details class="sample-index-sets"><summary>Source indicators and participant index sets</summary>
+<p>The source indicator is <i>R</i><sub>i</sub> = 1 for a trial participant and 0 for an external control. It denotes trial membership in both randomized trials and single-arm ECTs.</p>
+<div class="formula-block" role="region" tabindex="0" aria-label="Participant index sets">
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mtable columnalign="right left" columnspacing=".18em" rowspacing=".35em">
+<mtr><mtd><mi mathvariant="normal">ℛ</mi></mtd><mtd><mo>=</mo><mo>{</mo><mi>i</mi><mo>:</mo><msub><mi>R</mi><mi>i</mi></msub><mo>=</mo><mn>1</mn><mo>}</mo></mtd></mtr>
+<mtr><mtd><mi mathvariant="normal">ℰ</mi></mtd><mtd><mo>=</mo><mo>{</mo><mi>i</mi><mo>:</mo><msub><mi>R</mi><mi>i</mi></msub><mo>=</mo><mn>0</mn><mo>}</mo></mtd></mtr>
+<mtr><mtd><mi>N</mi></mtd><mtd><mo>=</mo><mo>|</mo><mi mathvariant="normal">ℛ</mi><mo>∪</mo><mi mathvariant="normal">ℰ</mi><mo>|</mo></mtd></mtr>
+</mtable></math></div>
+<p>The sets refer to the records included in the current analysis. In an HCT, |ℛ| = <i>n</i><sub>RCT</sub> counts both randomized arms. In an ECT, |ℛ| = <i>n</i><sub>1</sub> counts the treated trial group, and the total is <i>n</i><sub>ECT</sub>. The set ℛ and the binary variable <i>R</i><sub>i</sub> are distinct objects.</p>
+</details>
 <p class="notation-help">Hover over, tap, or focus a symbol in an equation to read its definition.</p>
 <div class="trace-toolbar" hidden id="trace-toolbar">
   <label for="reduction-path">Follow the derivation for</label>

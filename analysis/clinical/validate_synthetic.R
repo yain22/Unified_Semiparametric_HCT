@@ -6,29 +6,29 @@ h <- clinical_load(dirname(script))
 set.seed(7102026L)
 n <- 300L
 d <- data.frame(
-  S = c(rep(1, 200), rep(0, 100)), A = c(rep(1, 100), rep(0, 200)),
+  R = c(rep(1, 200), rep(0, 100)), A = c(rep(1, 100), rep(0, 200)),
   hba1c0 = rnorm(n), age = rnorm(n), duration = rnorm(n), male = rbinom(n, 1, .45), pump = rbinom(n, 1, .6)
 )
-d$Y <- .2 * d$age - .3 * d$A + .25 * (1 - d$S) + rnorm(n) * exp(.15 * d$hba1c0)
+d$Y <- .2 * d$age - .3 * d$A + .25 * (1 - d$R) + rnorm(n) * exp(.15 * d$hba1c0)
 fit <- h$cgm_est_nuisance(d, h)
 a <- fit$predictions
 s <- h$cgm_est_score(d, a)
 e <- .5
-S <- d$S
-T <- S * d$A
-C <- S * (1 - d$A)
-E <- 1 - S
+R <- d$R
+T <- R * d$A
+C <- R * (1 - d$A)
+E <- 1 - R
 lambda <- a$p * (1 - e) / (a$p * (1 - e) + (1 - a$p) * a$vC / a$vE)
 delta <- a$mC - a$mE
 # Independent assembly of each unrestricted-score term, with raw residuals.
-fixed <- S * (a$mT - lambda * a$mC - (1 - lambda) * a$mE) + T / e * (d$Y - a$mT) -
+fixed <- R * (a$mT - lambda * a$mC - (1 - lambda) * a$mE) + T / e * (d$Y - a$mT) -
   C * lambda / (1 - e) * (d$Y - a$mC) - E * (1 - lambda) * a$odds * (d$Y - a$mE)
-cs <- -delta * lambda * (1 - lambda) * (S - a$p) / (1 - a$p)
+cs <- -delta * lambda * (1 - lambda) * (R - a$p) / (1 - a$p)
 cc <- delta * lambda * (1 - lambda) * C / (1 - e) * ((d$Y - a$mC)^2 / a$vC - 1)
 ce <- -delta * lambda * (1 - lambda) * E * a$odds * ((d$Y - a$mE)^2 / a$vE - 1)
-term_error <- max(abs(unname(s$corrections) - c(sum(fixed), sum(cs), sum(cc), sum(ce)) / sum(S)))
+term_error <- max(abs(unname(s$corrections) - c(sum(fixed), sum(cs), sum(cc), sum(ce)) / sum(R)))
 stopifnot(
-  term_error < 1e-12, abs(s$estimate - sum(fixed + cs + cc + ce) / sum(S)) < 1e-12,
+  term_error < 1e-12, abs(s$estimate - sum(fixed + cs + cc + ce) / sum(R)) < 1e-12,
   abs(sum(s$corrections) - s$estimate) < 1e-12, abs(mean(s$phi)) < 1e-12
 )
 # At pointwise equal fitted control means all three derivative terms vanish.

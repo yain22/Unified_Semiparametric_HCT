@@ -16,15 +16,15 @@ paired_sample <- function(n, b) {
   f <- .5 + (.6 / sqrt(5)) * rowSums(X[, 1:5]) + (.25 / sqrt(5)) * rowSums(X[, 1:5]^2)
   error <- c(epsT, exp(.2 * xc[, 1]) * epsC, exp(-.2 * xe[, 1]) * epsE)
   data <- setNames(as.data.frame(X), paste0('X', 1:10))
-  data$S <- c(rep(1L, n), rep(0L, nE))
+  data$R <- c(rep(1L, n), rep(0L, nE))
   data$A <- c(rep(1L, nT), rep(0L, nC + nE))
-  data$Y <- f + error - (1 - data$S) * X[, 1]
+  data$Y <- f + error - (1 - data$R) * X[, 1]
   list(data = data, seed = seed)
 }
 
 sample_values <- function(data) {
-  stopifnot(identical(names(data), c(paste0("X", 1:10), "S", "A", "Y")),
-            all(data$S %in% 0:1), all(data$A %in% 0:1))
+  stopifnot(identical(names(data), c(paste0("X", 1:10), "R", "A", "Y")),
+            all(data$R %in% 0:1), all(data$A %in% 0:1))
   values <- as.double(as.matrix(data))
   stopifnot(all(is.finite(values)))
   values
@@ -43,6 +43,13 @@ portable_sample_hash <- function(values, phase) {
                  serialize = FALSE, algo = "sha256")
 }
 
+# Historical raw hashes include the original column name. Only the temporary
+# serialization copy uses that archived schema; analysis data retain R.
+archived_sample_hash <- function(data) {
+  names(data)[names(data) == "R"] <- "S"
+  digest::digest(data, algo = "sha256")
+}
+
 check_paired_sample <- function(data, seed, reference, fingerprint, baseline = NULL) {
   stopifnot(nrow(reference) == 1L, nrow(fingerprint) == 1L, seed == reference$seed,
             reference$N_trial == fingerprint$N_trial, reference$replicate == fingerprint$replicate)
@@ -50,7 +57,7 @@ check_paired_sample <- function(data, seed, reference, fingerprint, baseline = N
   if (!is.null(baseline)) {
     stopifnot(nrow(baseline) == 1L, seed == baseline$seed,
               reference$N_trial == baseline$N_trial, reference$replicate == baseline$replicate)
-    if (raw_hash != baseline$full_sample_sha256)
+    if (!baseline$full_sample_sha256 %in% c(raw_hash, archived_sample_hash(data)))
       stop("Exact pairing with the supplied baseline failed for trial size ", reference$N_trial,
            ", replicate ", reference$replicate, ".", call. = FALSE)
   }
@@ -58,7 +65,7 @@ check_paired_sample <- function(data, seed, reference, fingerprint, baseline = N
   if (hash != fingerprint$portable_sha256)
     stop("Full-sample fingerprint mismatch for trial size ", reference$N_trial,
          ", replicate ", reference$replicate, ".", call. = FALSE)
-  list(raw = raw_hash, exact = raw_hash == reference$full_sample_sha256, portable = hash)
+  list(raw = raw_hash, exact = archived_sample_hash(data) == reference$full_sample_sha256, portable = hash)
 }
 
 read_trial_fits <- function(here) {
@@ -99,7 +106,7 @@ if (sys.nframe() == 0L) {
   for (j in seq_len(nrow(reference))) {
     row <- reference[j, ]
     d <- paired_sample(row$N_trial, row$replicate)
-    stopifnot(row$seed == d$seed, identical(digest::digest(d$data, algo = "sha256"), row$full_sample_sha256))
+    stopifnot(row$seed == d$seed, identical(archived_sample_hash(d$data), row$full_sample_sha256))
     values <- sample_values(d$data)
     scaled <- values * 2^24
     # Widely separated neighboring candidates reduce the number of retries.

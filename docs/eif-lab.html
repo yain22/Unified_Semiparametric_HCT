@@ -22,7 +22,7 @@
 
 <section id="law">
 <h2>Borrowing and the gap</h2>
-<p>Consider an iid mixture of trial and external records. Each record has a binary covariate <i>X</i>. Trial participants (<i>S</i> = 1) receive treatment (<i>A</i> = 1) with known probability ⅔ or concurrent control with probability ⅓. External participants (<i>S</i> = 0) all receive control. Treatment adds one unit to the trial control mean in both strata.</p>
+<p>Consider an iid mixture of trial and external records. Each record has a binary covariate <i>X</i>. Trial participants (<i>R</i> = 1) receive treatment (<i>A</i> = 1) with known probability ⅔ or concurrent control with probability ⅓. External participants (<i>R</i> = 0) all receive control. Treatment adds one unit to the trial control mean in both strata.</p>
 
 <form id="settings" class="controls">
 <div><label for="delta">Internal minus external control mean, δ</label><div class="range"><input id="delta" type="range" min="-1" max="1" step=".05" value=".2"><output for="delta" id="delta-value">0.20</output></div></div>
@@ -33,7 +33,7 @@
 
 <div class="table-wrap" role="region" aria-label="Calculated stratum values" tabindex="0">
 <table><caption>How each covariate stratum enters the target</caption>
-<thead><tr><th scope="col"><i>x</i></th><th scope="col">Pr(<i>S</i> = 1 | <i>x</i>)</th><th scope="col">Trial mix<br>Pr(<i>x</i> | <i>S</i> = 1)</th><th scope="col">Discrepancy<br>δ(<i>x</i>)</th><th scope="col">Internal share<br>λ(<i>x</i>)</th><th scope="col">Stratum gap<br>[1 − λ(<i>x</i>)]δ(<i>x</i>)</th></tr></thead>
+<thead><tr><th scope="col"><i>x</i></th><th scope="col">Pr(<i>R</i> = 1 | <i>x</i>)</th><th scope="col">Trial mix<br>Pr(<i>x</i> | <i>R</i> = 1)</th><th scope="col">Discrepancy<br>δ(<i>x</i>)</th><th scope="col">Internal share<br>λ(<i>x</i>)</th><th scope="col">Stratum gap<br>[1 − λ(<i>x</i>)]δ(<i>x</i>)</th></tr></thead>
 <tbody id="strata-rows"></tbody></table></div>
 <div class="measures" aria-live="polite" aria-atomic="true">
 <div><span>Trial effect θ</span><strong id="trial-value">1.000</strong></div>
@@ -42,7 +42,7 @@
 </div>
 <p>The precision rule assigns internal controls a share proportional to their availability divided by their variance. At the starting settings, the external share is ¾. A control discrepancy of 0.20 then shifts the borrowing target by 0.15 outcome units. Increase the external variance to see why a less precise external cohort has a smaller effect on the contrast.</p>
 <details><summary>See the data law and target formulas</summary>
-<p>At the central law, Pr(<i>X</i> = 1) = ½. Set <i>e</i> = ⅔ and <i>q</i> = Pr(<i>S</i> = 1). Conditional means are <i>m</i><sub>1,0</sub>(<i>x</i>) = 0.4<i>x</i> for internal controls, <i>m</i><sub>1</sub>(<i>x</i>) = 0.4<i>x</i> + 1 for treated participants, and <i>m</i><sub>0</sub>(<i>x</i>) = 0.4<i>x</i> − δ(<i>x</i>) for external controls. The two trial variances are one. For each group <i>g</i>, generate <i>Y</i> = <i>m</i><sub>g</sub>(<i>x</i>) + √<i>v</i><sub>g</sub>(<i>x</i>) <i>Z</i>, with <i>Z</i> equal to −√3, 0, or √3 with probabilities ⅙, ⅔, and ⅙. Exact sums over these 18 possible records give every expectation below.</p>
+<p>At the central law, Pr(<i>X</i> = 1) = ½. Set <i>e</i> = ⅔ and <i>q</i> = Pr(<i>R</i> = 1). Conditional means are <i>m</i><sub>1,0</sub>(<i>x</i>) = 0.4<i>x</i> for internal controls, <i>m</i><sub>1</sub>(<i>x</i>) = 0.4<i>x</i> + 1 for treated participants, and <i>m</i><sub>0</sub>(<i>x</i>) = 0.4<i>x</i> − δ(<i>x</i>) for external controls. The two trial variances are one. For each group <i>g</i>, generate <i>Y</i> = <i>m</i><sub>g</sub>(<i>x</i>) + √<i>v</i><sub>g</sub>(<i>x</i>) <i>Z</i>, with <i>Z</i> equal to −√3, 0, or √3 with probabilities ⅙, ⅔, and ⅙. Exact sums over these 18 possible records give every expectation below.</p>
 <p class="equation">π<sub>I</sub>(<i>x</i>) = <i>p</i>(<i>x</i>)(1 − <i>e</i>) / <i>v</i><sub>1,0</sub>(<i>x</i>), &nbsp; π<sub>E</sub>(<i>x</i>) = [1 − <i>p</i>(<i>x</i>)] / <i>v</i><sub>0</sub>(<i>x</i>)</p>
 <p class="equation">λ(<i>x</i>) = π<sub>I</sub>(<i>x</i>) / [π<sub>I</sub>(<i>x</i>) + π<sub>E</sub>(<i>x</i>)]</p>
 <p>The transported causal estimand (TCE) θ̃ averages <i>m</i><sub>1</sub>(<i>X</i>) − λ(<i>X</i>)<i>m</i><sub>1,0</sub>(<i>X</i>) − [1 − λ(<i>X</i>)]<i>m</i><sub>0</sub>(<i>X</i>) over trial covariates. The trial effect θ averages <i>m</i><sub>1</sub>(<i>X</i>) − <i>m</i><sub>1,0</sub>(<i>X</i>) over the same distribution. Their difference averages [1 − λ(<i>X</i>)]δ(<i>X</i>) over trial covariates.</p>
@@ -84,7 +84,7 @@
 
 <section id="bound">
 <h2>What makes an influence function efficient?</h2>
-<p>With known randomization probability <i>e</i>, the assignment residual <i>U</i> = <i>S</i>(<i>A</i> − <i>e</i>) is orthogonal to every allowed score. Adding <i>cU</i> to the EIF therefore preserves the pathwise derivatives. Move <i>c</i> to see how two influence functions for the same target can imply different precision.</p>
+<p>With known randomization probability <i>e</i>, the assignment residual <i>U</i> = <i>R</i>(<i>A</i> − <i>e</i>) is orthogonal to every allowed score. Adding <i>cU</i> to the EIF therefore preserves the pathwise derivatives. Move <i>c</i> to see how two influence functions for the same target can imply different precision.</p>
 <form id="efficiency" class="controls">
 <div><label for="penalty">Coefficient <i>c</i> on the assignment residual</label><div class="range"><input type="range" id="penalty" min="-6" max="6" step=".25" value="2"><output for="penalty" id="c-value">2.0</output></div></div>
 <div><label for="size">Total iid records, <i>N</i></label><select id="size"><option>100</option><option selected>300</option><option>1000</option></select></div>

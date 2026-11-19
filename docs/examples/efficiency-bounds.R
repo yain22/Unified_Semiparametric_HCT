@@ -78,8 +78,8 @@ efficiency_bounds <- function(nT = 100, nI = 50, nE = 150,
       if (model == "unrestricted") {
         # Random source membership and the two estimated control variances
         # contribute even with a single covariate value when delta is nonzero.
-        S <- as.integer(!external)
-        correction <- -(S - q) / (1 - q)
+        R <- as.integer(!external)
+        correction <- -(R - q) / (1 - q)
         correction[internal] <- correction[internal] + (z[internal]^2 - 1) / (1 - e)
         correction[external] <- correction[external] - q * (z[external]^2 - 1) / (1 - q)
         score <- score + delta * lambda * external_share * correction / q

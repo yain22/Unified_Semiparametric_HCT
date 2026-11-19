@@ -21,8 +21,8 @@ scalar_ect_load <- function(paper, sim_source) {
 scalar_ect_fit <- function(data, sim, alpha = .05, eps = .01) {
   # data is the original complete HCT draw, before any shift. This explicit
   # split guarantees internal-control observations enter neither ECT fit.
-  D1 <- data[data$S == 1 & data$A == 1, , drop = FALSE]
-  D0 <- data[data$S == 0, , drop = FALSE]
+  D1 <- data[data$R == 1 & data$A == 1, , drop = FALSE]
+  D0 <- data[data$R == 0, , drop = FALSE]
   n1 <- nrow(D1)
   n0 <- nrow(D0)
   N <- n1 + n0

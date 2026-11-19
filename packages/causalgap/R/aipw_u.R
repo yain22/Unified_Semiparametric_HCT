@@ -2,18 +2,18 @@ aipw_u <- function(data, nuisance) {
   if (!is.data.frame(data) || !is.data.frame(nuisance) || nrow(data) == 0L ||
       nrow(data) != nrow(nuisance))
     stop("Supply two data frames with the same, positive number of rows.", call. = FALSE)
-  obs <- c("S", "A", "Y")
+  obs <- c("R", "A", "Y")
   fits <- c("p", "e", "m_treated", "m_internal", "m_external", "v_internal", "v_external")
   if (!all(obs %in% names(data)) || !all(fits %in% names(nuisance)))
     stop("Missing required column in data or nuisance. See ?aipw_u.", call. = FALSE)
   cols <- c(as.list(data[obs]), as.list(nuisance[fits]))
   if (!all(vapply(cols, function(x) is.numeric(x) && is.null(dim(x)), logical(1))))
     stop("Each required column must be a numeric vector.", call. = FALSE)
-  s <- data$S
+  s <- data$R
   a <- data$A
   y <- data$Y
   if (!all(s %in% 0:1) || !all(a %in% 0:1) || any(a > s) || any(!is.finite(y)))
-    stop("S and A must be binary, external records must have A=0, and Y must be finite.",
+    stop("R and A must be binary, external records must have A=0, and Y must be finite.",
          call. = FALSE)
   if (sum(s) == 0)
     stop("At least one observation from the trial is required.", call. = FALSE)
@@ -56,7 +56,7 @@ aipw_u <- function(data, nuisance) {
   terms[ec, 4L] <- -odds_ec * le[ec] * r_ec
 
   weight_derivative <- delta * li * le
-  # Inside the trial (S-p)/(1-p) equals one, including close to p=1.
+  # Inside the trial (R-p)/(1-p) equals one, including close to p=1.
   terms[shared_trial, 5L] <- -weight_derivative[shared_trial]
   terms[ec, 5L] <- weight_derivative[ec] * odds_ec
   shared_ic <- ic & both
